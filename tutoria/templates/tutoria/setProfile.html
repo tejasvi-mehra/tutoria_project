@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+    <title></title>
+  </head>
+  <body>
+    <form class="" action="" method="post" onsubmit="return validateMyForm();">
+      {% csrf_token %}
+      <h3>Regsiter as Tutor:</h3>
+      Yes <input type="checkbox" name="checks" value="tutor" id="isTutor">
+
+      <div id="tutorOption" style="display:none">
+        Private <input type="checkbox" id="private" class="tutorClass" value="private" name="checks">
+        Contracted <input type="checkbox" id="contracted" class="tutorClass" value="contracted" name="checks"><br>
+        University <input type="text" name="university" value=""><br>
+        Biography <input type="text" name="biography" value="">
+      </div>
+
+      <h3>Regsiter as Student:</h3>
+      Yes <input type="checkbox" name="checks" value="student" id="isStudent"><br><br>
+
+      <h3>Wallet Settings</h3>
+      Add to Wallet: $$ <input type="number" name="balance" value=""><br><br>
+
+      <button type="submit" name="button">Submit</button>
+    </form>
+  </body>
+</html>
+
+<script type="text/javascript">
+
+  // lets you check only private or contracted
+  $('input.tutorClass').on('change' ,function(){
+    $('input.tutorClass').not(this).prop('checked', false);
+  });
+
+  // fades in tutor options based on tutor selection
+  $('#isTutor').change(function(){
+    if(this.checked){
+      $('#tutorOption').fadeIn('slow');
+    }else{
+      $('#tutorOption').fadeOut('slow');
+    }
+  })
+
+  // checks whether tutor is selected
+  function validateMyForm(){
+
+      var student = $('#isStudent').is(":checked");
+      var tutor = $('#isTutor').is(":checked");
+      var type1 = $('#contracted').is(":checked");
+      var type2 = $('#private').is(":checked");
+
+
+      if(tutor && (type1 || type2)){
+        return true;
+      }
+      else if(student){
+        return true;
+      }
+      else{
+        alert('validation failed. check');
+        return false;
+      }
+
+  }
+</script>

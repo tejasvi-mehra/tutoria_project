@@ -1,0 +1,6 @@
+<h2>Create New Account</h3>
+<form action="/tutoria/register/" enctype="multipart/form-data" method="post">
+  {% csrf_token %}
+  {% include 'tutoria/form-template.html' %}
+  <button type="submit" class="btn btn-success"> Submit </button>
+</form>

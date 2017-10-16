@@ -1,0 +1,16 @@
+<h3>List of All tutors</h3>
+<a href="/tutoria/search">Show all</a><br>
+<a href="/tutoria/advancedSearch"> Advanced Search </a>
+<form class="" action="/tutoria/nameSearch/" method="post">
+  {% csrf_token %}
+  Search by name:
+  <input type="text" name="nameSearch" value="">
+  <button type="submit" name="button">Submit</button>
+</form>
+<ul>
+  {% for tutor in tutors %}
+    <li>
+      <a href="/tutoria/viewProfile/{{tutor.id}}">{{tutor.username}}</a>
+    </li>
+  {% endfor %}
+</ul>
