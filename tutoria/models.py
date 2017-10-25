@@ -21,7 +21,7 @@ class Student(models.Model):
     def __str__(self):
         return self.username
 
-class Transactions(models.Model):
+class Transaction(models.Model):
     student = models.ForeignKey(Student)
     tutor = models.ForeignKey(Tutor)
     amount = models.DecimalField(decimal_places=2, max_digits=10, default=0)
@@ -29,3 +29,13 @@ class Transactions(models.Model):
 
     def __str__(self):
         return self.amount
+
+class Session(models.Model):
+    tutor = models.ForeignKey(Tutor)
+    student = models.ForeignKey(Student)
+    amount = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    startTime = models.DateTimeField(null=True, blank=True)
+    endTime = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return self.startTime + ' - ' + endTime

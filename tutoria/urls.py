@@ -23,4 +23,6 @@ urlpatterns = [
 
     url(r'^viewProfile/(?P<tutor_id>[0-9]+)/$', views.viewProfile, name='viewProfile'),
 
+    url(r'^book/(?P<tutor_id>[0-9]+)/$', views.book, name='book'),
+
 ]
