@@ -9,9 +9,10 @@ def home(request):
 
 def dashboard(request):
     user = request.user.username
+
     context = {
         'name' : request.user.username,
-        'sessions': Session.objects.filter(Q(tutor=user) | Q(student=user))
+        
     }
     return render(request, 'tutoria/dashboard.html', context)
 
@@ -69,6 +70,11 @@ def nameSearch(request):
 
 def viewProfile(request, tutor_id):
     tutor = get_object_or_404(Tutor, pk=tutor_id)
+    # data = getData(tutor.sessionInfo)
+    # search for user in database
+    # get sessions from user.sessionInfo
+    # call method and fix data
+    # send data in context.sessions.
     return render(request, 'tutoria/viewProfile.html', {'tutor':tutor})
 
 def book(request, tutor_id):

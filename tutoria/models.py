@@ -1,4 +1,5 @@
 from django.db import models
+import json
 
 class Tutor(models.Model):
     name = models.CharField(max_length=100, default="")
@@ -8,6 +9,7 @@ class Tutor(models.Model):
     tutortype = models.CharField(max_length=10)
     balance = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     isStudent = models.BooleanField(default=False)
+    sessionInfo = models.CharField(max_length=10000)
 
     def __str__(self):
         return self.username
@@ -17,6 +19,7 @@ class Student(models.Model):
     username = models.CharField(max_length=100)
     balance = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     isTutor = models.BooleanField(default=False)
+    sessionInfo = models.CharField(max_length=10000)
 
     def __str__(self):
         return self.username
