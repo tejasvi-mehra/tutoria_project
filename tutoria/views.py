@@ -12,7 +12,6 @@ def dashboard(request):
 
     context = {
         'name' : request.user.username,
-        
     }
     return render(request, 'tutoria/dashboard.html', context)
 
