@@ -1,7 +1,19 @@
+<style media="screen">
+a {color:#000000;}      /* unvisited link */
+a:visited {color:#000000;}  /* visited link */
+a:hover {color:#000000;}  /* mouse over link */
+a:active {color:#000000;}  /* selected link */
+a {
+text-decoration: none;
+}
+</style>
 <h3>Tutor Profile</h3>
 <br>
 Name: {{tutor.name}}<br>
 Biography: {{tutor.biography}}<br>
 University: {{tutor.university}}<br>
 Tutor Type: {{tutor.tutortype}}<br><br>
-<a href="/tutoria/viewTimetable/{{tutor.id}}">Book Session</a>
+<br><br>
+<button type="button" name="button">
+  <a href="/tutoria/viewTimetable/{{tutor.id}}">Book Session</a>
+</button>

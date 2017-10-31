@@ -1,3 +1,13 @@
+
+<style media="screen">
+a {color:#000000;}      /* unvisited link */
+a:visited {color:#000000;}  /* visited link */
+a:hover {color:#000000;}  /* mouse over link */
+a:active {color:#000000;}  /* selected link */
+a {
+text-decoration: none;
+}
+</style>
 <h3>Tutoria Dashboard</h3>
 <h4>Hey {{name}}</h4>
 
@@ -6,5 +16,7 @@
   <a href="/tutoria/cancel/{{sesh.date}}/{{sesh.time}}">{{sesh.date}} --- {{sesh.time}} --- Cancel</a>
 {% endfor %}
 <br><br>
-<a href="/tutoria/search">Search for Tutors</a><br>
-<a href="/tutoria/logout"> Logout </a>
+<button type="button" name="button">
+<a href="/tutoria/search">Search for Tutors</a><br></button>
+<br><br>
+<button type="button" name="button"><a href="/tutoria/logout"> Logout </a></button>

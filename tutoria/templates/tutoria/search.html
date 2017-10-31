@@ -1,3 +1,12 @@
+<style media="screen">
+a {color:#000000;}      /* unvisited link */
+a:visited {color:#000000;}  /* visited link */
+a:hover {color:#000000;}  /* mouse over link */
+a:active {color:#000000;}  /* selected link */
+a {
+text-decoration: none;
+}
+</style>
 <h3>List of All tutors</h3>
 <a href="/tutoria/search">Show all</a><br>
 <a href="/tutoria/advancedSearch"> Advanced Search </a>
@@ -10,7 +19,11 @@
 <ul>
   {% for tutor in tutors %}
     <li>
-      <a href="/tutoria/viewProfile/{{tutor.id}}">{{tutor.username}}</a>
+      <button type="button" name="button">
+          <a href="/tutoria/viewProfile/{{tutor.id}}">{{tutor.username}}</a>
+      </button>
+
     </li>
+    <br>
   {% endfor %}
 </ul>
