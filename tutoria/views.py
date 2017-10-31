@@ -100,8 +100,10 @@ def getSessions(sessions):
     result = []
     for sesh in sessionList:
         temp = {'date' : sesh[0], 'time' : sesh[1], 'status' : False}
+        print(temp)
         if sesh in booked:
-            temp.status = True
+            print(temp)
+            temp['status'] = True
         result.append(temp)
     return result
 
