@@ -1,1 +1,11 @@
-<!-- 3 hours per day for five days -->
+<h1>Book Session</h1>
+<br>
+<h3>Name: {{tutor.name}}</h3>
+<br>
+<h4>Date: {{date}}</h4>
+<br>
+<h4>Time: {{time}}</h4>
+<br>
+<form action = "/tutoria/book/{{tutor.id}}/{{date}}/{{time}}/" method = "post">{% csrf_token %}
+        <input type="submit" name="book" value="Book" />
+</form>

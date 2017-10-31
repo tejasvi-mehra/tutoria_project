@@ -1,17 +1,38 @@
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm
 from .models import Tutor, Student, Session
 from django.db.models import Q
 
+
+sessionList = [
+    ['09/01', '10:00'], ['09/01', '11:00'], ['09/01', '12:00'],
+    ['09/01', '13:00'], ['09/01', '14:00'], ['09/01', '15:00'],
+    ['09/01', '16:00'], ['09/01', '17:00'], ['09/02', '10:00'],
+    ['09/03', '11:00']
+]
+
 def home(request):
     return render(request, 'tutoria/home.html')
 
 def dashboard(request):
-    user = request.user.username
-
+    booked = []
+    try:
+        student = Student.objects.get(username = request.user.username)
+        print(student)
+        booked = student.session_set.all()
+        print("here", booked)
+    except:
+        tutor = Tutor.objects.get(username = request.user.username)
+        try:
+            booked = tutor.session_set.all()
+        except:
+            booked = []
     context = {
         'name' : request.user.username,
+        'booked' : booked,
+        'id' : request.user.id
     }
     return render(request, 'tutoria/dashboard.html', context)
 
@@ -69,22 +90,61 @@ def nameSearch(request):
 
 def viewProfile(request, tutor_id):
     tutor = get_object_or_404(Tutor, pk=tutor_id)
-    # data = getData(tutor.sessionInfo)
-    # search for user in database
-    # get sessions from user.sessionInfo
-    # call method and fix data
-    # send data in context.sessions.
     return render(request, 'tutoria/viewProfile.html', {'tutor':tutor})
 
-def book(request, tutor_id):
+def getSessions(sessions):
+    booked = []
+    for sesh in sessions:
+        temp = [sesh.date, sesh.time]
+        booked.append(temp)
+    result = []
+    for sesh in sessionList:
+        temp = {'date' : sesh[0], 'time' : sesh[1], 'status' : False}
+        if sesh in booked:
+            temp.status = True
+        result.append(temp)
+    return result
+
+def viewTimetable(request, tutor_id):
+    tutor = get_object_or_404(Tutor, pk=tutor_id)
+    sessions = tutor.session_set.all()
+    result = getSessions(sessions)
+    context = {
+        'tutor' : tutor,
+        'sessions' : result
+    }
+    return render(request, 'tutoria/viewTimetable.html', context)
+
+def book(request, tutor_id, date, time):
+    tutor = get_object_or_404(Tutor, id=tutor_id)
     if request.method == 'POST':
-        a = 1
-    # create session model save it and redirect to dashboard.
-    # in dashboard create a booked session section where you can query the
-    # session model and if it matches the user then display it.
+        student = get_object_or_404(Student, username=request.user.username)
+        session = Session(
+            tutor = tutor,
+            student = student,
+            date = date,
+            time = time
+        )
+        session.save()
+        return redirect('/tutoria/dashboard')
     else:
-        a = 2
-    # display the time table of the tutor using tutor_id.
-    # we query the session model, you send to front end and render
-    # for each time slot you check if back end has sent something
-    # if not booked then render as available.
+        context = {
+            'date': date,
+            'time': time,
+            'tutor': tutor
+        }
+        return render(request, 'tutoria/bookSession.html', context)
+
+def cancel(request, date, time):
+    student = Student.objects.get(username = request.user.username)
+    session = Session.objects.get(student = student, date = date, time = time)
+    if request.method == 'POST':
+        session.delete()
+        return redirect('/tutoria/dashboard')
+    else:
+        context = {
+            'date': date,
+            'time': time,
+            'tutor': session.tutor
+        }
+        return render(request, 'tutoria/cancelSession.html', context)

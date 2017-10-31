@@ -1,0 +1,13 @@
+<h3>{{tutor.username}}</h3>
+<br>
+{% for sesh in sessions %}
+<ul>
+  <li>
+    {% if sesh.status %}
+      {{sesh.date}} ----- {{sesh.time}} ---- Booked
+    {% else %}
+      <a href="/tutoria/book/{{tutor.id}}/{{sesh.date}}/{{sesh.time}}"> {{sesh.date}} --- {{sesh.time}} ---- Book</a>
+    {% endif %}
+  </li>
+</ul>
+{% endfor %}

@@ -1,4 +1,10 @@
 <h3>Tutoria Dashboard</h3>
 <h4>Hey {{name}}</h4>
+
+<h4>Booked</h4>
+{% for sesh in booked %}
+  <a href="/tutoria/cancel/{{sesh.date}}/{{sesh.time}}">{{sesh.date}} --- {{sesh.time}} --- Cancel</a>
+{% endfor %}
+<br><br>
 <a href="/tutoria/search">Search for Tutors</a><br>
 <a href="/tutoria/logout"> Logout </a>

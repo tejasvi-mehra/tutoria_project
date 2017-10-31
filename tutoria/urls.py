@@ -19,10 +19,13 @@ urlpatterns = [
 
     url(r'^nameSearch/$', views.nameSearch, name='nameSearch'),
 
-    # url(r'^advancedSearch/$', views.advancedSearch, name='advancedSearch'),
+    url(r'^book/(?P<tutor_id>[0-9]+)/(?P<date>.*)/(?P<time>.*)/$', views.book, name='book'),
+
+    url(r'^cancel/(?P<date>.*)/(?P<time>.*)/$', views.cancel, name='cancel'),
 
     url(r'^viewProfile/(?P<tutor_id>[0-9]+)/$', views.viewProfile, name='viewProfile'),
 
-    url(r'^book/(?P<tutor_id>[0-9]+)/$', views.book, name='book'),
+    url(r'^viewTimetable/(?P<tutor_id>[0-9]+)/$', views.viewTimetable, name='viewTimetable'),
+
 
 ]
