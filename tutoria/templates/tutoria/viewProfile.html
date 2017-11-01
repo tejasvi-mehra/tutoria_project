@@ -1,4 +1,4 @@
-<style media="screen">
+<!-- /*<style media="screen">
 a {color:#000000;}      /* unvisited link */
 a:visited {color:#000000;}  /* visited link */
 a:hover {color:#000000;}  /* mouse over link */
@@ -16,4 +16,64 @@ Tutor Type: {{tutor.tutortype}}<br><br>
 <br><br>
 <button type="button" name="button">
   <a href="/tutoria/viewTimetable/{{tutor.id}}">Book Session</a>
-</button>
+</button>*/ -->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <script scr=""></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>Tutoria</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+
+  </head>
+
+  <body>
+    <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+      <a class="navbar-brand navbar-right" href="/tutoria/logout">Logout</a>
+      <a class="navbar-brand " href="/tutoria/dashboard">DashBoard</a>
+
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="well well-sm">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                            <img src="http://placehold.it/380x500" alt="" class="img-rounded img-responsive" />
+                        </div>
+                        <div class="col-sm-6 col-md-8">
+                            <p><b>Biography:</b> {{tutor.biography}}<br>
+                            <b>University:</b> {{tutor.university}}<br>
+                            <b>Tutor Type:</b> {{tutor.tutortype}}<br></p>
+                            <b>Tutor Rate:</b> {{tutor.rate}}<br></p>
+                            <!-- Split button -->
+                            <div class="btn-group">
+                                <a class="btn btn-primary" href="/tutoria/viewTimetable/{{tutor.id}}">Book Session</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="../../../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../../../dist/js/bootstrap.min.js"></script>
+  </body>
+  </html>

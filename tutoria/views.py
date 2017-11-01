@@ -7,10 +7,9 @@ from django.db.models import Q
 
 
 sessionList = [
-    ['09/01', '10:00'], ['09/01', '11:00'], ['09/01', '12:00'],
-    ['09/01', '13:00'], ['09/01', '14:00'], ['09/01', '15:00'],
     ['09/01', '16:00'], ['09/01', '17:00'], ['09/02', '10:00'],
-    ['09/03', '11:00']
+    ['09/03', '16:00'], ['09/03', '17:00'], ['09/03', '18:00'],
+    ['09/06', '16:00'], ['09/06', '17:00'], ['09/06', '18:00'],
 ]
 
 def home(request):
@@ -64,7 +63,8 @@ def setProfile(request):
                 university = request.POST['university'],
                 tutortype = temp[1],
                 balance = request.POST['balance'],
-                isStudent = isStudent
+                isStudent = isStudent,
+                rate = request.POST['rate'],
             )
             tutor.save()
         if 'student' in temp:
