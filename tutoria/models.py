@@ -35,11 +35,10 @@ class Transaction(models.Model):
 class Session(models.Model):
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    amount = models.DecimalField(decimal_places=2, max_digits=10, default=0)
-    date = models.CharField(max_length=100, default="")
-    time = models.CharField(max_length=100, default="")
-    # startTime = models.DateTimeField(null=True, blank=True)
-    # endTime = models.DateTimeField(null=True, blank=True)
+    amount = models.IntegerField()
+    status = models.CharField(max_length=100, default="") # BOOKED || BLOCKED
+    start_time = models.DateTimeField(null=True, blank=True)
+    duration = models.IntegerField()
 
     def __str__(self):
-        return self.tutor.username
+        return "booked by " + self.student.username + " with "  + self.tutor.username
