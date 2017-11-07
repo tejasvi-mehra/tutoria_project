@@ -1,5 +1,4 @@
-<!--
-<style media="screen">
+<!--<style media="screen">
 a {color:#000000;}      /* unvisited link */
 a:visited {color:#000000;}  /* visited link */
 a:hover {color:#000000;}  /* mouse over link */
@@ -7,99 +6,42 @@ a:active {color:#000000;}  /* selected link */
 a {
 text-decoration: none;
 }
-</style>
+</style>-->
+
 <h3>Tutoria Dashboard</h3>
 <h4>Hey {{name}}</h4>
 
 <h4>Booked</h4>
-{% for sesh in booked %}
-  <a href="/tutoria/cancel/{{sesh.date}}/{{sesh.time}}">{{sesh.date}} --- {{sesh.time}} --- Cancel</a>
+{% if tutor %}
+<h5>As Tutor</h5><br>
+{% for sesh in tutor_sessions %}
+<ul>
+    {% ifnotequal sesh.status 'BLOCKED' %}
+      <li>{{sesh.start_time}} to  {{sesh.end_time}} with student --- {{sesh.student}}</li>
+    {% endifnotequal %}
+
+</ul>
+
 {% endfor %}
+<br>
+<a href="/tutoria/manage_timetable/tutor">Manage teacher timetable</a>
+<br>
+<br>
+{% endif %}
+{% if student %}
+<h5>As Student</h5><br>
+{% for sesh in student_sessions %}
+<ul>
+  <li>
+    {{sesh.start_time}} to  {{sesh.end_time}} with tutor --- {{sesh.tutor}}
+  </li>
+</ul>
+{% endfor %}
+<br>
+<a href="/tutoria/manage_timetable/student">Manage student timetable</a>
 <br><br>
+{% endif %}
 <button type="button" name="button">
 <a href="/tutoria/search">Search for Tutors</a><br></button>
 <br><br>
-<button type="button" name="button"><a href="/tutoria/logout"> Logout </a></button> -->
-
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
-    <title>Tutoria</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <style media="screen">
-      a {color:#000000;}      /* unvisited link */
-      a:visited {color:#000000;}  /* visited link */
-      a:hover {color:#000000;}  /* mouse over link */
-      a:active {color:#000000;}  /* selected link */
-      a {
-      text-decoration: none;
-      }
-    </style>
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  </head>
-
-  <body>
-
-    <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
-      <a class="navbar-brand navbar-right" href="/tutoria/logout">Logout</a>
-      <a class="navbar-brand " href="/tutoria/dashboard">DashBoard</a>
-      <a class="navbar-brand " href="/tutoria/dashboard">Manage Timetable</a>
-    </nav>
-
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <div class="container">
-        <h1 class="display-3">Hey {{name}}</h1>
-        <p>Welcome to your dashboard {{name}} . You can view all your messages and booked sessions here. You can also begin searching for tutors</p>
-      </div>
-    </div>
-
-    <div class="container">
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-md-4">
-          <h2>Your Booked Sessions</h2>
-          <p>
-            {% for sesh in booked %}
-              <a href="/tutoria/cancel/{{sesh.date}}/{{sesh.time}}">{{sesh.date}} --- {{sesh.time}} --- Details</a>
-            {% endfor %}
-          </p>
-        </div>
-        <div class="col-md-4">
-          <h2>Search</h2>
-          <p>Begin Searching for all your subjects from all the Tutors available on Tutoria! </p>
-          <p><a class="btn btn-secondary" href="/tutoria/search" role="button">Search &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>Your Messages</h2>
-          <p>You have no new messages</p>
-              </div>
-      </div>
-
-      <hr>
-
-      <footer>
-        <p>&copy; Fast and Query-Us  2017</p>
-      </footer>
-    </div> <!-- /container -->
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="../../dist/js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
-  </body>
-</html>
+<button type="button" name="button"><a href="/tutoria/logout"> Logout </a></button>

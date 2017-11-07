@@ -1,0 +1,18 @@
+{% if error %}
+{{error}} <br>
+<a href="/tutoria/dashboard"> Dashboard </a>
+{% endif %}
+<h1>Session detail</h1>
+<br>
+<h3>Name: {{tutor}}</h3>
+<br>
+<h4>start: {{start}}</h4>
+<br>
+<h4>end: {{end}}</h4>
+<br>
+<h4>duration: {{duration}}</h4>
+<br>
+<form action = "/tutoria/cancel/{{start |date:'Y-m-d H:i'}}/" method = "post">
+        {% csrf_token %}
+        <input type="submit" name="book" value="Cancel" />
+</form>
