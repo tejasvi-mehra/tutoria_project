@@ -13,7 +13,9 @@
   </head>
 
   <body>
-
+    {% if error %}
+    <h2>{{error}}</h2> <br>
+    {% endif %}
     <nav class="navbar navbar-inverse bg-inverse">
       <a class="navbar-brand navbar-right" href="/tutoria/logout">Logout</a>
       <a class="navbar-brand " href="/tutoria/dashboard">DashBoard</a>

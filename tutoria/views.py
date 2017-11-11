@@ -342,7 +342,7 @@ def book(request, tutor_id, date_time):
 
             costOfBooking = (float(tutor.rate) + float(tutor.rate)*0.05) if tutor.tutortype == 'private' else 0
             if costOfBooking > student.balance :
-                return render(request, 'tutoria/bookSession.html', {'error' : 'Insufficient Funds !!.'})
+                return render(request, 'tutoria/add_funds.html', {'error' : 'Insufficient Funds !!.'})
             else:
                 session = Session(
                 tutor = tutor,
