@@ -8,6 +8,16 @@ def moneyTransfer(amount, username):
     tutor = Tutor.objects.get(username=username)
     tutor.balance= float(tutor.balance) + float(amount)
     tutor.save()
+    notif=Notification(
+                title="Click to write a review for your session with {}".format(session.tutor),
+                forSession=False,
+                student=student,
+                now=int(ttime.time()),
+                date="{}/{}/{}".format(today.day,today.month,today.year),
+                time="{}:{}".format(today.hour,today.minute)
+
+                )
+    notif.save()
 
 def start():
     tdy = datetime.datetime.today()

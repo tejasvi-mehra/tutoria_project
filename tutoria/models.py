@@ -1,5 +1,12 @@
 from django.db import models
 import json
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+import re
+import time
+# from dateutil.parser import *
+from datetime import date, datetime
 
 class Tutor(models.Model):
     name = models.CharField(max_length=100, default="")
@@ -56,3 +63,36 @@ class AdminWallet(models.Model):
     amount = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     def __self__ (self):
         return "Amount: " + self.amount
+
+import re
+import time
+# from dateutil.parser import *
+from datetime import date, datetime
+
+
+class Notification(models.Model):
+
+    title = models.CharField(max_length=250)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
+    forSession=models.BooleanField(default=True)
+    viewed_stu = models.BooleanField(default=False)
+    viewed_tut = models.BooleanField(default=False)
+    now=models.DecimalField(decimal_places=2, max_digits=13, default=0)
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
+    date=models.CharField(max_length=200)
+    time=models.CharField(max_length=200)
+
+class Review(models.Model):
+    """docstring for Review"""
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
+    text = models.CharField(max_length=250)
+    rating = models.IntegerField()
+        
+
+
+@receiver(post_save, sender=User)
+def send_notif(sender, **kwargs):
+    print("New Notification")

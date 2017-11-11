@@ -1,0 +1,15 @@
+<h3>Notifications</h3>
+<ul>
+  {% for notif in notifs %}
+    <li>
+    	<div>
+    		<h3>{{notif.title}}</h3>
+    		{%if notif.forSession%}
+    		<a href="/tutoria/session_detail/{{notif.start_time | date:'Y-m-d H:i'}}/">View Session</a>
+    		{%endif%}
+    		<p>{{notif.date}} - {{notif.time}}</p>
+    	</div>
+      
+    </li>
+  {% endfor %}
+</ul>

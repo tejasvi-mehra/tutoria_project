@@ -66,6 +66,19 @@ Tutor Type: {{tutor.tutortype}}<br><br>
                 </div>
             </div>
         </div>
+        <br>
+        <div class="well well-sm">
+            <h3>Reviews</h3>
+            <br>
+            {%for rev in reviews%}
+            <h4>{{rev.student.username}}</h4>
+            <h4>{{rev.rating}}/5</h4>
+            <p>{{rev.text}}</p>
+            <br>
+            {%endfor%}
+        </div>
+
+
     </div>
 
     <!-- Bootstrap core JavaScript

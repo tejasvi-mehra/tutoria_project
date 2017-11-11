@@ -2,10 +2,12 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm
-from .models import Tutor, Student, Session, Transaction, AdminWallet
+from .models import Tutor, Student, Session, Transaction, AdminWallet, Notification, Review
 from django.db.models import Q
 import datetime
 from dateutil import parser
+from datetime import date
+import time as ttime
 
 """ functions to be imported """
 
@@ -272,7 +274,8 @@ def tutor_name_search(request):
 
 def view_tutor_profile(request, tutor_id):
     tutor = get_object_or_404(Tutor, pk=tutor_id)
-    return render(request, 'tutoria/viewProfile.html', {'tutor':tutor})
+    reviews=Review.objects.filter(tutor=tutor)
+    return render(request, 'tutoria/viewProfile.html', {'tutor':tutor, 'reviews':reviews[::-1]})
 
 def tutor_lock_session(request, date_time):
     tolock = parser.parse(date_time)
@@ -364,6 +367,28 @@ def book(request, tutor_id, date_time):
                 commission = commission
                 )
                 transaction.save()
+
+                """ Notification object """
+                title="{} booked a session with {} on {}.".format(session.student,session.tutor,session.start_time)
+                today=datetime.datetime.today()
+                str_date="{}/{}/{}".format(today.day,today.month,today.year)
+                str_time="{}:{}".format(today.hour,today.minute)
+                now=int(ttime.time())
+                notif=Notification(
+                title=title,
+                tutor=session.tutor,
+                student=session.student,
+                now=now,
+                date=str_date,
+                time=str_time,
+                start_time = start_time,
+                end_time = start_time + td,
+                forSession = True,
+
+                )
+                print(notif.title)
+                notif.save()
+                """ Notification object """
                 sendFundsToAdmin(student.username, costOfBooking)
                 return redirect('/tutoria/dashboard')
         else:
@@ -390,9 +415,23 @@ def detail_cancel(request, date_time):
             refundFromAdmin(student.username, refund_amount)
             session.delete()
             transaction.delete()
+            today=datetime.datetime.today()
+            notif=Notification(
+                title="{} cancelled session with {} scheduled for {}".format(student.username,session.tutor.username,session.start_time),
+                forSession=False,
+                student=student,
+                tutor=session.tutor,
+                now=int(ttime.time()),
+                date="{}/{}/{}".format(today.day,today.month,today.year),
+                time="{}:{}".format(today.hour,today.minute)
+
+                )
+            print(notif.title)
+            notif.save()
             return redirect('/tutoria/dashboard')
     else:
         context = {
+            'session_id':session.id,
             'tutor' : session.tutor,
             'start' : session.start_time,
             'end' : session.end_time,
@@ -414,3 +453,45 @@ def add_funds(request):
         return redirect('/tutoria/dashboard')
     else:
         return render(request, 'tutoria/add_funds.html')
+
+def notifications(request):
+    if request.method=="GET":
+        s1=Student.objects.filter(username=request.user.username)
+        if len(s1)>=0:
+            s=s1
+        else:
+            s=None
+        tutor=None
+        student=None
+        if s:
+            student=s
+        else:
+            tutor=Tutor.objects.filter(username=request.user.username)
+        stu_notifs=Notification.objects.filter(student=student)
+        tut_notifs=Notification.objects.filter(tutor=tutor)
+        # stu_notifs=Notification.objects.filter(student=user)
+        notifs=[]
+        for x in tut_notifs:
+            notifs.append(x)
+        for y in stu_notifs:
+            notifs.append(y)
+
+        notifs.sort(key=lambda x: x.now, reverse=True)
+
+        return render(request,'tutoria/notifications.html/',{'notifs':notifs})
+
+def review(request,session_id):
+    if request.method=="POST":
+        session=get_object_or_404(Session,pk=session_id)
+        rev=Review(
+            student=session.student,
+            tutor=session.tutor,
+            text=request.POST['review'],
+            rating=request.POST['rating']
+            )
+        rev.save()
+        return redirect('/tutoria/dashboard')
+
+    else:
+        return render(request, 'tutoria/writeReview.html')
+
