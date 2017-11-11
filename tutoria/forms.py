@@ -10,3 +10,10 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
+
+class AddFunds(forms.Form):
+    amount = forms.FloatField(max_value=5000, help_text='Enter amount')
+
+    def clean_amount(self):
+        data = self.cleaned_data['amount']
+        return data   

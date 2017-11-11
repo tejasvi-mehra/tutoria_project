@@ -6,7 +6,7 @@
 {% for sesh in sessions %}
 <ul>
   <li>
-    {% ifnotequal sesh.status 'vacant'%}
+    {% ifnotequal sesh.status 'vacant' %}
       {{sesh.time}} - {{sesh.status}}
     {% else %}
       <a href="/tutoria/tutor_lock_session/{{sesh.time | date:'Y-m-d H:i'}}">{{sesh.time}} - {{sesh.status}} -- lock</a>

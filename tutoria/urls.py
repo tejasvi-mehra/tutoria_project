@@ -33,7 +33,9 @@ urlpatterns = [
 
     url(r'^session_detail/(?P<date_time>.*)/$', views.detail_cancel, name='session_detail'),
 
-    url(r'^tutor_lock_session/(?P<date_time>.*)/$', views.tutor_lock_session, name='tutor_lock_session')
+    url(r'^tutor_lock_session/(?P<date_time>.*)/$', views.tutor_lock_session, name='tutor_lock_session'),
+
+    url(r'^add_funds/$', views.add_funds, name='add_funds')
 
 
 ]

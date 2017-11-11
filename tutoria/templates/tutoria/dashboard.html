@@ -24,6 +24,8 @@ text-decoration: none;
 
 {% endfor %}
 <br>
+<h5>Your balance: </h5>
+{{balance}}
 <a href="/tutoria/manage_timetable/tutor">Manage teacher timetable</a>
 <br>
 <br>
@@ -38,10 +40,35 @@ text-decoration: none;
 </ul>
 {% endfor %}
 <br>
+
+<h5>Balance: {{balance}}</h5>
 <a href="/tutoria/manage_timetable/student">Manage student timetable</a>
 <br><br>
 {% endif %}
+<h4>Transaction History</h4>
+<h5>Outgoing Transactions</h5>
+{% for transaction in transactions_outgoing %}
+<ul>
+  <li>
+    Made to  {{transaction.tutor}} with amount {{transaction.amount}} --- for session: {{transaction.start_time}} to  {{transaction.end_time}}
+  </li>
+</ul>
+{% endfor %}
+<br>
+<h5>Incoming Transactions</h5>
+{% for transaction in transactions_incoming %}
+<ul>
+  <li>
+    Made by {{transaction.student}} with amount {{transaction.amount}} --- for session: {{transaction.start_time}} to  {{transaction.end_time}}
+  </li>
+</ul>
+{% endfor %}
+<br>
 <button type="button" name="button">
 <a href="/tutoria/search">Search for Tutors</a><br></button>
+
+<button type="button" name="button">
+<a href="/tutoria/add_funds">Add money</a><br></button>
+
 <br><br>
 <button type="button" name="button"><a href="/tutoria/logout"> Logout </a></button>

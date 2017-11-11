@@ -2,7 +2,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm
-from .models import Tutor, Student, Session
+from .models import Tutor, Student, Session, Transaction, AdminWallet
 from django.db.models import Q
 import datetime
 from dateutil import parser
@@ -102,8 +102,81 @@ def check_person(username):
     except:
             return False, Tutor.objects.get(username=username)
 
-""" functions to be imported """
+# return the balance of student or tutor
+def get_balance(username):
+    try:
+        student = Student.objects.get(username=username)
+        if student.isTutor:
+            tutor = Tutor.objects.get(username=username)
+            return tutor.balance
+        else:
+            return student.balance
+    except:
+        tutor = Tutor.objects.get(username=username)
+        return tutor.balance
 
+# Transfer money from student to admin on every booking
+def sendFundsToAdmin(username, amount):
+    student = Student.objects.get(username = username)
+    if student.isTutor:
+        tutor = Tutor.objects.get(username=username)
+        tutor.balance= float(tutor.balance) - amount
+        tutor.save()
+    else:
+        student.balance= float(student.balance) - amount
+        student.save()
+    admin = AdminWallet.objects.get(username = "admin")
+    admin.amount = float(admin.amount) + amount
+    admin.save()
+
+# Refund money back to student
+def refundFromAdmin(username, amount):
+    student = Student.objects.get(username = username)
+    if student.isTutor:
+        tutor = Tutor.objects.get(username=username)
+        tutor.balance = float(tutor.balance) + float(amount)
+        tutor.save()
+    else:
+        student.balance= float(student.balance) + float(amount)
+        student.save()
+    admin = AdminWallet.objects.get(username = "admin")
+    admin.amount = float(admin.amount) - float(amount)
+    admin.save()
+
+# Get transactions made in past 30 days
+def get_transactions_outgoing(username):
+    booked = []
+    try:
+        student = Student.objects.get(username=username)
+        try:
+            # print(student)
+            booked = student.transaction_set.all()
+            booked = filter_sessions(booked,30)
+            # print(booked[0])
+        except:
+            booked = []
+    except:
+        booked = []
+
+    return booked
+
+# Get incoming transactios for past 30 days
+""" functions to be imported """
+def get_transactions_incoming(username):
+    booked = []
+    try:
+        tutor = Tutor.objects.get(username=username)
+        try:
+            # print(student)
+            booked = tutor.transaction_set.all()
+            booked = filter_sessions(booked,30)
+            # print(booked[0])
+        except:
+            booked = []
+    except:
+        booked = []
+
+    return booked
 
 def home(request):
     return render(request, 'tutoria/home.html')
@@ -112,12 +185,18 @@ def dashboard(request):
     username = request.user.username
     tutor_sessions, student_sessions = get_sessions(username)
     student, tutor = check_person(username)
+    balance = get_balance(username)
+    transactions_outgoing = get_transactions_outgoing(username)
+    transactions_incoming = get_transactions_incoming(username)
     context = {
         'name' : request.user.username,
         'tutor_sessions' : tutor_sessions,
         'student_sessions' : student_sessions,
         'student' : student,
-        'tutor': tutor
+        'tutor': tutor,
+        'balance': balance,
+        'transactions_outgoing' : transactions_outgoing,
+        'transactions_incoming' : transactions_incoming
     }
     return render(request, 'tutoria/dashboard.html', context)
 
@@ -259,7 +338,13 @@ def book(request, tutor_id, date_time):
         if check_conflict(tutor, student, start_time):
             duration = 60 if tutor.tutortype == 'private' else 30
             td = datetime.timedelta(minutes=60) if tutor.tutortype == 'private' else datetime.timedelta(minutes=30)
-            session = Session(
+            #  Deduct from wallet
+
+            costOfBooking = (float(tutor.rate) + float(tutor.rate)*0.05) if tutor.tutortype == 'private' else 0
+            if costOfBooking > student.balance :
+                return render(request, 'tutoria/bookSession.html', {'error' : 'Insufficient Funds !!.'})
+            else:
+                session = Session(
                 tutor = tutor,
                 student = student,
                 start_time = start_time,
@@ -267,9 +352,20 @@ def book(request, tutor_id, date_time):
                 duration = duration,
                 amount = tutor.rate,
                 status = 'BOOKED'
-            )
-            session.save()
-            return redirect('/tutoria/dashboard')
+                )
+                session.save()
+                commission= float(tutor.rate)*0.05
+                transaction = Transaction(
+                tutor = tutor,
+                student = student,
+                start_time = start_time,
+                end_time = start_time + td,
+                amount = float(tutor.rate),
+                commission = commission
+                )
+                transaction.save()
+                sendFundsToAdmin(student.username, costOfBooking)
+                return redirect('/tutoria/dashboard')
         else:
             return render(request, 'tutoria/bookSession.html', {'error' : 'conflict with another booked slot.'})
     else:
@@ -283,12 +379,17 @@ def detail_cancel(request, date_time):
     tocancel = parser.parse(date_time)
     student = Student.objects.get(username = request.user.username)
     session = Session.objects.get(student = student, start_time=tocancel)
+    transaction =Transaction.objects.get(student = student, start_time = tocancel)
     tdy = datetime.datetime.today() + datetime.timedelta(hours=8)
     if request.method == 'POST':
         if session.start_time < tdy + datetime.timedelta(hours=24):
-            return redirect('/tutoria/session_detail.html', {'error': 'cant cancel'})
+            return redirect('/tutoria/session_detail.html', {'error': 'can\'t cancel'})
         else:
+            # refund and delete transaction
+            refund_amount = transaction.amount + transaction.commission
+            refundFromAdmin(student.username, refund_amount)
             session.delete()
+            transaction.delete()
             return redirect('/tutoria/dashboard')
     else:
         context = {
@@ -298,3 +399,18 @@ def detail_cancel(request, date_time):
             'duration': session.duration
         }
         return render(request, 'tutoria/session_detail.html', context)
+
+def add_funds(request):
+    if request.method == 'POST':
+        amount = request.POST['amount']
+        student = Student.objects.get(username = request.user.username)
+        if student.isTutor:
+            tutor = Tutor.objects.get(username=request.user.username)
+            tutor.balance = float(tutor.balance) + float(amount)
+            tutor.save()
+        else:
+            student.balance= float(student.balance) + float(amount)
+            student.save()
+        return redirect('/tutoria/dashboard')
+    else:
+        return render(request, 'tutoria/add_funds.html')

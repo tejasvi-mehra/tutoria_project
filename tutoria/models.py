@@ -27,10 +27,14 @@ class Transaction(models.Model):
     student = models.ForeignKey(Student)
     tutor = models.ForeignKey(Tutor)
     amount = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    commission = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     discount = models.DecimalField(decimal_places=0, max_digits=3, default=0)
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
+    completed = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.amount
+        return str(self.student) + " to " + str(self.tutor) + " at " + str(self.start_time) + " val " + str(self.completed)
 
 class Session(models.Model):
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
@@ -46,3 +50,9 @@ class Session(models.Model):
             return "booked by " + self.student.username + " with "  + self.tutor.username
         else:
             return "blocked by " + self.tutor.username
+
+class AdminWallet(models.Model):
+    username = models.CharField(max_length=100, default="admin")
+    amount = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    def __self__ (self):
+        return "Amount: " + self.amount
