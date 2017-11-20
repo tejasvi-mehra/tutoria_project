@@ -26,36 +26,33 @@ from django.contrib.admin import AdminSite
 
 
 
+#
+# class CourseAdmin(admin.ModelAdmin):
+#     list_display = ["code","subject"]
+#     class Meta:
+#         model = Course
+#
+#     def has_change_permission(self, request, obj=None):
+#         return True
+#     def has_delete_permission(self, request, obj=None):
+#         return False
+#     def has_add_permission(self, request):
+#         return True
 
-class CourseAdmin(admin.ModelAdmin):
-    list_display = ["code","subject"]
-    class Meta:
-        model = Course
+#
+# class MyAdminSite(AdminSite):
+#     site_header = 'Monty Python administration'
+#     usern=AdminWallet.objects.get(username="admin")
+#     index_title = str(usern.amount)
+    # index_template = "/home/krohak/Documents/SE/tutoria_project/tutoria_project/templates/admin/view.html"
 
-    def has_change_permission(self, request, obj=None):
-        return True
-    def has_delete_permission(self, request, obj=None):
-        return False
-    def has_add_permission(self, request):
-        return True
-
-
-class MyAdminSite(AdminSite):
-    site_header = 'Monty Python administration'
-    usern=AdminWallet.objects.get(username="admin")
-    index_title = str(usern.amount)
-    #index_template = "/home/krohak/Documents/SE/tutoria_project/tutoria_project/templates/admin/view.html"
-
-
-admin.site = MyAdminSite(name='myadmin')
-
-
-
-admin.site.register(Group)
-admin.site.register(User)
+#
+# admin.site = MyAdminSite(name='myadmin')
+#
+#
 
 admin.site.register(AdminWallet)
-admin.site.register(Course,CourseAdmin)
+admin.site.register(Course)
 # Register your models here.
 admin.site.register(Tutor)
 admin.site.register(Student)
