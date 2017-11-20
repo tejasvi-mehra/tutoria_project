@@ -2,7 +2,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm
-from .models import Tutor, Student, Session, Transaction, AdminWallet, Notification, Review
+from .models import Tutor, Student, Session, Transaction, AdminWallet, Notification, Review, Wallet
 from django.db.models import Q
 import datetime
 from dateutil import parser
@@ -106,41 +106,51 @@ def check_person(username):
 
 # return the balance of student or tutor
 def get_balance(username):
-    try:
-        student = Student.objects.get(username=username)
-        if student.isTutor:
-            tutor = Tutor.objects.get(username=username)
-            return tutor.balance
-        else:
-            return student.balance
-    except:
-        tutor = Tutor.objects.get(username=username)
-        return tutor.balance
+    # try:
+    #     student = Student.objects.get(username=username)
+    #     if student.isTutor:
+    #         tutor = Tutor.objects.get(username=username)
+    #         return tutor.balance
+    #     else:
+    #         return student.balance
+    # except:
+    #     tutor = Tutor.objects.get(username=username)
+    #     return tutor.balance
+
+    wallet = Wallet.objects.get(username=username)
+    return wallet.balance;
 
 # Transfer money from student to admin on every booking
 def sendFundsToAdmin(username, amount):
-    student = Student.objects.get(username = username)
-    if student.isTutor:
-        tutor = Tutor.objects.get(username=username)
-        tutor.balance= float(tutor.balance) - amount
-        tutor.save()
-    else:
-        student.balance= float(student.balance) - amount
-        student.save()
+    # student = Student.objects.get(username = username)
+    # if student.isTutor:
+    #     tutor = Tutor.objects.get(username=username)
+    #     tutor.balance= float(tutor.balance) - amount
+    #     tutor.save()
+    # else:
+    #     student.balance= float(student.balance) - amount
+    #     student.save()
+
+    wallet = Wallet.objects.get(username=username)
+    wallet.balance = float(wallet.balance)-amount
+    wallet.save()
     admin = AdminWallet.objects.get(username = "admin")
     admin.amount = float(admin.amount) + amount
     admin.save()
 
 # Refund money back to student
 def refundFromAdmin(username, amount):
-    student = Student.objects.get(username = username)
-    if student.isTutor:
-        tutor = Tutor.objects.get(username=username)
-        tutor.balance = float(tutor.balance) + float(amount)
-        tutor.save()
-    else:
-        student.balance= float(student.balance) + float(amount)
-        student.save()
+    # student = Student.objects.get(username = username)
+    # if student.isTutor:
+    #     tutor = Tutor.objects.get(username=username)
+    #     tutor.balance = float(tutor.balance) + float(amount)
+    #     tutor.save()
+    # else:
+    #     student.balance= float(student.balance) + float(amount)
+    #     student.save()
+    wallet = Wallet.objects.get(username=username)
+    wallet.balance = float(wallet.balance) + float(amount)
+    wallet.save()
     admin = AdminWallet.objects.get(username = "admin")
     admin.amount = float(admin.amount) - float(amount)
     admin.save()
@@ -239,14 +249,20 @@ def set_profile(request):
             isStudent = True
         if 'tutor' in temp:
             isTutor = True
+        # Create wallet object
+        wallet = Wallet(
+        username = request.user.username,
+        balance = request.POST['balance'],
+        )
+        wallet.save()
         if temp[0] == 'tutor':
             tutor = Tutor(
-                name = request.user.first_name + request.user.last_name,
+                first_name = request.user.first_name,
+                last_name = request.user.last_name,
                 username = request.user.username,
                 biography = request.POST['biography'],
                 university = request.POST['university'],
                 tutortype = temp[1],
-                balance = request.POST['balance'],
                 isStudent = isStudent,
                 rate = request.POST['rate'],
             )
@@ -255,7 +271,6 @@ def set_profile(request):
             student = Student(
                 name = request.user.first_name + request.user.last_name,
                 username = request.user.username,
-                balance = request.POST['balance'],
                 isTutor = isTutor
             )
             student.save()
@@ -390,7 +405,7 @@ def book(request, tutor_id, date_time):
             #  Deduct from wallet
 
             costOfBooking = (float(tutor.rate) + float(tutor.rate)*0.05) if tutor.tutortype == 'private' else 0
-            if costOfBooking > student.balance :
+            if costOfBooking > get_balance(student.username) :
                 return render(request, 'tutoria/add_funds.html', {'error' : 'Insufficient Funds !!.'})
             else:
                 session = Session(
@@ -403,7 +418,9 @@ def book(request, tutor_id, date_time):
                 status = 'BOOKED'
                 )
                 session.save()
+                # Calculate commission
                 commission= float(tutor.rate)*0.05
+                # create transaction object
                 transaction = Transaction(
                 tutor = tutor,
                 student = student,
@@ -488,14 +505,16 @@ def detail_cancel(request, date_time):
 def add_funds(request):
     if request.method == 'POST':
         amount = request.POST['amount']
-        student = Student.objects.get(username = request.user.username)
-        if student.isTutor:
-            tutor = Tutor.objects.get(username=request.user.username)
-            tutor.balance = float(tutor.balance) + float(amount)
-            tutor.save()
-        else:
-            student.balance= float(student.balance) + float(amount)
-            student.save()
+        # student = Student.objects.get(username = request.user.username)
+        # if student.isTutor:
+        #     tutor = Tutor.objects.get(username=request.user.username)
+        #     tutor.balance = float(tutor.balance) + float(amount)
+        #     tutor.save()
+        # else:
+        #     student.balance= float(student.balance) + float(amount)
+        #     student.save()
+        wallet = Wallet.objects.get(username=username)
+        wallet.balance = float(wallet.balance)+float(amount)
         return redirect('/tutoria/dashboard')
     else:
         return render(request, 'tutoria/add_funds.html')
