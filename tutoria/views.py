@@ -266,11 +266,54 @@ def search(request):
     tutors = Tutor.objects.all()
     return render(request, 'tutoria/search.html', {'tutors': tutors})
 
-def tutor_name_search(request):
+def nameSearch(request):
     if request.method == 'POST':
-        field = request.POST['nameSearch']
-        tutors = Tutor.objects.filter(username__startswith=field)
-        return render(request, 'tutoria/search.html', {'tutors': tutors})
+        field_name = request.POST['nameSearch']
+        if field_name:
+            tutors = Tutor.objects.filter(Q(first_name__startswith=field_name) | Q(last_name__startswith=field_name))
+            return render(request, 'tutoria/search.html', {'tutors': tutors, 'nameSearch':1})
+
+
+        '''try:'''
+        field_uni = request.POST['uniSearch']
+        field_course = request.POST['courseSearch']
+        field_sub = request.POST['subSearch']
+        field_rateFrom = request.POST['rateFrom']
+        field_rateTo = request.POST['rateTo']
+        field_type = request.POST['typeSearch']
+        field_day = request.POST['daySearch']
+
+        #print(field_uni,field_course,field_sub,field_type)
+        try:
+            tutors = Tutor.objects.filter(university__startswith=field_uni,
+                                          tutortype__startswith=field_type,
+                                          course__startswith=field_course,
+                                          subject__startswith=field_sub,
+                                          rate__lt=field_rateTo,
+                                          rate__gt=field_rateFrom)
+        except:
+            tutors = Tutor.objects.filter(university__startswith=field_uni,
+                                          tutortype__startswith=field_type,
+                                          course__startswith=field_course,
+                                          subject__startswith=field_sub)
+
+        if field_day =="Seven":
+            t_remove=[]
+            for t in tutors:
+                num=len(Session.objects.filter(tutor=t))
+                if t.tutortype == "private" and num == 56:
+                    t_remove.append(t)
+                elif t.tutortype == "contracted" and num == 112:
+                    t_remove.append(t)
+
+            tutors=tutors.exclude(id__in=[o.id for o in t_remove])
+
+        return render(request, 'tutoria/search.html', {'tutors': tutors, 'nameSearch':1})
+
+        '''except Exception as e:
+            print(e)
+            tutors = Tutor.objects.all()
+            return render(request, 'tutoria/search.html', {'tutors': tutors})'''
 
 def view_tutor_profile(request, tutor_id):
     tutor = get_object_or_404(Tutor, pk=tutor_id)
@@ -494,4 +537,3 @@ def review(request,session_id):
 
     else:
         return render(request, 'tutoria/writeReview.html')
-

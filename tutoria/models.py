@@ -8,6 +8,7 @@ import time
 # from dateutil.parser import *
 from datetime import date, datetime
 
+
 class Tutor(models.Model):
     name = models.CharField(max_length=100, default="")
     username = models.CharField(max_length=100)
@@ -64,12 +65,6 @@ class AdminWallet(models.Model):
     def __self__ (self):
         return "Amount: " + self.amount
 
-import re
-import time
-# from dateutil.parser import *
-from datetime import date, datetime
-
-
 class Notification(models.Model):
 
     title = models.CharField(max_length=250)
@@ -90,9 +85,12 @@ class Review(models.Model):
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
     text = models.CharField(max_length=250)
     rating = models.IntegerField()
-        
 
 
 @receiver(post_save, sender=User)
 def send_notif(sender, **kwargs):
     print("New Notification")
+
+class Course(models.Model):
+    code = models.CharField(max_length=10, default="")
+    subject = models.CharField(max_length=100, default="")

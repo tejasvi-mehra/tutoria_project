@@ -17,7 +17,7 @@ urlpatterns = [
 
     url(r'^search/$', views.search, name='search'),
 
-    url(r'^nameSearch/$', views.tutor_name_search, name='tutor_name_search'),
+    url(r'^nameSearch/$', views.nameSearch, name='nameSearch'),
 
     url(r'^book/(?P<tutor_id>[0-9]+)/(?P<date_time>.*)/$', views.book, name='book'),
 
