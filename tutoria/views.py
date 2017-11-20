@@ -513,11 +513,34 @@ def add_funds(request):
         # else:
         #     student.balance= float(student.balance) + float(amount)
         #     student.save()
-        wallet = Wallet.objects.get(username=username)
+        wallet = Wallet.objects.get(username=request.user.username)
         wallet.balance = float(wallet.balance)+float(amount)
+        wallet.save()
         return redirect('/tutoria/dashboard')
     else:
         return render(request, 'tutoria/add_funds.html')
+
+# Withdraw funds for tutor
+def withdraw_funds(request):
+    if request.method == 'POST':
+        amount = request.POST['amount']
+        # student = Student.objects.get(username = request.user.username)
+        # if student.isTutor:
+        #     tutor = Tutor.objects.get(username=request.user.username)
+        #     tutor.balance = float(tutor.balance) + float(amount)
+        #     tutor.save()
+        # else:
+        #     student.balance= float(student.balance) + float(amount)
+        #     student.save()
+        wallet = Wallet.objects.get(username=request.user.username)
+        if float(amount) > float(wallet.balance) :
+            return render(request, 'tutoria/withdraw_funds.html', {error : "Insufficient funds !!!"})
+        else :
+            wallet.balance = float(wallet.balance)-float(amount)
+            wallet.save()
+        return redirect('/tutoria/dashboard')
+    else:
+        return render(request, 'tutoria/withdraw_funds.html')
 
 def notifications(request):
     if request.method=="GET":

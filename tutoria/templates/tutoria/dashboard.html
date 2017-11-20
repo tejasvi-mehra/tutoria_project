@@ -71,5 +71,11 @@ text-decoration: none;
 <button type="button" name="button">
 <a href="/tutoria/add_funds">Add money</a><br></button>
 
+{% if tutor %}
+<button type="button" name="button">
+<a href="/tutoria/withdraw_funds">Withdraw money</a><br></button>
+
+{% endif %}
+
 <br><br>
 <button type="button" name="button"><a href="/tutoria/logout"> Logout </a></button>

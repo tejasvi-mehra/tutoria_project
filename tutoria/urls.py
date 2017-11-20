@@ -9,7 +9,7 @@ urlpatterns = [
 
     url(r'^login/$', auth_views.login ,  name='login'),
 
-    url(r'^logout/$', auth_views.logout ,  name='login'),
+    url(r'^logout/$', auth_views.logout ,  name='logout'),
 
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
 
@@ -36,6 +36,8 @@ urlpatterns = [
     url(r'^tutor_lock_session/(?P<date_time>.*)/$', views.tutor_lock_session, name='tutor_lock_session'),
 
     url(r'^add_funds/$', views.add_funds, name='add_funds'),
+
+    url(r'^withdraw_funds/$', views.withdraw_funds, name='withdraw_funds'),
 
     url(r'^notifications/',views.notifications,name='notifications'),
 
