@@ -10,7 +10,8 @@ from datetime import date, datetime
 
 
 class Tutor(models.Model):
-    name = models.CharField(max_length=100, default="")
+    first_name = models.CharField(max_length=100, default="")
+    last_name = models.CharField(max_length=100, default="")
     username = models.CharField(max_length=100)
     biography = models.CharField(max_length=10000)
     university = models.CharField(max_length=100)
@@ -18,6 +19,8 @@ class Tutor(models.Model):
     balance = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     isStudent = models.BooleanField(default=False)
     rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    course = models.CharField(max_length=10, default="")
+    subject = models.CharField(max_length=100, default="")
 
     def __str__(self):
         return self.username

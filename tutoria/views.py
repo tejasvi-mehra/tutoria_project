@@ -267,7 +267,10 @@ def search(request):
     return render(request, 'tutoria/search.html', {'tutors': tutors})
 
 def nameSearch(request):
-    if request.method == 'POST':
+    if request.method =='GET':
+        tutors = Tutor.objects.all()
+        return render(request, 'tutoria/search.html', {'tutors': tutors})
+    else:
         field_name = request.POST['nameSearch']
         if field_name:
             tutors = Tutor.objects.filter(Q(first_name__startswith=field_name) | Q(last_name__startswith=field_name))

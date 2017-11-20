@@ -30,7 +30,7 @@
   <body>
     <form class="well form-horizontal" action="" method="post" onsubmit="return validateMyForm();">
       {% csrf_token %}
-      <h3>Regsiter as Tutor:</h3>
+      <h3>Register as Tutor:</h3>
       <h4>Yes <input type="checkbox" name="checks" value="tutor" id="isTutor">
         <br>
         <div id="tutorOption" style="display:none">
@@ -38,10 +38,10 @@
           Contracted <input type="checkbox" id="contracted" class="tutorClass" value="contracted" name="checks"><br>
           University <input type="text" name="university" value=""><br>
           Biography <input type="text" name="biography" value="">
-          Rate <input type="number" name="rate" value="">
+          <div id="tutorRate" style="display:none">Rate <input type="number" name="rate" value=""></div>
         </div>
       </h4>
-      <h3>Regsiter as Student:</h3>
+      <h3>Register as Student:</h3>
       <h4>Yes <input type="checkbox" name="checks" value="student" id="isStudent"><br><br></h4>
 
       <h3>Wallet Settings</h3>
@@ -65,6 +65,20 @@
       $('#tutorOption').fadeIn('slow');
     }else{
       $('#tutorOption').fadeOut('slow');
+    }
+  })
+
+  $('#private').change(function(){
+    if(this.checked){
+      $('#tutorRate').fadeIn('slow');
+    }else{
+      $('#tutorRate').fadeOut('slow');
+    }
+  })
+
+  $('#contracted').change(function(){
+    if(this.checked){
+      $('#tutorRate').fadeOut('slow');
     }
   })
 
