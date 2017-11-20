@@ -65,8 +65,11 @@ text-decoration: none;
 </ul>
 {% endfor %}
 <br>
+
+{% if student %}
 <button type="button" name="button">
 <a href="/tutoria/search">Search for Tutors</a><br></button>
+{% endif %}
 
 <button type="button" name="button">
 <a href="/tutoria/add_funds">Add money</a><br></button>

@@ -1,14 +1,125 @@
-{% if error %}
+<!-- {% if error %}
 {{error}} <br>
 <a href="/tutoria/dashboard"> Dashboard </a>
 {% endif %}
 <h1>Book Session</h1>
 <br>
-<h3>Name: {{tutor.name}}</h3>
+<h3>Name: {{tutor.username}}</h3>
 <br>
 <h4>Date: {{date}}</h4>
 <br>
+<h4>Rate: {{tutor.rate}}</h4>
+<br>
+<h4>Add coupon code: </h4>
+<input type="text" name="" value="">
+<br><br>
 <form action = "/tutoria/book/{{tutor.id}}/{{date}}/" method = "post">
         {% csrf_token %}
         <input type="submit" name="book" value="Book" />
 </form>
+
+
+<div class="w3-container">
+  <h2>W3.CSS Modal</h2>
+  <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-black">Open Modal</button>
+
+  <div id="id01" class="w3-modal">
+    <div class="w3-modal-content">
+      <div class="w3-container">
+        <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+        <p>Some text. Some text. Some text.</p>
+        <p>Some text. Some text. Some text.</p>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!DOCTYPE html>
+<html>
+<title>W3.CSS</title>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+  {% if error %}
+  {{error}} <br>
+  <a href="/tutoria/dashboard"> Dashboard </a>
+  {% endif %}
+  <h1>Book Session</h1>
+  <br>
+  <h3>Name: {{tutor.username}}</h3>
+  <br>
+  <h4>Date: {{date}}</h4>
+  <br>
+  <h4>Rate: {{tutor.rate}}</h4>
+  <br>
+  <h4 >Amount to be payed: <span id="due">{{tutor.rate}}</span></h4>
+  <br>
+  <h4>Add coupon code: </h4>
+  <input type="text" id="code" value="">
+  <button type="" id="test">Apply</button>
+  <div class="invalid">
+
+  </div>
+  <br><br>
+  <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-black">Book</button>
+
+  <!-- <form action = "/tutoria/book/{{tutor.id}}/{{date}}/" method = "post">
+          {% csrf_token %}
+          <input type="submit" name="book" value="Book" />
+  </form> -->
+  <!-- <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-black">Open Modal</button> -->
+
+  <div id="id01" class="w3-modal">
+    <div class="w3-modal-content">
+      <div class="w3-container">
+        <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+        <p>Name: {{tutor.username}}</p>
+        <p>Date: {{date}}</p>
+        <p>Due: <span id="due1">{{tutor.rate}}</span></p>
+        <form action = "/tutoria/book/{{tutor.id}}/{{date}}/" method = "post">
+                {% csrf_token %}
+                <input type="text" name="final" id="final" value="" hidden>
+                <input type="submit" name="book" value="Book" />
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
+
+<script type="text/javascript">
+  // console.log({{coupon}})
+  var code = "";
+  $('#code').on('change', function(e){
+    code = $(this).val();
+    console.log(code);
+  })
+  $('#test').on('click', function(e){
+    $.ajax({
+      url : '/tutoria/coupon/' + code,
+      success : function(data){
+        console.log(data);
+        if (data["success"] === true){
+          var discount = parseInt(data["discount"]);
+          console.log("discount", discount);
+          var old =  $('#due').text() ;
+          console.log("old", old);
+          var yo = old - (discount/100)*old;
+          $('#due').text(yo);
+          $('#due1').text(yo);
+          $('#final').val(yo);
+          console.log(yo);
+          $(".invalid").empty();
+        }
+        else{
+          $(".invalid").append("<h3>fuck off</h3>")
+        }
+      }
+    })
+  })
+
+</script>

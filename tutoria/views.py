@@ -2,13 +2,13 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm
-from .models import Tutor, Student, Session, Transaction, AdminWallet, Notification, Review, Wallet
+from .models import Tutor, Student, Session, Transaction, AdminWallet, Notification, Review, Wallet, Coupon
 from django.db.models import Q
 import datetime
 from dateutil import parser
 from datetime import date
 import time as ttime
-
+from django.http import JsonResponse
 """ functions to be imported """
 
 # filter the sessions array based on number of days
@@ -28,11 +28,7 @@ def get_tutor_sessions(username):
     booked = []
     try:
         tutor = Tutor.objects.get(username=username)
-        try:
-            booked = tutor.session_set.all()
-            print("booked", booked)
-        except:
-            booked = []
+        booked = tutor.session_set.all()
     except:
         booked = []
     return booked
@@ -134,7 +130,7 @@ def sendFundsToAdmin(username, amount):
     wallet = Wallet.objects.get(username=username)
     wallet.balance = float(wallet.balance)-amount
     wallet.save()
-    admin = AdminWallet.objects.get(username = "admin")
+    admin = AdminWallet.objects.get(username = "administrator")
     admin.amount = float(admin.amount) + amount
     admin.save()
 
@@ -151,7 +147,7 @@ def refundFromAdmin(username, amount):
     wallet = Wallet.objects.get(username=username)
     wallet.balance = float(wallet.balance) + float(amount)
     wallet.save()
-    admin = AdminWallet.objects.get(username = "admin")
+    admin = AdminWallet.objects.get(username = "administrator")
     admin.amount = float(admin.amount) - float(amount)
     admin.save()
 
@@ -174,6 +170,16 @@ def get_transactions_outgoing(username):
 
 # Get incoming transactios for past 30 days
 """ functions to be imported """
+def mytutors_withdraw(request):
+    wallet = AdminWallet.objects.all()[0]
+    if request.method == 'POST':
+        print("here")
+        to_deduct = int(request.POST["withdraw"])
+        wallet = AdminWallet.objects.all()[0]
+        wallet.amount = wallet.amount - to_deduct;
+        wallet.save();
+    return render(request, 'tutoria/mytutors.html',{'wallet':wallet})
+
 def get_transactions_incoming(username):
     booked = []
     try:
@@ -194,6 +200,13 @@ def home(request):
     return render(request, 'tutoria/home.html')
 
 def dashboard(request):
+    if request.user.username ==  "administrator":
+        return render(request, 'tutoria/admin.html')
+
+    if request.user.username ==  "mytutors":
+        wallet = AdminWallet.objects.all()[0]
+        return render(request, 'tutoria/mytutors.html',{'wallet':wallet})
+
     username = request.user.username
     tutor_sessions, student_sessions = get_sessions(username)
     student, tutor = check_person(username)
@@ -376,8 +389,6 @@ def view_tutor_timetable(request, tutor_id):
     }
     return render(request, 'tutoria/viewTimetable.html', context)
 
-# one more condition to be checked....
-# dont allow student to book two sessions with same tutor on same day.
 def check_conflict(tutor, student, date_time):
     # print(date_time, datetime.datetime.today(), datetime.timedelta(hours=24))
     tdy = datetime.datetime.today() + datetime.timedelta(hours=8)
@@ -392,42 +403,49 @@ def check_conflict(tutor, student, date_time):
     for item in sessions:
         if item.start_time <= date_time and date_time < item.end_time:
             return False
+    for item in student_sessions:
+        if item.tutor == tutor:
+            comp = item.start_time
+            if comp.day == date_time.day and comp.month == date_time.month and comp.year == date_time.year:
+             return False
+
     return True
 
 def book(request, tutor_id, date_time):
     tutor = get_object_or_404(Tutor, id=tutor_id)
     start_time = parser.parse(date_time)
     if request.method == 'POST':
+        due = float(request.POST['final'])
         student = get_object_or_404(Student, username=request.user.username)
         if check_conflict(tutor, student, start_time):
             duration = 60 if tutor.tutortype == 'private' else 30
             td = datetime.timedelta(minutes=60) if tutor.tutortype == 'private' else datetime.timedelta(minutes=30)
             #  Deduct from wallet
 
-            costOfBooking = (float(tutor.rate) + float(tutor.rate)*0.05) if tutor.tutortype == 'private' else 0
+            costOfBooking = (due + due*0.05) if tutor.tutortype == 'private' else 0
             if costOfBooking > get_balance(student.username) :
                 return render(request, 'tutoria/add_funds.html', {'error' : 'Insufficient Funds !!.'})
             else:
                 session = Session(
-                tutor = tutor,
-                student = student,
-                start_time = start_time,
-                end_time = start_time + td,
-                duration = duration,
-                amount = tutor.rate,
-                status = 'BOOKED'
+                    tutor = tutor,
+                    student = student,
+                    start_time = start_time,
+                    end_time = start_time + td,
+                    duration = duration,
+                    amount = due,
+                    status = 'BOOKED'
                 )
                 session.save()
                 # Calculate commission
                 commission= float(tutor.rate)*0.05
                 # create transaction object
                 transaction = Transaction(
-                tutor = tutor,
-                student = student,
-                start_time = start_time,
-                end_time = start_time + td,
-                amount = float(tutor.rate),
-                commission = commission
+                    tutor = tutor,
+                    student = student,
+                    start_time = start_time,
+                    end_time = start_time + td,
+                    amount = due,
+                    commission = commission
                 )
                 transaction.save()
 
@@ -438,15 +456,15 @@ def book(request, tutor_id, date_time):
                 str_time="{}:{}".format(today.hour,today.minute)
                 now=int(ttime.time())
                 notif=Notification(
-                title=title,
-                tutor=session.tutor,
-                student=session.student,
-                now=now,
-                date=str_date,
-                time=str_time,
-                start_time = start_time,
-                end_time = start_time + td,
-                forSession = True,
+                    title=title,
+                    tutor=session.tutor,
+                    student=session.student,
+                    now=now,
+                    date=str_date,
+                    time=str_time,
+                    start_time = start_time,
+                    end_time = start_time + td,
+                    forSession = True,
 
                 )
                 print(notif.title)
@@ -459,7 +477,8 @@ def book(request, tutor_id, date_time):
     else:
         context = {
             'date': date_time,
-            'tutor': tutor
+            'tutor': tutor,
+            'coupon' : ["1", "2"]
         }
         return render(request, 'tutoria/bookSession.html', context)
 
@@ -582,3 +601,12 @@ def review(request,session_id):
 
     else:
         return render(request, 'tutoria/writeReview.html')
+
+
+def coupon(request, code):
+    print(code)
+    try:
+        coupon = Coupon.objects.get(code=code)
+        return JsonResponse({"success" : True, "discount" : coupon.discount})
+    except:
+        return JsonResponse({"success" : False})

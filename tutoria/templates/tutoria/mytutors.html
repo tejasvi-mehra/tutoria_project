@@ -1,0 +1,8 @@
+
+current fund - {{wallet.amount}}
+
+<form onSubmit="return confirm('Are you sure you wish to withdraw?');" action="/tutoria/mytutors/withdraw/" method="post">
+  {% csrf_token %}
+  withdraw_funds <input type="text" name="withdraw" value="">
+  <button type="submit" name="button">Submit</button>
+</form>

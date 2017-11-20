@@ -9,7 +9,7 @@ urlpatterns = [
 
     url(r'^login/$', auth_views.login ,  name='login'),
 
-    url(r'^logout/$', auth_views.logout ,  name='logout'),
+    url(r'^logout/$', auth_views.logout ,  {'next_page' : 'login'}, name='logout'),
 
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
 
@@ -41,7 +41,9 @@ urlpatterns = [
 
     url(r'^notifications/',views.notifications,name='notifications'),
 
-    url(r'^writeReview/(?P<session_id>.*)/$',views.review,name='review')
+    url(r'^writeReview/(?P<session_id>.*)/$',views.review,name='review'),
 
+    url(r'^coupon/(?P<code>.*)/$',views.coupon, name='coupon'),
 
+    url(r'^mytutors/withdraw/$', views.mytutors_withdraw , name='mytutors_withdraw'),
 ]

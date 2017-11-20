@@ -61,7 +61,7 @@ class Session(models.Model):
             return "blocked by " + self.tutor.username
 
 class AdminWallet(models.Model):
-    username = models.CharField(max_length=100, default="admin")
+    username = models.CharField(max_length=100, default="administrator")
     amount = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     def __self__ (self):
         return "Amount: " + self.amount
@@ -86,6 +86,10 @@ class Review(models.Model):
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
     text = models.CharField(max_length=250)
     rating = models.IntegerField()
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=10, default="")
+    discount = models.IntegerField()
 
 
 @receiver(post_save, sender=User)
