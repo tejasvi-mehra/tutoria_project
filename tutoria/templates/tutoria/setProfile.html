@@ -28,7 +28,7 @@
   }
   </style>
   <body>
-    <form class="well form-horizontal" action="" method="post" onsubmit="return validateMyForm();">
+    <form class="well form-horizontal" action="" method="post" onsubmit="return validateMyForm();" enctype="multipart/form-data">
       {% csrf_token %}
       <h3>Register as Tutor:</h3>
       <h4>Yes <input type="checkbox" name="checks" value="tutor" id="isTutor">
@@ -37,15 +37,23 @@
           <h4>Private <input type="checkbox" id="private" class="tutorClass" value="private" name="checks">
           Contracted <input type="checkbox" id="contracted" class="tutorClass" value="contracted" name="checks"><br>
           University <input type="text" name="university" value=""><br>
-          Biography <input type="text" name="biography" value="">
+          Biography <input type="text" name="biography" value=""><br>
+          Upload Profile Photo <input type="file" name="myfile" value="hi">
           <div id="tutorRate" style="display:none">Rate <input type="number" name="rate" value=""></div>
         </div>
       </h4>
       <h3>Register as Student:</h3>
       <h4>Yes <input type="checkbox" name="checks" value="student" id="isStudent"><br><br></h4>
 
+      <!-- <-h3>Phone Number</h3> -->
+        <h4>Phone Number: <input type="tel" name="tel"><br><br></h4>
+
       <h3>Wallet Settings</h3>
-        <h4>Add to Wallet: $$ <input type="number" name="balance" value=""><br><br></h4>
+        <h4>Add to Wallet: $$ <input type="number" name="balance" min="0" max="1000" placeholder="" step="10"><br><br></h4>
+
+      <!-- <h3>Upload File</h3> -->
+
+
 
       <button type="submit" name="button">Submit</button>
     </form>

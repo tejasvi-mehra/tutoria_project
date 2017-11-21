@@ -18,10 +18,8 @@
 
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
-from .models import AdminWallet, Course
+from .models import AdminWallet, Course, Tutor, Student, Transaction, Session
 from django.contrib.admin import AdminSite
-#Tutor, Student, Transaction, Session,
-
 
 
 
@@ -57,10 +55,10 @@ admin.site = MyAdminSite(name='myadmin')
 admin.site.register(AdminWallet)
 admin.site.register(Course,CourseAdmin)
 # Register your models here.
-#admin.site.register(Tutor)
-#admin.site.register(Student)
-#admin.site.register(Transaction)
-#admin.site.register(Session)
+admin.site.register(Tutor)
+admin.site.register(Student)
+admin.site.register(Transaction)
+admin.site.register(Session)
 
 '''
 class PostAdmin(admin.ModelAdmin):

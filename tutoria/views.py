@@ -8,6 +8,9 @@ import datetime
 from dateutil import parser
 from datetime import date
 import time as ttime
+from django.core.files.storage import FileSystemStorage, Storage
+from decimal import Decimal
+
 
 """ functions to be imported """
 
@@ -240,23 +243,39 @@ def set_profile(request):
         if 'tutor' in temp:
             isTutor = True
         if temp[0] == 'tutor':
-            tutor = Tutor(
-                name = request.user.first_name + request.user.last_name,
-                username = request.user.username,
-                biography = request.POST['biography'],
-                university = request.POST['university'],
-                tutortype = temp[1],
-                balance = request.POST['balance'],
-                isStudent = isStudent,
-                rate = request.POST['rate'],
-            )
-            tutor.save()
+            avatar=""
+            rate=0
+            try:
+                myfile = request.FILES['myfile']
+                fs = FileSystemStorage()
+                avatar = fs.save(str(myfile),myfile)
+                rate = int(request.POST['rate'])
+            except:
+                print('')
+            finally:
+                #uploaded_file_url = fs.url(filename)
+                tutor = Tutor(
+                    first_name = request.user.first_name,
+                    last_name =  request.user.last_name,
+                    username = request.user.username,
+                    biography = request.POST['biography'],
+                    university = request.POST['university'],
+                    tutortype = temp[1],
+                    avatar = avatar,
+                    isHidden = False,
+                    balance = float(request.POST['balance']),
+                    isStudent = isStudent,
+                    rate = rate,
+                    phoneNumber = request.POST['tel']
+                )
+                tutor.save()
         if 'student' in temp:
             student = Student(
                 name = request.user.first_name + request.user.last_name,
                 username = request.user.username,
                 balance = request.POST['balance'],
-                isTutor = isTutor
+                isTutor = isTutor,
+                phoneNumber = request.POST['tel']
             )
             student.save()
         return redirect('/tutoria/dashboard')

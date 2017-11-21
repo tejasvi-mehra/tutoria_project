@@ -106,7 +106,7 @@
           {% for tutor in tutors %}
 
             <li data-position="{{tutor.rate}}">
-                  <p><a href="/tutoria/viewProfile/{{tutor.id}}">{{tutor.username}}</a></p>
+                  <p><a href="/tutoria/viewProfile/{{tutor.id}}">{{tutor.first_name}}</a></p>
                   <p>{% if tutor.tutortype == "private" %}Rate: {{tutor.rate}} HKD {% else %} {{tutor.tutortype}} {% endif %} </p>
                   <p>{{tutor.biography}}</p>
                   <br>
