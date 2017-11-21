@@ -122,5 +122,6 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
+LOGIN_URL = '/tutoria/login'
 
 LOGIN_REDIRECT_URL = '/tutoria/dashboard'
