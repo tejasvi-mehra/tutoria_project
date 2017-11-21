@@ -1,8 +1,9 @@
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm
-from .models import Tutor, Student, Session, Transaction, AdminWallet, Notification, Review
+from .models import Tutor, Student, Session, Transaction, AdminWallet, Notification, Review, Wallet
 from django.db.models import Q
 import datetime
 from dateutil import parser
@@ -109,41 +110,51 @@ def check_person(username):
 
 # return the balance of student or tutor
 def get_balance(username):
-    try:
-        student = Student.objects.get(username=username)
-        if student.isTutor:
-            tutor = Tutor.objects.get(username=username)
-            return tutor.balance
-        else:
-            return student.balance
-    except:
-        tutor = Tutor.objects.get(username=username)
-        return tutor.balance
+    # try:
+    #     student = Student.objects.get(username=username)
+    #     if student.isTutor:
+    #         tutor = Tutor.objects.get(username=username)
+    #         return tutor.balance
+    #     else:
+    #         return student.balance
+    # except:
+    #     tutor = Tutor.objects.get(username=username)
+    #     return tutor.balance
+
+    wallet = Wallet.objects.get(username=username)
+    return wallet.balance;
 
 # Transfer money from student to admin on every booking
 def sendFundsToAdmin(username, amount):
-    student = Student.objects.get(username = username)
-    if student.isTutor:
-        tutor = Tutor.objects.get(username=username)
-        tutor.balance= float(tutor.balance) - amount
-        tutor.save()
-    else:
-        student.balance= float(student.balance) - amount
-        student.save()
+    # student = Student.objects.get(username = username)
+    # if student.isTutor:
+    #     tutor = Tutor.objects.get(username=username)
+    #     tutor.balance= float(tutor.balance) - amount
+    #     tutor.save()
+    # else:
+    #     student.balance= float(student.balance) - amount
+    #     student.save()
+
+    wallet = Wallet.objects.get(username=username)
+    wallet.balance = float(wallet.balance)-amount
+    wallet.save()
     admin = AdminWallet.objects.get(username = "admin")
     admin.amount = float(admin.amount) + amount
     admin.save()
 
 # Refund money back to student
 def refundFromAdmin(username, amount):
-    student = Student.objects.get(username = username)
-    if student.isTutor:
-        tutor = Tutor.objects.get(username=username)
-        tutor.balance = float(tutor.balance) + float(amount)
-        tutor.save()
-    else:
-        student.balance= float(student.balance) + float(amount)
-        student.save()
+    # student = Student.objects.get(username = username)
+    # if student.isTutor:
+    #     tutor = Tutor.objects.get(username=username)
+    #     tutor.balance = float(tutor.balance) + float(amount)
+    #     tutor.save()
+    # else:
+    #     student.balance= float(student.balance) + float(amount)
+    #     student.save()
+    wallet = Wallet.objects.get(username=username)
+    wallet.balance = float(wallet.balance) + float(amount)
+    wallet.save()
     admin = AdminWallet.objects.get(username = "admin")
     admin.amount = float(admin.amount) - float(amount)
     admin.save()
@@ -184,8 +195,9 @@ def get_transactions_incoming(username):
     return booked
 
 def home(request):
-    return render(request, 'tutoria/home.html')
+    return render(request, 'tutoria/index.html')
 
+@login_required()
 def dashboard(request):
     username = request.user.username
     tutor_sessions, student_sessions = get_sessions(username)
@@ -205,6 +217,7 @@ def dashboard(request):
     }
     return render(request, 'tutoria/dashboard.html', context)
 
+@login_required()
 def manage_student_time_table(request):
     username = request.user.username
     all_sessions = get_student_sessions(username)
@@ -213,6 +226,7 @@ def manage_student_time_table(request):
     result = manage_sessions(all_sessions, week)
     return render(request, 'tutoria/mstt.html', {'sessions' : result})
 
+@login_required()
 def manage_tutor_time_table(request):
     username = request.user.username
     all_sessions = get_tutor_sessions(username)
@@ -233,6 +247,7 @@ def register(request):
         form = RegisterForm()
     return render(request, 'tutoria/register.html', {'form' : form})
 
+@login_required(redirect_field_name='/tutoria/dashboard')
 def set_profile(request):
     if request.method == 'POST':
         temp = request.POST.getlist('checks')
@@ -242,6 +257,12 @@ def set_profile(request):
             isStudent = True
         if 'tutor' in temp:
             isTutor = True
+        # Create wallet object
+        wallet = Wallet(
+        username = request.user.username,
+        balance = request.POST['balance'],
+        )
+        wallet.save()
         if temp[0] == 'tutor':
             avatar=""
             rate=0
@@ -263,7 +284,6 @@ def set_profile(request):
                     tutortype = temp[1],
                     avatar = avatar,
                     isHidden = False,
-                    balance = float(request.POST['balance']),
                     isStudent = isStudent,
                     rate = rate,
                     phoneNumber = request.POST['tel']
@@ -273,7 +293,6 @@ def set_profile(request):
             student = Student(
                 name = request.user.first_name + request.user.last_name,
                 username = request.user.username,
-                balance = request.POST['balance'],
                 isTutor = isTutor,
                 phoneNumber = request.POST['tel']
             )
@@ -281,10 +300,12 @@ def set_profile(request):
         return redirect('/tutoria/dashboard')
     return render(request, 'tutoria/setProfile.html')
 
+@login_required()
 def search(request):
     tutors = Tutor.objects.all()
     return render(request, 'tutoria/search.html', {'tutors': tutors})
 
+@login_required()
 def nameSearch(request):
     if request.method =='GET':
         tutors = Tutor.objects.all()
@@ -337,11 +358,13 @@ def nameSearch(request):
             tutors = Tutor.objects.all()
             return render(request, 'tutoria/search.html', {'tutors': tutors})'''
 
+@login_required(redirect_field_name='/tutoria/dashboard')
 def view_tutor_profile(request, tutor_id):
     tutor = get_object_or_404(Tutor, pk=tutor_id)
     reviews=Review.objects.filter(tutor=tutor)
     return render(request, 'tutoria/viewProfile.html', {'tutor':tutor, 'reviews':reviews[::-1]})
 
+@login_required(redirect_field_name='/tutoria/dashboard')
 def tutor_lock_session(request, date_time):
     tolock = parser.parse(date_time)
     tutor = Tutor.objects.get(username=request.user.username)
@@ -367,6 +390,7 @@ def tutor_lock_session(request, date_time):
     else:
         return render(request, 'tutoria/mttt.html', {'error' : 'cant lock already been booked'})
 
+@login_required(redirect_field_name='/tutoria/dashboard')
 def view_tutor_timetable(request, tutor_id):
     tutor = get_object_or_404(Tutor, pk=tutor_id)
     sessions = filter_sessions(get_tutor_sessions(tutor.username), 7)
@@ -398,6 +422,7 @@ def check_conflict(tutor, student, date_time):
             return False
     return True
 
+@login_required(redirect_field_name='/tutoria/dashboard')
 def book(request, tutor_id, date_time):
     tutor = get_object_or_404(Tutor, id=tutor_id)
     start_time = parser.parse(date_time)
@@ -409,7 +434,7 @@ def book(request, tutor_id, date_time):
             #  Deduct from wallet
 
             costOfBooking = (float(tutor.rate) + float(tutor.rate)*0.05) if tutor.tutortype == 'private' else 0
-            if costOfBooking > student.balance :
+            if costOfBooking > get_balance(student.username) :
                 return render(request, 'tutoria/add_funds.html', {'error' : 'Insufficient Funds !!.'})
             else:
                 session = Session(
@@ -422,7 +447,9 @@ def book(request, tutor_id, date_time):
                 status = 'BOOKED'
                 )
                 session.save()
+                # Calculate commission
                 commission= float(tutor.rate)*0.05
+                # create transaction object
                 transaction = Transaction(
                 tutor = tutor,
                 student = student,
@@ -465,6 +492,7 @@ def book(request, tutor_id, date_time):
         }
         return render(request, 'tutoria/bookSession.html', context)
 
+@login_required(redirect_field_name='/tutoria/dashboard')
 def detail_cancel(request, date_time):
     tocancel = parser.parse(date_time)
     student = Student.objects.get(username = request.user.username)
@@ -504,21 +532,49 @@ def detail_cancel(request, date_time):
         }
         return render(request, 'tutoria/session_detail.html', context)
 
+@login_required()
 def add_funds(request):
     if request.method == 'POST':
         amount = request.POST['amount']
-        student = Student.objects.get(username = request.user.username)
-        if student.isTutor:
-            tutor = Tutor.objects.get(username=request.user.username)
-            tutor.balance = float(tutor.balance) + float(amount)
-            tutor.save()
-        else:
-            student.balance= float(student.balance) + float(amount)
-            student.save()
+        # student = Student.objects.get(username = request.user.username)
+        # if student.isTutor:
+        #     tutor = Tutor.objects.get(username=request.user.username)
+        #     tutor.balance = float(tutor.balance) + float(amount)
+        #     tutor.save()
+        # else:
+        #     student.balance= float(student.balance) + float(amount)
+        #     student.save()
+        wallet = Wallet.objects.get(username=request.user.username)
+        wallet.balance = float(wallet.balance)+float(amount)
+        wallet.save()
         return redirect('/tutoria/dashboard')
     else:
         return render(request, 'tutoria/add_funds.html')
 
+# Withdraw funds for tutor
+@login_required()
+def withdraw_funds(request):
+    if request.method == 'POST':
+        amount = request.POST['amount']
+        # student = Student.objects.get(username = request.user.username)
+        # if student.isTutor:
+        #     tutor = Tutor.objects.get(username=request.user.username)
+        #     tutor.balance = float(tutor.balance) + float(amount)
+        #     tutor.save()
+        # else:
+        #     student.balance= float(student.balance) + float(amount)
+        #     student.save()
+        wallet = Wallet.objects.get(username=request.user.username)
+        if float(amount) > float(wallet.balance) :
+            return render(request, 'tutoria/withdraw_funds.html', {error : "Insufficient funds !!!"})
+        else :
+            wallet.balance = float(wallet.balance)-float(amount)
+            wallet.save()
+        return redirect('/tutoria/dashboard')
+    else:
+        return render(request, 'tutoria/withdraw_funds.html')
+
+@login_required()
 def notifications(request):
     if request.method=="GET":
         s1=Student.objects.filter(username=request.user.username)
@@ -545,6 +601,7 @@ def notifications(request):
 
         return render(request,'tutoria/notifications.html/',{'notifs':notifs})
 
+@login_required(redirect_field_name='/tutoria/dashboard')
 def review(request,session_id):
     if request.method=="POST":
         session=get_object_or_404(Session,pk=session_id)

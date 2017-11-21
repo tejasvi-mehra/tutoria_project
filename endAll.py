@@ -1,23 +1,17 @@
-from tutoria.models import Tutor, Student, Session, Transaction, AdminWallet
+from tutoria.models import Tutor, Student, Session, Transaction, AdminWallet, Wallet, Notification
 import datetime
+import time as ttime
 
 def moneyTransfer(amount, username):
     admin = AdminWallet.objects.get(username = "admin")
     admin.amount = float(admin.amount) - float(amount)
     admin.save()
     tutor = Tutor.objects.get(username=username)
-    tutor.balance= float(tutor.balance) + float(amount)
-    tutor.save()
-    notif=Notification(
-                title="Click to write a review for your session with {}".format(session.tutor),
-                forSession=False,
-                student=student,
-                now=int(ttime.time()),
-                date="{}/{}/{}".format(today.day,today.month,today.year),
-                time="{}:{}".format(today.hour,today.minute)
-
-                )
-    notif.save()
+    # tutor.balance= float(tutor.balance) + float(amount)
+    # tutor.save()
+    wallet = Wallet.objects.get(username=username)
+    wallet.balance = float(wallet.balance) + float(amount)
+    wallet.save()
 
 def start():
     tdy = datetime.datetime.today()
@@ -26,6 +20,16 @@ def start():
          transaction.completed=True
          transaction.save()
          moneyTransfer(transaction.amount, transaction.tutor.username)
+         notif=Notification(
+                     title="Click to write a review for your session with {}".format(transaction.tutor),
+                     forSession=False,
+                     student=transaction.student,
+                     now=int(ttime.time()),
+                     date="{}/{}/{}".format(tdy.day,tdy.month,tdy.year),
+                     time="{}:{}".format(tdy.hour,tdy.minute)
+                     )
+         notif.save()
+
 
 def clear_history():
     thirty_days = datetime.datetime.today()-datetime.timedelta(days=30)

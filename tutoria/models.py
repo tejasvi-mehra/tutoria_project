@@ -16,7 +16,6 @@ class Tutor(models.Model):
     biography = models.CharField(max_length=10000)
     university = models.CharField(max_length=100)
     tutortype = models.CharField(max_length=10)
-    balance = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     isStudent = models.BooleanField(default=False)
     rate = models.IntegerField(default=0)
     course = models.CharField(max_length=10, default="")
@@ -31,7 +30,6 @@ class Tutor(models.Model):
 class Student(models.Model):
     name = models.CharField(max_length=100, default="")
     username = models.CharField(max_length=100)
-    balance = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     isTutor = models.BooleanField(default=False)
     phoneNumber = models.DecimalField(decimal_places=0, max_digits=10, default=99999999)
 
@@ -101,3 +99,9 @@ def send_notif(sender, **kwargs):
 class Course(models.Model):
     code = models.CharField(max_length=10, default="")
     subject = models.CharField(max_length=100, default="")
+
+class Wallet(models.Model):
+    username = models.CharField(max_length=100)
+    balance = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    def __str__(self):
+        return "Balance for " + self.username + " :" + str(self.balance)
