@@ -1,18 +1,69 @@
-<!--<style media="screen">
-a {color:#000000;}      /* unvisited link */
-a:visited {color:#000000;}  /* visited link */
-a:hover {color:#000000;}  /* mouse over link */
-a:active {color:#000000;}  /* selected link */
-a {
-text-decoration: none;
-}
-</style>-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
 
-<h3>Tutoria Dashboard</h3>
-<nav><a href="/tutoria/notifications">Notifications</a><br></nav>
+    <title>Tutoria</title>
+    {% load staticfiles %}
+
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'tutoria/style.css' %}"/> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet ">
+
+    <!-- Custom fonts for this template -->
+    <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet " type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+
+    <!-- Plugin CSS -->
+    <link href="{% static 'vendor/magnific-popup/magnific-popup.css' %}" rel="stylesheet ">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/creative.css' %}" rel="stylesheet">
+
+  </head>
+
+  <body id="page-top">
+{% load static %}
+    <nav class="navbar navbar-expand-lg navbar-shrink fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="/tutoria/dashboard">Tutoria</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto nav-link-container">
+            <li class="nav-item">
+
+              <a class="nav-link js-scroll-trigger" href="/tutoria/search"><img src="{% static "img/magnifying-glass.png" %}"></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="/tutoria/notifications"><img src="{% static "img/star.png" %}"></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#portfolio"><img src="{% static "img/envelope.png" %}"></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#contact"><img src="{% static "img/settings.png" %}"></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main role="main" class="container">
+      <div class="jumbotron main-container page-title">
+        <div>
+        <h1>Dashboard</h1></div>
+
 <h4>Hey {{name}}</h4>
-
-<h4>Booked</h4>
+<div class="content-container">
+<!-- <h4>Booked</h4> -->
 {% if tutor %}
 <h2>{{tutor.first_name}}</h2>
 <h5>As Tutor</h5><br>
@@ -26,13 +77,15 @@ text-decoration: none;
 
 {% endfor %}
 <br>
-<h5>Your balance: </h5>
-{{balance}}
-<a href="/tutoria/manage_timetable/tutor">Manage teacher timetable</a>
+<button class="btn btn-primary dash-button"><a href="/tutoria/manage_timetable/tutor">Manage teacher timetable</a></button>
+<h5>Your balance: {{balance}}</h5>
+
+</div>
 <br>
 <br>
 {% endif %}
 {% if student %}
+<div class="content-container">
 <h5>As Student</h5><br>
 {% for sesh in student_sessions %}
 <ul>
@@ -42,11 +95,13 @@ text-decoration: none;
 </ul>
 {% endfor %}
 <br>
-
+<button class="btn btn-primary dash-button"><a href="/tutoria/manage_timetable/student">Manage student timetable</a></button>
 <h5>Balance: {{balance}}</h5>
-<a href="/tutoria/manage_timetable/student">Manage student timetable</a>
+
+</div>
 <br><br>
 {% endif %}
+<div class="content-container">
 <h4>Transaction History</h4>
 <h5>Outgoing Transactions</h5>
 {% for transaction in transactions_outgoing %}
@@ -65,6 +120,7 @@ text-decoration: none;
   </li>
 </ul>
 {% endfor %}
+</div>
 <br>
 
 {% if student %}
@@ -84,3 +140,7 @@ text-decoration: none;
 
 <br><br>
 <button type="button" name="button"><a href="/tutoria/logout"> Logout </a></button>
+      </div>
+    </main>
+  </body>
+  </html>

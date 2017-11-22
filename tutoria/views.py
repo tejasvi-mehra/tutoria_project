@@ -370,6 +370,11 @@ def view_tutor_profile(request, tutor_id):
     tutor = get_object_or_404(Tutor, pk=tutor_id)
     reviews=Review.objects.filter(tutor=tutor)
     return render(request, 'tutoria/viewProfile.html', {'tutor':tutor, 'reviews':reviews[::-1]})
+    reviews=Review.objects.filter(tutor=tutor)
+    hasRating=False
+    if len(reviews)>3:
+        hasRating=True
+    return render(request, 'tutoria/viewProfile.html', {'tutor':tutor, 'reviews':reviews[::-1], 'hasRating':hasRating})
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def tutor_lock_session(request, date_time):
@@ -479,6 +484,7 @@ def book(request, tutor_id, date_time):
                 str_time="{}:{}".format(today.hour,today.minute)
                 now=int(ttime.time())
                 notif=Notification(
+<<<<<<< HEAD
                     title=title,
                     tutor=session.tutor,
                     student=session.student,
@@ -488,6 +494,18 @@ def book(request, tutor_id, date_time):
                     start_time = start_time,
                     end_time = start_time + td,
                     forSession = True,
+=======
+                title=title,
+                tutor=session.tutor,
+                student=session.student,
+                now=now,
+                date=str_date,
+                time=str_time,
+                start_time = start_time,
+                end_time = start_time + td,
+                forSession = True,
+                session=session
+>>>>>>> origin/2111
 
                 )
                 print(notif.title)
@@ -539,6 +557,7 @@ def detail_cancel(request, date_time):
         context = {
             'session_id':session.id,
             'tutor' : session.tutor,
+            'tutor_no':session.tutor.phoneNumber,
             'start' : session.start_time,
             'end' : session.end_time,
             'duration': session.duration
@@ -625,6 +644,17 @@ def review(request,session_id):
             rating=request.POST['rating']
             )
         rev.save()
+        tut=session.tutor
+        revs=Review.objects.filter(tutor=tut)
+
+        if len(revs)>3:
+            tot=0
+            for rev in revs:
+                tot=tot+rev.rating
+            avg=tot/len(revs)
+            tut.rating=avg
+            tut.hasRating=True
+            tut.save()
         return redirect('/tutoria/dashboard')
 
     else:
