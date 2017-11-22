@@ -41,7 +41,10 @@ urlpatterns = [
 
     url(r'^notifications/',views.notifications,name='notifications'),
 
-    url(r'^writeReview/(?P<session_id>.*)/$',views.review,name='review')
+    url(r'^writeReview/(?P<session_id>.*)/$',views.review,name='review'),
+
+    url(r'^edit_profile/$', views.edit_profile, name='edit_profile'),
+
 
 
 ]

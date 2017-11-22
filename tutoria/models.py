@@ -10,8 +10,8 @@ from datetime import date, datetime
 
 
 class Tutor(models.Model):
-    first_name = models.CharField(max_length=100, default="")
     last_name = models.CharField(max_length=100, default="")
+    first_name = models.CharField(max_length=100, default="")
     username = models.CharField(max_length=100)
     biography = models.CharField(max_length=10000)
     university = models.CharField(max_length=100)

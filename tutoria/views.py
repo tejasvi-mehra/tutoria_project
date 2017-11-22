@@ -10,7 +10,6 @@ from dateutil import parser
 from datetime import date
 import time as ttime
 from django.core.files.storage import FileSystemStorage, Storage
-from decimal import Decimal
 
 
 """ functions to be imported """
@@ -264,37 +263,22 @@ def set_profile(request):
         )
         wallet.save()
         if temp[0] == 'tutor':
-            avatar=""
-            rate=0
-            try:
-                myfile = request.FILES['myfile']
-                fs = FileSystemStorage()
-                avatar = fs.save(str(myfile),myfile)
-                rate = int(request.POST['rate'])
-            except:
-                print('')
-            finally:
-                #uploaded_file_url = fs.url(filename)
-                tutor = Tutor(
-                    first_name = request.user.first_name,
-                    last_name =  request.user.last_name,
-                    username = request.user.username,
-                    biography = request.POST['biography'],
-                    university = request.POST['university'],
-                    tutortype = temp[1],
-                    avatar = avatar,
-                    isHidden = False,
-                    isStudent = isStudent,
-                    rate = rate,
-                    phoneNumber = request.POST['tel']
-                )
-                tutor.save()
+            tutor = Tutor(
+                first_name = request.user.first_name,
+                last_name = request.user.last_name,
+                username = request.user.username,
+                biography = request.POST['biography'],
+                university = request.POST['university'],
+                tutortype = temp[1],
+                isStudent = isStudent,
+                rate = request.POST['rate'],
+            )
+            tutor.save()
         if 'student' in temp:
             student = Student(
                 name = request.user.first_name + request.user.last_name,
                 username = request.user.username,
-                isTutor = isTutor,
-                phoneNumber = request.POST['tel']
+                isTutor = isTutor
             )
             student.save()
         return redirect('/tutoria/dashboard')
@@ -616,3 +600,29 @@ def review(request,session_id):
 
     else:
         return render(request, 'tutoria/writeReview.html')
+
+@login_required()
+def edit_profile(request):
+    if request.method == 'POST':
+        tutor = Tutor.objects.get(username=request.user.username)
+        tutor.first_name = request.POST['first_name']
+        tutor = Tutor.objects.get(username=request.user.username)
+        tutor.last_name = request.POST['last_name']
+        tutor.biography = request.POST['biography']
+        tutor.university = request.POST['university']
+        tutor.rate = request.POST['rate']
+        isHidden = request.POST.get('isHidden', False)
+        tutor.isHidden = isHidden
+        tutor.phoneNumber = request.POST['tel']
+        print ("isHidden.................................................................." + str(isHidden))
+        # tutor.isHidden =
+        if len(request.FILES) != 0:
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage()
+            avatar = fs.save(str(myfile),myfile)
+            tutor.avatar = avatar
+        tutor.save()
+        return redirect('/tutoria/dashboard')
+    else:
+        tutor = Tutor.objects.get(username=request.user.username)
+        return render(request, 'tutoria/editProfile.html',{"tutor" : tutor})
