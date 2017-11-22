@@ -1,75 +1,87 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-    <title></title>
-  </head>
-  <body>
-    {% if error %}
-    {{error}} <br>
-    <a href="/tutoria/dashboard"> Dashboard </a>
-    {% endif %}
-    <h1>Your timetable</h1>
+{% extends 'tutoria/base.html' %}
+{% block body %}
+<style media="screen">
+  a:link{
+    /*color:blue;*/
+  }
+  td,th{
+    width:10%;
+  }
+  td{
+    background: white;
+  }
+  .main-container{
+    padding-bottom: 0.5rem;
+  }
+</style>
+<main role="main" class="container">
+  <div class="jumbotron main-container page-title">
+    <div>
+      <h1>Timetable</h1>
+    </div>
 
 
-<div class="table-responsive">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>
+    <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>
 
-          </th>
-          <th>
-            09:00
-          </th>
-          <th>
-            10:00
-          </th>
-          <th>
-            11:00
-          </th>
-          <th>
-            12:00
-          </th>
-          <th>
-            13:00
-          </th>
-          <th>
-            14:00
-          </th>
-          <th>
-            15:00
-          </th>
-          <th>
-            16:00
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          {% for sesh in sessions %}
-              {% if forloop.counter0|divisibleby:8  %}
-                </tr>
-              {% endif %}
-              {% if forloop.counter0|divisibleby:8 %}
-                <tr>
-                <th>{{sesh.time | date:'Y-m-d'}}</th>
-              {% endif %}
-              <td>
-                {% ifnotequal sesh.status 'vacant' %}
-                  <a href="/tutoria/session_tutor/{{sesh.time | date:'Y-m-d H:i'}}"> {{sesh.status}} </a>
-                {% else %}
-                 <a href="/tutoria/tutor_lock_session/{{sesh.time | date:'Y-m-d H:i'}}"> BLOCK </a>
-                {% endifnotequal %}
-              </td>
-          {% endfor %}
-        </tr>
-      </tbody>
-    </table>
+              </th>
+              <th>
+                09:00
+              </th>
+              <th>
+                10:00
+              </th>
+              <th>
+                11:00
+              </th>
+              <th>
+                12:00
+              </th>
+              <th>
+                13:00
+              </th>
+              <th>
+                14:00
+              </th>
+              <th>
+                15:00
+              </th>
+              <th>
+                16:00
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {% for sesh in sessions %}
+                  {% if forloop.counter0|divisibleby:8  %}
+                    </tr>
+                  {% endif %}
+                  {% if forloop.counter0|divisibleby:8 %}
+                    <tr>
+                    <th>{{sesh.time | date:'Y-m-d'}}</th>
+                  {% endif %}
+                  <td>
+                    {% ifnotequal sesh.status 'vacant' %}
+                    {% ifequal sesh.status 'BLOCKED' %}
+                      <p><a href="/tutoria/tutor_unblock_session/{{sesh.time | date:'Y-m-d H:i'}}">UNBLOCK</a></p>
+                    {% else %}
+                      <p><a href="/tutoria/session_tutor/{{sesh.time | date:'Y-m-d H:i'}}">{{sesh.status}}</a></p>
+
+                    {% endifequal %}
+                    {% else %}
+                      <p><a href="/tutoria/tutor_block_session/{{sesh.time | date:'Y-m-d H:i'}}">BLOCK</a></p>
+                    {% endifnotequal %}
+                  </td>
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+    </div>
   </div>
-  </body>
-</html>
+</main>
+
+{% endblock %}

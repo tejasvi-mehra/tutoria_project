@@ -229,7 +229,7 @@ def view_tutor_profile(request, tutor_id):
     return render(request, 'tutoria/profile/viewProfile.html', {'tutor':tutor, 'reviews':reviews[::-1], 'hasRating':hasRating})
 
 @login_required(redirect_field_name='/tutoria/dashboard')
-def tutor_lock_session(request, date_time):
+def tutor_block_session(request, date_time):
     tolock = parser.parse(date_time)
     tutor = Tutor.objects.get(username=request.user.username)
     td = datetime.timedelta(minutes=60) if tutor.tutortype == 'private' else datetime.timedelta(minutes=30)
@@ -253,6 +253,16 @@ def tutor_lock_session(request, date_time):
         return redirect('/tutoria/manage_timetable/tutor')
     else:
         return render(request, 'tutoria/timetable/mtttp.html', {'error' : 'cant lock already been booked'})
+
+
+@login_required(redirect_field_name='/tutoria/dashboard')
+def tutor_unblock_session(request, date_time):
+    tounlock = parser.parse(date_time)
+    tutor = Tutor.objects.get(username=request.user.username)
+    session = Session.objects.get(tutor=tutor, start_time=tounlock)
+    session.delete();
+    return redirect('/tutoria/manage_timetable/tutor')
+
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def view_tutor_timetable(request, tutor_id):
