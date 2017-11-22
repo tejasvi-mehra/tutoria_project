@@ -1,0 +1,16 @@
+<h1>Your timetable</h1>
+{% for sesh in sessions %}
+<ul>
+  <li>
+    {% ifnotequal sesh.status 'vacant'  %}
+      {% ifnotequal sesh.status 'MIDDLE'  %}
+        <a href="/tutoria/session_detail/{{sesh.time | date:'Y-m-d H:i'}}/"> {{sesh.time}} - {{sesh.status}} </a>
+      {% else %}
+        {{sesh.time}} - BOOKED
+      {% endifnotequal %}
+    {% else %}
+      {{sesh.time}} - {{sesh.status}}
+    {% endifnotequal %}
+  </li>
+</ul>
+{% endfor %}

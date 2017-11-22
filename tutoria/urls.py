@@ -35,7 +35,9 @@ urlpatterns = [
 
     url(r'^session_tutor/(?P<date_time>.*)/$', views.session_tutor, name='session_detail'),
 
-    url(r'^tutor_lock_session/(?P<date_time>.*)/$', views.tutor_lock_session, name='tutor_lock_session'),
+    url(r'^tutor_block_session/(?P<date_time>.*)/$', views.tutor_block_session, name='tutor_block_session'),
+
+    url(r'^tutor_unblock_session/(?P<date_time>.*)/$', views.tutor_unblock_session, name='tutor_unblock_session'),
 
     url(r'^add_funds/$', views.add_funds, name='add_funds'),
 
