@@ -1,0 +1,72 @@
+{% extends 'tutoria/base.html' %}
+{% block body %}
+    <main role="main" class="container">
+      <div class="jumbotron main-container page-title">
+        <div>
+          <h1>Timetable</h1>
+        </div>
+
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>
+
+                  </th>
+                  <th>
+                    09:00
+                  </th>
+                  <th>
+                    10:00
+                  </th>
+                  <th>
+                    11:00
+                  </th>
+                  <th>
+                    12:00
+                  </th>
+                  <th>
+                    13:00
+                  </th>
+                  <th>
+                    14:00
+                  </th>
+                  <th>
+                    15:00
+                  </th>
+                  <th>
+                    16:00
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {% for sesh in sessions %}
+                      {% if forloop.counter0|divisibleby:8  %}
+                        </tr>
+                      {% endif %}
+                      {% if forloop.counter0|divisibleby:8 %}
+                        <tr>
+                        <th>{{sesh.time | date:'Y-m-d'}}</th>
+                      {% endif %}
+                      <td>
+                        {% ifnotequal sesh.status 'vacant' %}
+                          <a href="/tutoria/session_tutor/{{sesh.time | date:'Y-m-d H:i'}}">{{sesh.status}}</a>
+                        {% else %}
+                          <p><a href="/tutoria/tutor_lock_session/{{sesh.time | date:'Y-m-d H:i'}}">BLOCK</a></p>
+                        {% endifnotequal %}
+                      </td>
+                  {% endfor %}
+                </tr>
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </main>
+
+{% endblock %}
+
+<script type="text/javascript">
+
+</script>

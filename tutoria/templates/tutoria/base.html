@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -25,24 +25,11 @@
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
     <!-- Custom styles for this template -->
     <link href="{% static 'css/creative.css' %}" rel="stylesheet">
-    <style media="screen">
-      a:link{
-        /*color:blue;*/
-      }
-      td,th{
-        width:10%;
-      }
-      td{
-        background: white;
-      }
-      .main-container{
-        padding-bottom: 0.5rem;
-      }
-    </style>
+
   </head>
 
   <body id="page-top">
-    {% load static %}
+{% load static %}
     <nav class="navbar navbar-expand-lg navbar-shrink fixed-top" id="mainNav">
       <div class="container">
         <a class="navbar-brand js-scroll-trigger" href="/tutoria/dashboard">Tutoria</a>
@@ -69,75 +56,14 @@
       </div>
     </nav>
 
-    <main role="main" class="container">
+    <!-- <main role="main" class="container">
       <div class="jumbotron main-container page-title">
-        <div>
-          <h1>Timetable</h1>
-        </div>
 
-
-        <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>
-
-                  </th>
-                  <th>
-                    09:00
-                  </th>
-                  <th>
-                    10:00
-                  </th>
-                  <th>
-                    11:00
-                  </th>
-                  <th>
-                    12:00
-                  </th>
-                  <th>
-                    13:00
-                  </th>
-                  <th>
-                    14:00
-                  </th>
-                  <th>
-                    15:00
-                  </th>
-                  <th>
-                    16:00
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  {% for sesh in sessions %}
-                      {% if forloop.counter0|divisibleby:8  %}
-                        </tr>
-                      {% endif %}
-                      {% if forloop.counter0|divisibleby:8 %}
-                        <tr>
-                        <th>{{sesh.time | date:'Y-m-d'}}</th>
-                      {% endif %}
-                      <td>
-                        {% ifnotequal sesh.status 'vacant' %}
-                          <p>{{sesh.status}}</p>
-                        {% else %}
-                          <p><a href="/tutoria/tutor_lock_session/{{sesh.time | date:'Y-m-d H:i'}}">BLOCK</a></p>
-                        {% endifnotequal %}
-                      </td>
-                  {% endfor %}
-                </tr>
-              </tbody>
-            </table>
-        </div>
+        <h1>Tutor Search</h1>
       </div>
-    </main>
+    </main> -->
+
+    {% block body %}
+    {% endblock %}
   </body>
-
-<!-- {{sesh.time | date:'H:i'}} |  - -->
-
-
-<script type="text/javascript">
-
-</script>
+  </html>
