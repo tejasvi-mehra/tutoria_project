@@ -90,6 +90,8 @@ def manage_sessions(all_sessions, week):
         for sesh in all_sessions:
             if item['time'] == sesh.start_time:
                 item['status'] = sesh.status
+            if item['time'] > sesh.start_time and item['time'] < sesh.end_time:
+                item['status'] = "MIDDLE"
     return week
 
 # check if tutor or student
@@ -254,7 +256,11 @@ def manage_tutor_time_table(request):
     tutor = Tutor.objects.get(username=username)
     week = create_week(14, 60) if tutor.tutortype == 'private' else create_week(14, 30)
     result = manage_sessions(all_sessions, week)
-    return render(request, 'tutoria/mttt.html', {'sessions' : result})
+    if tutor.tutortype == 'private':
+        return render(request, 'tutoria/mtttp.html', {'sessions' : result})
+    else:
+        return render(request, 'tutoria/mtttc.html', {'sessions' : result})
+
 
 def register(request):
     if request.method == 'POST':

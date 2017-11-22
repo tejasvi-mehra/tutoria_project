@@ -1,0 +1,43 @@
+{% if error %}
+{{error}} <br>
+<a href="/tutoria/dashboard"> Dashboard </a>
+{% endif %}
+<h1>Your timetable</h1>
+
+
+
+<table>
+
+
+{% for sesh in sessions %}
+    {% ifequal forloop.counter 15 %}
+    <tr>
+    {% endifequal %}
+    <td>
+         {% ifnotequal sesh.status 'vacant' %}
+          {{sesh.time}} - {{sesh.status}}
+         {% else %}
+          <a href="/tutoria/tutor_lock_session/{{sesh.time | date:'Y-m-d H:i'}}">{{sesh.time}} - {{sesh.status}} -- lock</a>
+         {% endifnotequal %}
+    </td>
+    {% ifequal forloop.counter 15 %}
+      </tr>
+    {% endifequal %}
+
+{% endfor %}
+
+</table>
+
+
+
+
+<!--
+<ul>
+  <li>
+    {% ifnotequal sesh.status 'vacant' %}
+      {{sesh.time}} - {{sesh.status}}
+    {% else %}
+      <a href="/tutoria/tutor_lock_session/{{sesh.time | date:'Y-m-d H:i'}}">{{sesh.time}} - {{sesh.status}} -- lock</a>
+    {% endifnotequal %}
+  </li>
+</ul> -->
