@@ -484,7 +484,7 @@ def book(request, tutor_id, date_time):
                 str_time="{}:{}".format(today.hour,today.minute)
                 now=int(ttime.time())
                 notif=Notification(
-<<<<<<< HEAD
+
                     title=title,
                     tutor=session.tutor,
                     student=session.student,
@@ -494,18 +494,7 @@ def book(request, tutor_id, date_time):
                     start_time = start_time,
                     end_time = start_time + td,
                     forSession = True,
-=======
-                title=title,
-                tutor=session.tutor,
-                student=session.student,
-                now=now,
-                date=str_date,
-                time=str_time,
-                start_time = start_time,
-                end_time = start_time + td,
-                forSession = True,
-                session=session
->>>>>>> origin/2111
+                    session=session
 
                 )
                 print(notif.title)
