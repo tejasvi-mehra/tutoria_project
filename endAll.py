@@ -1,9 +1,9 @@
-from tutoria.models import Tutor, Student, Session, Transaction, AdminWallet, Wallet, Notification
+from tutoria.models import Tutor, Student, Session, Transaction, MyTutorsWallet, Wallet, Notification
 import datetime
 import time as ttime
 
 def moneyTransfer(amount, username):
-    admin = AdminWallet.objects.get(username = "admin")
+    admin = MyTutorsWallet.objects.get(username = "mytutors")
     admin.amount = float(admin.amount) - float(amount)
     admin.save()
     tutor = Tutor.objects.get(username=username)

@@ -2,7 +2,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm
-from .models import Tutor, Student, Session, Transaction, AdminWallet, Notification, Review, Wallet, Coupon
+from .models import Tutor, Student, Session, Transaction, MyTutorsWallet, Notification, Review, Wallet, Coupon
 from django.db.models import Q
 import datetime
 from dateutil import parser
@@ -130,7 +130,7 @@ def sendFundsToAdmin(username, amount):
     wallet = Wallet.objects.get(username=username)
     wallet.balance = float(wallet.balance)-amount
     wallet.save()
-    admin = AdminWallet.objects.get(username = "administrator")
+    admin = MyTutorsWallet.objects.get(username = "mytutors")
     admin.amount = float(admin.amount) + amount
     admin.save()
 
@@ -147,7 +147,7 @@ def refundFromAdmin(username, amount):
     wallet = Wallet.objects.get(username=username)
     wallet.balance = float(wallet.balance) + float(amount)
     wallet.save()
-    admin = AdminWallet.objects.get(username = "administrator")
+    admin = MyTutorsWallet.objects.get(username = "mytutors")
     admin.amount = float(admin.amount) - float(amount)
     admin.save()
 
@@ -171,11 +171,11 @@ def get_transactions_outgoing(username):
 # Get incoming transactios for past 30 days
 """ functions to be imported """
 def mytutors_withdraw(request):
-    wallet = AdminWallet.objects.all()[0]
+    wallet = MyTutorsWallet.objects.all()[0]
     if request.method == 'POST':
         print("here")
         to_deduct = int(request.POST["withdraw"])
-        wallet = AdminWallet.objects.all()[0]
+        wallet = MyTutorsWallet.objects.all()[0]
         wallet.amount = wallet.amount - to_deduct;
         wallet.save();
     return render(request, 'tutoria/mytutors.html',{'wallet':wallet})
@@ -204,7 +204,7 @@ def dashboard(request):
         return render(request, 'tutoria/admin.html')
 
     if request.user.username ==  "mytutors":
-        wallet = AdminWallet.objects.all()[0]
+        wallet = MyTutorsWallet.objects.get(username="mytutors")
         return render(request, 'tutoria/mytutors.html',{'wallet':wallet})
 
     username = request.user.username

@@ -60,8 +60,8 @@ class Session(models.Model):
         else:
             return "blocked by " + self.tutor.username
 
-class AdminWallet(models.Model):
-    username = models.CharField(max_length=100, default="administrator")
+class MyTutorsWallet(models.Model):
+    username = models.CharField(max_length=100, default="mytutors")
     amount = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     def __self__ (self):
         return "Amount: " + self.amount
