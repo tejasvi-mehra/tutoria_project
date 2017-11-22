@@ -23,6 +23,8 @@ class Tutor(models.Model):
     phoneNumber = models.IntegerField(default=99999999)
     avatar = models.FileField(default="http://s3.amazonaws.com/37assets/svn/765-default-avatar.png")
     isHidden =  models.BooleanField(default=False)
+    rating = models.DecimalField(decimal_places=2,max_digits=3,default=0)
+    hasRating = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username
@@ -83,6 +85,7 @@ class Notification(models.Model):
     end_time = models.DateTimeField(null=True, blank=True)
     date=models.CharField(max_length=200)
     time=models.CharField(max_length=200)
+    session=models.ForeignKey(Session,default=2)
 
 class Review(models.Model):
     """docstring for Review"""
