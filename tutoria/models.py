@@ -23,6 +23,7 @@ class Tutor(models.Model):
     phoneNumber = models.IntegerField(default=99999999)
     avatar = models.FileField(default="http://s3.amazonaws.com/37assets/svn/765-default-avatar.png")
     isHidden =  models.BooleanField(default=False)
+    tags = models.CharField(max_length=10000, default="")
 
     def __str__(self):
         return self.username

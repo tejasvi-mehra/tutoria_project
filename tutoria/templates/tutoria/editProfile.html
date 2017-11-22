@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <script scr=""></script>
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <title>Tutoria</title>
@@ -16,8 +16,17 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">  <script src="https://code.jquery.com/jquery-3.2.1.min.js"
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css" />
+    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
 
-    <style media="screen">
+
+    <style media="screen" type="text/css">
+    .bootstrap-tagsinput {
+        width: 50%;
+    }
+    .label {
+        line-height: 2 !important;
+    }
     a {color:#000000;}      /* unvisited link */
     a:visited {color:#000000;}  /* visited link */
     a:hover {color:#000000;}  /* mouse over link */
@@ -41,6 +50,7 @@
           Upload Profile Photo <input type="file" name="myfile" value="">
           Rate <input type="number" name="rate" value="{{tutor.rate}}">
           Phone Number: <input type="tel" name="tel" value="{{tutor.phoneNumber}}"><br>
+          Tags <input type="text" name="tags" value="{{tutor.tags}}" data-role="tagsinput">
 
         </div>
 

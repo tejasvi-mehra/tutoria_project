@@ -272,6 +272,8 @@ def set_profile(request):
                 tutortype = temp[1],
                 isStudent = isStudent,
                 rate = request.POST['rate'],
+                tags = request.POST['tags'],
+                phoneNumber = request.POST['tel'], 
             )
             tutor.save()
         if 'student' in temp:
@@ -606,7 +608,6 @@ def edit_profile(request):
     if request.method == 'POST':
         tutor = Tutor.objects.get(username=request.user.username)
         tutor.first_name = request.POST['first_name']
-        tutor = Tutor.objects.get(username=request.user.username)
         tutor.last_name = request.POST['last_name']
         tutor.biography = request.POST['biography']
         tutor.university = request.POST['university']
@@ -614,8 +615,7 @@ def edit_profile(request):
         isHidden = request.POST.get('isHidden', False)
         tutor.isHidden = isHidden
         tutor.phoneNumber = request.POST['tel']
-        print ("isHidden.................................................................." + str(isHidden))
-        # tutor.isHidden =
+        tutor.tags = request.POST['tags']
         if len(request.FILES) != 0:
             myfile = request.FILES['myfile']
             fs = FileSystemStorage()
