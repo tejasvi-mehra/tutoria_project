@@ -103,7 +103,7 @@ def manage_tutor_time_table(request):
     week = create_week(14, 60) if tutor.tutortype == 'private' else create_week(14, 30)
     result = manage_sessions(all_sessions, week)
     if tutor.tutortype == 'private':
-        return render(request, 'tutoria/mtttp.html', {'sessions' : result})
+        return render(request, 'tutoria/timetable/mtttp.html', {'sessions' : result})
     else:
         return render(request, 'tutoria/timetable/mtttc.html', {'sessions' : result})
 
@@ -114,10 +114,10 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('/tutoria/setProfile/')
+            return redirect('/tutoria/profile/setProfile/')
     else:
         form = RegisterForm()
-    return render(request, 'tutoria/register.html', {'form' : form})
+    return render(request, 'tutoria/profile/register.html', {'form' : form})
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def set_profile(request):
@@ -372,11 +372,9 @@ def detail_cancel(request, date_time):
     session = Session.objects.get(student = student, start_time=tocancel)
     transaction =Transaction.objects.get(student = student, start_time = tocancel)
     tdy = datetime.datetime.today() + datetime.timedelta(hours=8)
+    error = ''
     if request.method == 'POST':
-        if session.start_time < tdy + datetime.timedelta(hours=24):
-            return redirect('/tutoria/session_detail.html', {'error': 'can\'t cancel'})
-        else:
-            # refund and delete transaction
+        if session.start_time > tdy + datetime.timedelta(hours=24):
             refund_amount = transaction.amount + transaction.commission
             refundFromAdmin(student.username, refund_amount)
             session.delete()
@@ -395,16 +393,19 @@ def detail_cancel(request, date_time):
             print(notif.title)
             notif.save()
             return redirect('/tutoria/dashboard')
-    else:
-        context = {
-            'session_id':session.id,
-            'tutor' : session.tutor,
-            'tutor_no':session.tutor.phoneNumber,
-            'start' : session.start_time,
-            'end' : session.end_time,
-            'duration': session.duration
-        }
-        return render(request, 'tutoria/session/session_detail.html', context)
+        else:
+            error = "You cant cancel a session which starts in less than 24 hours. Sorry."
+
+    context = {
+        'session_id':session.id,
+        'tutor' : session.tutor,
+        'tutor_no':session.tutor.phoneNumber,
+        'start' : session.start_time,
+        'end' : session.end_time,
+        'duration': session.duration,
+        'error' : error
+    }
+    return render(request, 'tutoria/session/session_detail.html', context)
 
 @login_required()
 def add_funds(request):

@@ -1,48 +1,13 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
-
-    <title>Tutoria</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-  </head>
-
-  <body>
-    {% if error %}
-    <h2>{{error}}</h2> <br>
-    {% endif %}
-    <nav class="navbar navbar-inverse bg-inverse">
-      <a class="navbar-brand navbar-right" href="/tutoria/logout">Logout</a>
-      <a class="navbar-brand " href="/tutoria/dashboard">DashBoard</a>
-
-    </nav>
-
+{% extends 'tutoria/base.html' %}
+{% block body %}
     <main role="main" class="container">
-      <div class="jumbotron">
+      <div class="jumbotron" style="text-align:center;">
         <h1>Withdraw Amount</h1>
         <form onSubmit="return confirm('Are you sure you wish to withdraw?');" class="" action="/tutoria/withdraw_funds/" method="post">
           {% csrf_token %}
-          <p>Enter amount:</p>
-          <input type="number" name="amount" value="" style="height:40px; width:100px">
+          $$ <input type="number" name="amount" value="" style="height:40px; width:100px">
           <button class ="btn btn-lg btn-primary" type="submit" name="button", style="height:40px">Submit</button>
-
         </form>
-
       </div>
     </main>
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="../../../../assets/js/vendor/popper.min.js"></script>
-    <script src="../../../../dist/js/bootstrap.min.js"></script>
-  </body>
-</html>
+{% endblock %}

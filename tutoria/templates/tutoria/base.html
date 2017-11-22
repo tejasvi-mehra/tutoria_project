@@ -39,7 +39,6 @@
         <div class="navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto nav-link-container">
             <li class="nav-item">
-
               <a class="nav-link js-scroll-trigger" href="/tutoria/search"><img src="{% static "img/magnifying-glass.png" %}"></a>
             </li>
             <li class="nav-item">
@@ -56,14 +55,45 @@
       </div>
     </nav>
 
-    <!-- <main role="main" class="container">
-      <div class="jumbotron main-container page-title">
-
-        <h1>Tutor Search</h1>
-      </div>
-    </main> -->
-
     {% block body %}
     {% endblock %}
   </body>
   </html>
+
+  <script type="text/javascript">
+
+    $('#due_amount_copy').text('{{tutor.rate}}');
+
+    $('#final_due_amount').val('{{tutor.rate}}');
+
+    var code = "";
+    
+    $('#coupon_code').on('change', function(e){
+      code = $(this).val();
+    })
+
+    $('#coupon_test').on('click', function(e){
+      $.ajax({
+        url : '/tutoria/coupon/' + code,
+        success : function(data){
+          console.log(data);
+          if (data["success"] === true){
+            var discount = parseInt(data["discount"]);
+            console.log("discount", discount);
+            var old =  $('#due_amount').text() ;
+            console.log("old", old);
+            var final = old - (discount/100)*old;
+            $('#due_amount').text(final);
+            $('#due_amount_copy').text(final);
+            $('#final_due_amount').val(final);
+            console.log(final);
+            $(".invalid").empty();
+          }
+          else{
+            $(".invalid").append("<h3>fuck off</h3>")
+          }
+        }
+      })
+    })
+
+  </script>

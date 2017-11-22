@@ -1,10 +1,22 @@
-<h3>Name: {{session.tutor}}</h3>
-<br>
-<h4>start: {{session.start_time}}</h4>
-<br>
-<h4>end: {{session.end_time}}</h4>
-<br>
-<h4>duration: {{session.duration}}</h4>
-<br>
-<h4>student: {{session.student}}</h4>
-<br>
+{% extends 'tutoria/base.html' %}
+{% block body %}
+<main role="main" class="container">
+  <div class="jumbotron main-container page-title">
+    <div class="page-title">
+    <h1>Session Details</h1></div>
+      <div class="brief-container">
+        <h3>Name: {{session.tutor}}</h3>
+        <br>
+        <h4>start: {{session.start_time}}</h4>
+        <br>
+        <h4>end: {{session.end_time}}</h4>
+        <br>
+        <h4>duration: {{session.duration}}</h4>
+        <br>
+        <h4>student: {{session.student}}</h4>
+        <br>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
