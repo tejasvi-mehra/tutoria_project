@@ -61,9 +61,9 @@
               {% endif %}
               <td>
                 {% ifnotequal sesh.status 'vacant' %}
-                  {{sesh.status}}
+                  <a href="/tutoria/session_tutor/{{sesh.time | date:'Y-m-d H:i'}}">{{sesh.status}}</a>
                 {% else %}
-                 <a href="/tutoria/tutor_lock_session/{{sesh.time | date:'Y-m-d H:i'}}">BLOCK</a>
+                 <a href="/tutoria/tutor_lock_session/{{sesh.time | date:'Y-m-d H:i'}}"> BLOCK </a>
                 {% endifnotequal %}
               </td>
           {% endfor %}

@@ -93,6 +93,8 @@
 
 <script type="text/javascript">
   // console.log({{coupon}})
+  $('#due1').text('{{tutor.rate}}');
+  $('#final').val('{{tutor.rate}}');
   var code = "";
   $('#code').on('change', function(e){
     code = $(this).val();

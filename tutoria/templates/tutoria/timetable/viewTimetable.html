@@ -13,7 +13,7 @@ text-decoration: none;
 <ul>
   <li>
     {% ifnotequal sesh.status 'vacant' %}
-      {{sesh.time |date:'Y-m-d H:i'}}  ---- Booked
+      {{sesh.time |date:'Y-m-d H:i'}}  ---- Unavailable
     {% else %}
       {{sesh.time |date:'Y-m-d H:i'}} <a href="/tutoria/book/{{tutor.id}}/{{sesh.time |date:'Y-m-d H:i'}}"> Book </a>
     {% endifnotequal %}
