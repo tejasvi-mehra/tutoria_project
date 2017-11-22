@@ -16,9 +16,18 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">  <script src="https://code.jquery.com/jquery-3.2.1.min.js"
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css" />
+    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+
 
   </head>
-  <style media="screen">
+  <style media="screen" type="text/css">
+  .bootstrap-tagsinput {
+      width: 50%;
+  }
+  .label {
+      line-height: 2 !important;
+  }
   a {color:#000000;}      /* unvisited link */
   a:visited {color:#000000;}  /* visited link */
   a:hover {color:#000000;}  /* mouse over link */
@@ -28,24 +37,33 @@
   }
   </style>
   <body>
-    <form class="well form-horizontal" action="" method="post" onsubmit="return validateMyForm();">
+    <form class="well form-horizontal" action="" method="post" onsubmit="return validateMyForm();" enctype="multipart/form-data">
       {% csrf_token %}
       <h3>Register as Tutor:</h3>
       <h4>Yes <input type="checkbox" name="checks" value="tutor" id="isTutor">
         <br>
         <div id="tutorOption" style="display:none">
-          <h4>Private <input type="checkbox" id="private" class="tutorClass" value="private" name="checks">
           Contracted <input type="checkbox" id="contracted" class="tutorClass" value="contracted" name="checks"><br>
+          <h4>Private <input type="checkbox" id="private" class="tutorClass" value="private" name="checks">
           University <input type="text" name="university" value=""><br>
-          Biography <input type="text" name="biography" value="">
-          <div id="tutorRate" style="display:none">Rate <input type="number" name="rate" value=""></div>
+          Biography <input type="text" name="biography" value=""><br>
+          Upload Profile Photo <input type="file" name="myfile" value="hi">
+          Tags <input type="text" name="tags" value="" data-role="tagsinput">
+          <div id="tutorRate" style="display:none">Rate <input type="number" name="rate" value="" step="10"></div>
         </div>
       </h4>
       <h3>Register as Student:</h3>
       <h4>Yes <input type="checkbox" name="checks" value="student" id="isStudent"><br><br></h4>
 
+      <!-- <-h3>Phone Number</h3> -->
+        <h4>Phone Number: <input type="tel" name="tel"><br><br></h4>
+
       <h3>Wallet Settings</h3>
-        <h4>Add to Wallet: $$ <input type="number" name="balance" value=""><br><br></h4>
+        <h4>Add to Wallet: $$ <input type="number" name="balance" min="0" max="1000" placeholder="" step="10"><br><br></h4>
+
+      <!-- <h3>Upload File</h3> -->
+
+
 
       <button type="submit" name="button">Submit</button>
     </form>
