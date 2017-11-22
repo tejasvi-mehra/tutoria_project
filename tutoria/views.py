@@ -21,7 +21,7 @@ def mytutors_withdraw(request):
         wallet = MyTutorsWallet.objects.all()[0]
         wallet.amount = wallet.amount - to_deduct;
         wallet.save();
-    return render(request, 'tutoria/mytutors.html',{'wallet':wallet})
+    return render(request, 'tutoria/funds/mytutors.html',{'wallet':wallet})
 
 def get_transactions_incoming(username):
     booked = []
@@ -57,7 +57,7 @@ def dashboard(request):
 
     if request.user.username ==  "mytutors":
         wallet = MyTutorsWallet.objects.get(username="mytutors")
-        return render(request, 'tutoria/mytutors.html',{'wallet':wallet})
+        return render(request, 'tutoria/funds/mytutors.html',{'wallet':wallet})
 
     username = request.user.username
     tutor_sessions, student_sessions = get_sessions(username)
@@ -84,14 +84,14 @@ def manage_student_time_table(request):
     all_sessions = filter_sessions(all_sessions, 7)
     week = create_week(7, 30)
     result = manage_sessions(all_sessions, week)
-    return render(request, 'tutoria/mstt.html', {'sessions' : result})
+    return render(request, 'tutoria/timetable/mstt.html', {'sessions' : result})
 
 @login_required()
 def session_tutor(request, date_time):
     toview = parser.parse(date_time)
     tutor = Tutor.objects.get(username = request.user.username)
     session = Session.objects.get(tutor = tutor, start_time=toview)
-    return render(request, 'tutoria/session_tutor.html', {'session' : session})
+    return render(request, 'tutoria/session/session_tutor.html', {'session' : session})
 
 
 @login_required()
@@ -105,7 +105,7 @@ def manage_tutor_time_table(request):
     if tutor.tutortype == 'private':
         return render(request, 'tutoria/mtttp.html', {'sessions' : result})
     else:
-        return render(request, 'tutoria/mtttc.html', {'sessions' : result})
+        return render(request, 'tutoria/timetable/mtttc.html', {'sessions' : result})
 
 
 def register(request):
@@ -157,7 +157,7 @@ def set_profile(request):
             )
             student.save()
         return redirect('/tutoria/dashboard')
-    return render(request, 'tutoria/setProfile.html')
+    return render(request, 'tutoria/profile/setProfile.html')
 
 @login_required()
 def search(request):
@@ -221,12 +221,12 @@ def nameSearch(request):
 def view_tutor_profile(request, tutor_id):
     tutor = get_object_or_404(Tutor, pk=tutor_id)
     reviews=Review.objects.filter(tutor=tutor)
-    return render(request, 'tutoria/viewProfile.html', {'tutor':tutor, 'reviews':reviews[::-1]})
+    return render(request, 'tutoria/profile/viewProfile.html', {'tutor':tutor, 'reviews':reviews[::-1]})
     reviews=Review.objects.filter(tutor=tutor)
     hasRating=False
     if len(reviews)>3:
         hasRating=True
-    return render(request, 'tutoria/viewProfile.html', {'tutor':tutor, 'reviews':reviews[::-1], 'hasRating':hasRating})
+    return render(request, 'tutoria/profile/viewProfile.html', {'tutor':tutor, 'reviews':reviews[::-1], 'hasRating':hasRating})
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def tutor_lock_session(request, date_time):
@@ -252,7 +252,7 @@ def tutor_lock_session(request, date_time):
         session.save()
         return redirect('/tutoria/manage_timetable/tutor')
     else:
-        return render(request, 'tutoria/mtttp.html', {'error' : 'cant lock already been booked'})
+        return render(request, 'tutoria/timetable/mtttp.html', {'error' : 'cant lock already been booked'})
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def view_tutor_timetable(request, tutor_id):
@@ -266,7 +266,7 @@ def view_tutor_timetable(request, tutor_id):
         'tutor' : tutor,
         'sessions' : result
     }
-    return render(request, 'tutoria/viewTimetable.html', context)
+    return render(request, 'tutoria/timetable/viewTimetable.html', context)
 
 def check_conflict(tutor, student, date_time):
     # print(date_time, datetime.datetime.today(), datetime.timedelta(hours=24))
@@ -305,7 +305,7 @@ def book(request, tutor_id, date_time):
 
             costOfBooking = (due + due*0.05) if tutor.tutortype == 'private' else 0
             if costOfBooking > get_balance(student.username) :
-                return render(request, 'tutoria/add_funds.html', {'error' : 'Insufficient Funds !!.'})
+                return render(request, 'tutoria/funds/add_funds.html', {'error' : 'Insufficient Funds !!.'})
             else:
                 session = Session(
                     tutor = tutor,
@@ -356,14 +356,14 @@ def book(request, tutor_id, date_time):
                 sendFundsToAdmin(student.username, costOfBooking)
                 return redirect('/tutoria/dashboard')
         else:
-            return render(request, 'tutoria/bookSession.html', {'error' : 'conflict with another booked slot.'})
+            return render(request, 'tutoria/session/bookSession.html', {'error' : 'conflict with another booked slot.'})
     else:
         context = {
             'date': date_time,
             'tutor': tutor,
             'coupon' : ["1", "2"]
         }
-        return render(request, 'tutoria/bookSession.html', context)
+        return render(request, 'tutoria/session/bookSession.html', context)
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def detail_cancel(request, date_time):
@@ -404,7 +404,7 @@ def detail_cancel(request, date_time):
             'end' : session.end_time,
             'duration': session.duration
         }
-        return render(request, 'tutoria/session_detail.html', context)
+        return render(request, 'tutoria/session/session_detail.html', context)
 
 @login_required()
 def add_funds(request):
@@ -423,7 +423,7 @@ def add_funds(request):
         wallet.save()
         return redirect('/tutoria/dashboard')
     else:
-        return render(request, 'tutoria/add_funds.html')
+        return render(request, 'tutoria/funds/add_funds.html')
 
 # Withdraw funds for tutor
 @login_required()
@@ -440,13 +440,13 @@ def withdraw_funds(request):
         #     student.save()
         wallet = Wallet.objects.get(username=request.user.username)
         if float(amount) > float(wallet.balance) :
-            return render(request, 'tutoria/withdraw_funds.html', {error : "Insufficient funds !!!"})
+            return render(request, 'tutoria/funds/withdraw_funds.html', {error : "Insufficient funds !!!"})
         else :
             wallet.balance = float(wallet.balance)-float(amount)
             wallet.save()
         return redirect('/tutoria/dashboard')
     else:
-        return render(request, 'tutoria/withdraw_funds.html')
+        return render(request, 'tutoria/funds/withdraw_funds.html')
 
 @login_required()
 def notifications(request):
@@ -524,4 +524,4 @@ def edit_profile(request):
         return redirect('/tutoria/dashboard')
     else:
         tutor = Tutor.objects.get(username=request.user.username)
-        return render(request, 'tutoria/editProfile.html',{"tutor" : tutor})
+        return render(request, 'tutoria/profile/editProfile.html',{"tutor" : tutor})
