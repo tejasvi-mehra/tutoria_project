@@ -114,7 +114,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('/tutoria/profile/setProfile/')
+            return redirect('/tutoria/setProfile/')
     else:
         form = RegisterForm()
     return render(request, 'tutoria/profile/register.html', {'form' : form})
