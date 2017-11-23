@@ -64,7 +64,7 @@ def dashboard(request):
                 for id_i,code in enumerate(xs):
                     course = Course(subject=xs[id_i][1],code=xs[id_i][0])
                     course.save()
-                    
+
             if request.POST['sub']:
                 sub=request.POST['sub']
                 code=request.POST['code']
@@ -158,6 +158,12 @@ def set_profile(request):
         balance = request.POST['balance'],
         )
         wallet.save()
+
+        if len(request.FILES) != 0:
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage()
+            avatar = fs.save(str(myfile),myfile)
+
         if temp[0] == 'tutor':
             course_tut=""
             try:
@@ -175,6 +181,7 @@ def set_profile(request):
                 rate = request.POST['rate'],
                 tags = request.POST['tags'],
                 phoneNumber = request.POST['tel'],
+                avatar = avatar
             )
             tutor.save()
             tutor.course.add(course_tut)
@@ -183,7 +190,8 @@ def set_profile(request):
             student = Student(
                 name = request.user.first_name + request.user.last_name,
                 username = request.user.username,
-                isTutor = isTutor
+                isTutor = isTutor,
+                avatar = avatar
             )
             student.save()
         return redirect('/tutoria/dashboard')
@@ -561,9 +569,9 @@ def notifications(request):
             for x in tut_notifs:
                 notifs.append(x)
         # stu_notifs=Notification.objects.filter(student=user)
-        
-        
-        
+
+
+
 
         notifs.sort(key=lambda x: x.now, reverse=True)
 
