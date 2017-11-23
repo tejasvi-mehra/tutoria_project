@@ -42,6 +42,7 @@
       margin-right: 2px;
       color: #bb6767;
   }
+
   </style>
   <body>
     <nav class="navbar navbar-expand-lg navbar-shrink fixed-top" id="mainNav">
@@ -50,42 +51,27 @@
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <!-- <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto nav-link-container">
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#about"><img src="{% static 'img/magnifying-glass.png' %}"></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#services"><img src="{% static 'img/star.png' %}"></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#portfolio"><img src="{% static 'img/envelope.png' %}"></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#contact"><img src="{% static 'img/settings.png' %}"></a>
-            </li>
-          </ul>
-        </div> -->
       </div>
     </nav>
     <main role="main" class="container">
-      <div class="jumbotron main-container page-title">
+      <div class="jumbotron main-container page-title" style="
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 50%;
+    padding-bottom: 30px;">
         <div class="container">
 
           <form class="well form-horizontal" action="/tutoria/register/" enctype="multipart/form-data" method="post" id="contact_form">
             {% csrf_token %}
             {% include 'tutoria/form-template.html' %}
-            <div class="form-group">
-              <label class="col-md-4 control-label"></label>
-              <div class="col-md-4">
-                <br>
-                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                <button type="submit" class="btn btn-warning" >&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSUBMIT
-                  <span class="glyphicon glyphicon-send"></span>
-                  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                </button>
-              </div>
-            </div>
+
+              <button type="submit" class="btn btn-warning col-md-5" style="position: relative;
+    left: 25%;
+    right: 50%;">SUBMIT
+                <span class="glyphicon glyphicon-send"></span>
+              </button>
+
+
           </form>
         </div>
       </div>

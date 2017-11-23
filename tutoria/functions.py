@@ -173,5 +173,27 @@ def get_transactions_outgoing(username):
 
     return booked
 
+
+def check_conflict(tutor, student, date_time):
+    # print(date_time, datetime.datetime.today(), datetime.timedelta(hours=24))
+    tdy = datetime.datetime.today() + datetime.timedelta(hours=8)
+    print(date_time < datetime.datetime.today() + datetime.timedelta(hours=24))
+    if student.username == tutor.username:
+        return False, "You cannot book a session with yourself."
+    if date_time < tdy + datetime.timedelta(hours=24):
+        return False, "You cannot book a timeslot which start within 24 hours."
+    tutor_sessions = filter_sessions(get_tutor_sessions(tutor.username), 7)
+    student_sessions  = filter_sessions(get_student_sessions(student.username), 7)
+    sessions = tutor_sessions + student_sessions
+    for item in sessions:
+        if item.start_time <= date_time and date_time < item.end_time:
+            return False, "You have a conflict with another session."
+    for item in student_sessions:
+        if item.tutor == tutor:
+            comp = item.start_time
+            if comp.day == date_time.day and comp.month == date_time.month and comp.year == date_time.year:
+             return False, "You can only book one session per tutor per day."
+
+    return True, ""
 # Get incoming transactios for past 30 days
 """ functions to be imported """

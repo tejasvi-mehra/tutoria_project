@@ -76,6 +76,17 @@ def admin_panel(request):
 
     return render(request, 'tutoria/admin.html',{'courses':Course.objects.all()})
 
+def register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('/tutoria/set_profile/')
+    else:
+        form = RegisterForm()
+    return render(request, 'tutoria/profile/register.html', {'form' : form})
+
 @login_required()
 def dashboard(request):
     if request.user.username ==  "administrator":
@@ -135,17 +146,6 @@ def manage_tutor_time_table(request):
         return render(request, 'tutoria/timetable/mtttc.html', {'sessions' : result})
 
 
-def register(request):
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('/tutoria/setProfile/')
-    else:
-        form = RegisterForm()
-    return render(request, 'tutoria/profile/register.html', {'form' : form})
-
 @login_required(redirect_field_name='/tutoria/dashboard')
 def set_profile(request):
     if request.method == 'POST':
@@ -173,7 +173,7 @@ def set_profile(request):
             try:
                 course_tut = Course.objects.get(subject=request.POST['sub'],code=request.POST['code'])
             except:
-                return render(request, 'tutoria/profile/setProfile.html', {'error': 'Invalid Course Specified'})
+                return render(request, 'tutoria/profile/set_profile.html', {'error': 'Invalid Course Specified'})
             tutor = Tutor(
                 first_name = request.user.first_name,
                 last_name = request.user.last_name,
@@ -199,7 +199,7 @@ def set_profile(request):
             )
             student.save()
         return redirect('/tutoria/dashboard')
-    return render(request, 'tutoria/profile/setProfile.html')
+    return render(request, 'tutoria/profile/set_profile.html')
 
 
 @login_required()
@@ -337,27 +337,6 @@ def view_tutor_timetable(request, tutor_id):
     else:
         return render(request, 'tutoria/timetable/vttc.html', context)
 
-def check_conflict(tutor, student, date_time):
-    # print(date_time, datetime.datetime.today(), datetime.timedelta(hours=24))
-    tdy = datetime.datetime.today() + datetime.timedelta(hours=8)
-    print(date_time < datetime.datetime.today() + datetime.timedelta(hours=24))
-    if student.username == tutor.username:
-        return False, "You cannot book a session with yourself."
-    if date_time < tdy + datetime.timedelta(hours=24):
-        return False, "You cannot book a timeslot which start within 24 hours."
-    tutor_sessions = filter_sessions(get_tutor_sessions(tutor.username), 7)
-    student_sessions  = filter_sessions(get_student_sessions(student.username), 7)
-    sessions = tutor_sessions + student_sessions
-    for item in sessions:
-        if item.start_time <= date_time and date_time < item.end_time:
-            return False, "You have a conflict with another session."
-    for item in student_sessions:
-        if item.tutor == tutor:
-            comp = item.start_time
-            if comp.day == date_time.day and comp.month == date_time.month and comp.year == date_time.year:
-             return False, "You can only book one session per tutor per day."
-
-    return True, ""
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def book(request, tutor_id, date_time):
@@ -608,7 +587,7 @@ def review(request,session_id):
         return redirect('/tutoria/dashboard')
 
     else:
-        return render(request, 'tutoria/writeReview.html')
+        return render(request, 'tutoria/write_review.html')
 
 @login_required()
 def edit_profile(request, tutor_id):
