@@ -37,7 +37,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Oswald', sans-serif; 
+  font-family: 'Oswald', sans-serif;
   font-weight: 500;
     }
 
@@ -159,6 +159,25 @@ li {
   color: #5bc0de;
 }
 
+.row.profile-container{
+
+  width: 35%;
+}
+
+.profile-pic{
+  padding: 10px;
+  margin-right: auto;
+margin-right: auto;
+display: block;
+}
+
+.profile-pic img{
+margin-right: auto;
+margin-right: auto;
+display: block;
+  max-width:80%;
+}
+
 .profile-sub-deets p{
 
   font-family: 'Hind', sans-serif;
@@ -222,7 +241,7 @@ width: 64px;
   }
 .deets{
 
-  padding-left: 30px; 
+  padding-left: 30px;
   float: right;
   display: inline-block;
 }
@@ -240,7 +259,7 @@ width: 64px;
   float: right;
   padding-left: 10px;
   margin-left: 10px;
-  
+
 }
 .deets .rating img{
   max-width: 32px;
@@ -268,7 +287,7 @@ width: 64px;
   display: inline-block;
   padding: 5px;
   width: 100%;
-  border-bottom:solid black; 
+  border-bottom:solid black;
   border-bottom-width: 0.5px;
 }
 .notif-container .notif-header h2{
@@ -337,7 +356,7 @@ body {
       color: #fff; }
   #mainNav .navbar-nav > li.nav-item > a.nav-link,
   #mainNav .navbar-nav > li.nav-item > a.nav-link:focus {
-    
+
     padding-left: 64px;
     padding-right: 64px;
 
@@ -478,7 +497,7 @@ header.masthead {
   color: #F05F40 !important; }
 
 .btn {
-  
+
   font-weight: 700;
   text-transform: uppercase;
   border: none;
@@ -496,7 +515,7 @@ header.masthead {
 }
 
 .btn-xl {
-  padding: 1rem 2rem; 
+  padding: 1rem 2rem;
   min-width: 150px;
 }
 

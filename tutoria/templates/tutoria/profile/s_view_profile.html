@@ -4,14 +4,15 @@
   <div class="jumbotron main-container page-title">
     <div class="container">
             <div class="row">
-                
-                    
-                        
-                            <div class="profile-container">
-                                <img src="http://placehold.it/380x500" alt="" class="img-rounded img-responsive" />
+
+
+
+                            <div class="row profile-container">
+                                <div class="profile-pic">
+                                <img src="{{tutor.avatar.url}}" alt="" class="img-rounded img-responsive" /></div>
                             </div>
-                        
-                       
+
+
                             <div class="profile-container-deets">
                                 <h1><a href="#">{{tutor.first_name}} {{tutor.last_name}}</a></h1>
                                 <div class="profile-sub-deets">
@@ -25,9 +26,9 @@
                                     <a class="btn btn-primary" href="/tutoria/viewTimetable/{{tutor.id}}">Book Session</a>
                                 </div></div>
                             </div>
-                        
-                    
-                
+
+
+
             </div>
             <br>
             <div class="reviews-container">
