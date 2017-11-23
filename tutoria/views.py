@@ -162,6 +162,12 @@ def set_profile(request):
         balance = request.POST['balance'],
         )
         wallet.save()
+
+        if len(request.FILES) != 0:
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage()
+            avatar = fs.save(str(myfile),myfile)
+
         if temp[0] == 'tutor':
             course_tut=""
             try:
@@ -179,6 +185,7 @@ def set_profile(request):
                 rate = request.POST['rate'],
                 tags = request.POST['tags'],
                 phoneNumber = request.POST['tel'],
+                avatar = avatar
             )
             tutor.save()
             tutor.course.add(course_tut)
@@ -187,7 +194,8 @@ def set_profile(request):
             student = Student(
                 name = request.user.first_name + request.user.last_name,
                 username = request.user.username,
-                isTutor = isTutor
+                isTutor = isTutor,
+                avatar = avatar
             )
             student.save()
         return redirect('/tutoria/dashboard')

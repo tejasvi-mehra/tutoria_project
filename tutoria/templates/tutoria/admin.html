@@ -37,6 +37,7 @@
   .label {
       line-height: 2 !important;
   }
+
 .bootstrap-tagsinput .tag {
       margin-right: 2px;
       color: #bb6767;
@@ -73,9 +74,12 @@
       </form>
       <a href="/tutoria/logout">logout</a>
     </div>
-  </div>
-</main>
 
+    <div>
+      <label> Remove Courses </label> <input type="text" name="remsub" value="{% for course in courses %}{{course}}{%endfor%}"data-role="tagsinput"> <br>
+
+    </div>
+  <button type="submit" name="button">Submit</button>
 
 
   </body>
