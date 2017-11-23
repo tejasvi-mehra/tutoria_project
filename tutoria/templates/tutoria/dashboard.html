@@ -82,8 +82,10 @@
   {% if tutor %}
   <button type="button" name="button">
   <a href="/tutoria/withdraw_funds">Withdraw money</a><br></button>
+
   <button type="button" name="button">
-  <a href="/tutoria/edit_profile">Update</a></br></button>
+    <a href="/tutoria/view_profile/{{tutor.id}}">View Profile</a></br>
+  </button>
   {% endif %}
 
   <br><br>

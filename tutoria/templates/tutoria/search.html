@@ -160,7 +160,7 @@
                 {%endif%}
               </div>
                 <div class="deets">
-                  <span class="brief-prof-header"><h3><a href="/tutoria/viewProfile/{{tutor.id}}">{{tutor.first_name}} {{tutor.last_name}}</a></h3><div class="rating"><img src="{% static "img/star-32.png"%}">
+                  <span class="brief-prof-header"><h3><a href="/tutoria/view_profile/{{tutor.id}}">{{tutor.first_name}} {{tutor.last_name}}</a></h3><div class="rating"><img src="{% static "img/star-32.png"%}">
                     {% if tutor.hasRating %}
                       <p>{{tutor.rating}}</p>
                       {%else%}
