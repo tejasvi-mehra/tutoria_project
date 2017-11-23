@@ -9,7 +9,7 @@ urlpatterns = [
 
     url(r'^login/$', auth_views.login ,  name='login'),
 
-    url(r'^logout/$', auth_views.logout ,  {'next_page' : 'login'}, name='logout'),
+    url(r'^logout/$', auth_views.logout ,  {'next_page' : 'home'}, name='logout'),
 
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
 

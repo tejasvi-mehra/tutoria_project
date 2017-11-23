@@ -29,6 +29,15 @@ def start():
                      time="{}:{}".format(tdy.hour,tdy.minute)
                      )
          notif.save()
+         notif=Notification(
+                     title="{} was paid by {} to you.".format(transaction.amount,transaction.student),
+                     forSession=False,
+                     tutor=transaction.tutor,
+                     now=int(ttime.time()),
+                     date="{}/{}/{}".format(tdy.day,tdy.month,tdy.year),
+                     time="{}:{}".format(tdy.hour,tdy.minute)
+                     )
+
 
 
 def clear_history():
