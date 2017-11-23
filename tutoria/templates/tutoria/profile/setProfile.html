@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -7,17 +7,26 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <script scr=""></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
     <title>Tutoria</title>
+    {% load staticfiles %}
 
-    <!-- Bootstrap core CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">  <script src="https://code.jquery.com/jquery-3.2.1.min.js"
-    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-    crossorigin="anonymous"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'tutoria/style.css' %}"/> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet ">
+
+    <!-- Custom fonts for this template -->
+    <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet " type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+
     <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css" />
     <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+    <!-- Plugin CSS -->
+    <link href="{% static 'vendor/magnific-popup/magnific-popup.css' %}" rel="stylesheet ">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/creative.css' %}" rel="stylesheet">
 
 
   </head>
@@ -28,15 +37,41 @@
   .label {
       line-height: 2 !important;
   }
-  a {color:#000000;}      /* unvisited link */
-  a:visited {color:#000000;}  /* visited link */
-  a:hover {color:#000000;}  /* mouse over link */
-  a:active {color:#000000;}  /* selected link */
-  a {
-  text-decoration: none;
+
+.bootstrap-tagsinput .tag {
+      margin-right: 2px;
+      color: #bb6767;
   }
   </style>
   <body>
+    <nav class="navbar navbar-expand-lg navbar-shrink fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">Tutoria</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto nav-link-container">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#about"><img src="{% static 'img/magnifying-glass.png' %}"></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#services"><img src="{% static 'img/star.png' %}"></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#portfolio"><img src="{% static 'img/envelope.png' %}"></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#contact"><img src="{% static 'img/settings.png' %}"></a>
+            </li>
+          </ul>
+        </div> -->
+      </div>
+    </nav>
+    <main role="main" class="container">
+      <div class="jumbotron main-container page-title">
+        <div class="container">
+      {%if error%} {{error}} {% endif %}
     <form class="well form-horizontal" action="" method="post" onsubmit="return validateMyForm();" enctype="multipart/form-data">
       {% csrf_token %}
       <h3>Register as Tutor:</h3>
@@ -48,6 +83,8 @@
           University <input type="text" name="university" value=""><br>
           Biography <input type="text" name="biography" value=""><br>
           Upload Profile Photo <input type="file" name="myfile" value="hi">
+          Primary Subject <input type="text" name="sub" value="">
+          Course Code <input type="text" name="code" value=""> <br>
           Tags <input type="text" name="tags" value="" data-role="tagsinput">
         <div id="tutorRate" style="display:none">Rate <input type="number" name="rate" value="0" step="10"></div>
         </div>
@@ -67,6 +104,9 @@
 
       <button type="submit" name="button">Submit</button>
     </form>
+  </div>
+</div>
+</main>
   </body>
 </html>
 
