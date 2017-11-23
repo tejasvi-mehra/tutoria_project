@@ -576,7 +576,7 @@ def edit_profile(request):
                 tutor.course.add(courselist)
             except:
                 print('y')
-                
+
         if request.POST['sub']:
             try:
                 course_tut = Course.objects.get(subject=request.POST['sub'],code=request.POST['code'])
@@ -590,7 +590,7 @@ def edit_profile(request):
             avatar = fs.save(str(myfile),myfile)
             tutor.avatar = avatar
         tutor.save()
-        return redirect('/tutoria/dashboard')
+        return redirect('/tutoria/edit_profile')
     else:
         tutor = Tutor.objects.get(username=request.user.username)
         return render(request, 'tutoria/profile/editProfile.html',{"tutor" : tutor})
