@@ -55,16 +55,27 @@ def dashboard(request):
     if request.user.username ==  "administrator":
 
         if request.method == 'POST':
-            sub=request.POST['sub']
-            code=request.POST['code']
-            course = Course(
-            subject = sub,
-            code = code,
-            )
-            course.save()
-            return render(request, 'tutoria/admin.html',{'notify':'Course Added'})
 
-        return render(request, 'tutoria/admin.html')
+            if request.POST['remsub']:
+                Course.objects.all().delete()
+                remsub = request.POST['remsub']
+                courselist = str(remsub).split(',')
+                xs = [str(x).split(':') for x in courselist]
+                for id_i,code in enumerate(xs):
+                    course = Course(subject=xs[id_i][1],code=xs[id_i][0])
+                    course.save()
+                    
+            if request.POST['sub']:
+                sub=request.POST['sub']
+                code=request.POST['code']
+                course = Course(
+                subject = sub,
+                code = code,
+                )
+                course.save()
+
+
+        return render(request, 'tutoria/admin.html',{'courses':Course.objects.all()})
 
     if request.user.username ==  "mytutors":
         wallet = MyTutorsWallet.objects.get(username="mytutors")
