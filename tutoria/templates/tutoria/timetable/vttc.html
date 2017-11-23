@@ -1,26 +1,24 @@
 {% extends 'tutoria/base.html' %}
 {% block body %}
-  <style media="screen">
-    a:link{
-      /*color:blue;*/
-    }
-    td,th{
-      width:5%;
-    }
-    td{
-      background: white;
-    }
-    .main-container{
-      padding-bottom: 0.5rem;
-    }
-  </style>
+
+<style media="screen">
+  a:link{
+    /*color:blue;*/
+  }
+  td{
+    background: white;
+  }
+  .main-container{
+    padding-bottom: 0.5rem;
+  }
+</style>
 <main role="main" class="container">
-<div class="jumbotron main-container page-title">
-  <div>
-    <h1>Your Timetable</h1>
-  </div>
-  <div class="table-responsive">
-    <table class="table table-striped">
+  <div class="jumbotron main-container page-title">
+    <div>
+      <h1>{{tutor.first_name}} {{tutor.last_name}}</h1>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped">
       <thead>
           <tr>
             <th>
@@ -76,33 +74,28 @@
             </th>
           </tr>
         </thead>
-      <tbody>
-        <tr>
-          {% for sesh in sessions %}
+        <tbody>
+          <tr>
+            {% for sesh in sessions %}
               {% if forloop.counter0|divisibleby:16  %}
                 </tr>
               {% endif %}
               {% if forloop.counter0|divisibleby:16 %}
                 <tr>
-                <th>{{sesh.time | date:'Y-m-d'}}</th>
+                  <th>{{sesh.time | date:'Y-m-d'}}</th>
               {% endif %}
-              <td style="text-align:center;">
-                {% ifnotequal sesh.status 'vacant'  %}
-                  {% ifnotequal sesh.status 'MIDDLE'  %}
-                    <p><a href="/tutoria/session_detail/{{sesh.time | date:'Y-m-d H:i'}}/">BOOKED</a></p>
+                <td>
+                  {% ifnotequal sesh.status 'vacant' %}
+                    <p>UNAVAILABLE</p>
                   {% else %}
-                    <p><a href="/tutoria/session_detail/{{sesh.time | date:'Y-m-d H:i'}}/">BOOKED</a></p>
-                  {% endifnotequal %}
-                  {% else %}
-                    <p style="margin-bottom:0px; font-color:green">VACANT</p>
-                    <!-- <a href="/tutoria/search"><span style="font-size:75%;">Book</a></span> -->
+                    <p><a href="/tutoria/book/{{tutor.id}}/{{sesh.time |date:'Y-m-d H:i'}}">AVAILABLE&nbsp&nbsp;</a></p>
                   {% endifnotequal %}
                 </td>
-              {% endfor %}
-            </tr>
-          </tbody>
-        </table>
+                {% endfor %}
+              </tr>
+            </tbody>
+          </table>
+      </div>
     </div>
-  </div>
-</main>
+  </main>
 {% endblock %}

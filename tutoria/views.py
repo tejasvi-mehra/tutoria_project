@@ -308,7 +308,10 @@ def view_tutor_timetable(request, tutor_id):
         'tutor' : tutor,
         'sessions' : result
     }
-    return render(request, 'tutoria/timetable/viewTimetable.html', context)
+    if tutor.tutortype == 'private':
+        return render(request, 'tutoria/timetable/vttp.html', context)
+    else:
+        return render(request, 'tutoria/timetable/vttc.html', context)
 
 def check_conflict(tutor, student, date_time):
     # print(date_time, datetime.datetime.today(), datetime.timedelta(hours=24))
