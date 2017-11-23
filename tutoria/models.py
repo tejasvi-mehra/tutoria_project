@@ -13,7 +13,7 @@ class Course (models.Model):
     code = models.CharField(max_length=10, default="")
     subject = models.CharField(max_length=100, default="")
     def __str__(self):
-        return str(self.subject)+','+str(self.code)
+        return str(self.code)+':'+str(self.subject)+','
 
 class Tutor(models.Model):
     last_name = models.CharField(max_length=100, default="")
@@ -81,9 +81,9 @@ class MyTutorsWallet(models.Model):
 class Notification(models.Model):
 
     title = models.CharField(max_length=250)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
-    forSession =models.BooleanField(default=True)
+    student = models.ForeignKey(Student, null=True,on_delete=models.CASCADE)
+    tutor = models.ForeignKey(Tutor, null=True,on_delete=models.CASCADE)
+    forSession=models.BooleanField(default=True)
     viewed_stu = models.BooleanField(default=False)
     viewed_tut = models.BooleanField(default=False)
     now = models.DecimalField(decimal_places=2, max_digits=13, default=0)
