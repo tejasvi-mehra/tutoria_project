@@ -83,15 +83,15 @@ class Notification(models.Model):
     title = models.CharField(max_length=250)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
-    forSession=models.BooleanField(default=True)
+    forSession =models.BooleanField(default=True)
     viewed_stu = models.BooleanField(default=False)
     viewed_tut = models.BooleanField(default=False)
-    now=models.DecimalField(decimal_places=2, max_digits=13, default=0)
+    now = models.DecimalField(decimal_places=2, max_digits=13, default=0)
     start_time = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
-    date=models.CharField(max_length=200)
-    time=models.CharField(max_length=200)
-    session=models.ForeignKey(Session,default=2)
+    date = models.CharField(max_length=200)
+    time = models.CharField(max_length=200)
+    session = models.ForeignKey(Session,default=2)
 
 class Review(models.Model):
     """docstring for Review"""
