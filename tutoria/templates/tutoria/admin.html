@@ -5,9 +5,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   </head>
   <body>
-    Whats up Admin !!
+<h1>Add courses</h1>
+{%if notify%}{{notify}}{%endif%}
+<form class="well form-horizontal" action="" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
 
-    Add courses
+    <br>
+    <div>
+      Add Subject <input type="text" name="sub" value="">
+      Course Code <input type="text" name="code" value=""> <br>
+    </div>
+  <button type="submit" name="button">Submit</button>
+
+</form>
 
     <a href="/tutoria/logout">logout</a>
   </body>
