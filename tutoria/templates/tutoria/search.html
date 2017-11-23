@@ -9,7 +9,7 @@
 
     <title>Tutoria</title>
     {% load staticfiles %}
-    
+
     <!-- <link rel="stylesheet" type="text/css" href="{% static 'tutoria/style.css' %}"/> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -20,6 +20,8 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css" />
+    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
     <!-- Plugin CSS -->
     <link href="{% static 'vendor/magnific-popup/magnific-popup.css' %}" rel="stylesheet ">
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
@@ -28,6 +30,7 @@
 
   </head>
 
+  {% if student %}
   <body id="page-top">
 {% load static %}
     <nav class="navbar navbar-expand-lg navbar-shrink fixed-top" id="mainNav">
@@ -80,31 +83,23 @@
                             <button type="button" class="search-btn btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Filters</button>
                             <div class="dropdown-menu dropdown-menu-right" role="menu">
                               <div class="form-group">
-                                <select class="form-control" name="uniSearch">
-                                    <option value="HKU">HKU</option>
-                                    <option value="" selected>All Univerisities</option>
-                                </select>
+                                <input class="form-control" type="text" name="uniSearch" placeholder="University">
                               </div>
                               <div class="form-group">
-                                <select class="form-control" name="courseSearch">
-                                    <option value="COMP2123">COMP2123</option>
-                                    <option value="ENGG1111">ENGG1111</option>
-                                    <option value="" selected>All Courses</option>
-                                </select>
+                                <input class="form-control" type="text" name="courseSearch" placeholder="Course Code [XXXX0000]">
                               </div>
                               <div class="form-group">
-                                <select class="form-control" name="subSearch">
-                                    <option value="C++">C++</option>
-                                    <option value="JAVA">JAVA</option>
-                                    <option value="" selected>All Subjects</option>
-                                </select>
+                              <input class="form-control" type="text" name="subSearch" placeholder="Subject">
                               </div>
-                                  <div class="form-group col-md-6">
-                                    <input class="form-control" type="number" name="rateFrom" placeholder="Hourly Rate - From"/>
-                                  </div>
-                                  <div class="form-group col-md-6">
-                                    <input class="form-control" type="number" name="rateTo" placeholder="Hourly Rate - To"/>
-                                  </div>
+                              <div class="form-group col-md-12">
+                                <input class="form-control" type="text" name="tags" data-role="tagsinput" placeholder="Tags: Separate by comma" size="35">
+                              </div>
+                              <div class="form-group col-md-6">
+                                <input class="form-control" type="number" min="0" max="1000" step="10" name="rateFrom" placeholder="Hourly Rate - From"/>
+                              </div>
+                              <div class="form-group col-md-6">
+                                <input class="form-control" type="number" min="0" max="1000" step="10" name="rateTo" placeholder="Hourly Rate - To"/>
+                              </div>
                                   <div class="form-group">
                                     <select class="form-control" name="typeSearch">
                                         <option value="contracted">Contracted</option>
@@ -122,7 +117,7 @@
 
                             </div><button type="submit" name="button" class="btn btn-primary search-btn">Submit<span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></span>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -160,7 +155,7 @@
                       {%endif%}
 
                     </div><div class="head-descript"><p>{{tutor.university}}</p><p>{% if tutor.tutortype == "private" %}Rate: {{tutor.rate}} HKD {% else %} {{tutor.tutortype}} {% endif %} </p></div></span>
-                  
+
                   <p>{{tutor.biography}}</p></div></span>
                   <br>
                 </div>
@@ -207,4 +202,7 @@ $(document).ready(function() {
     <script src="../../../../assets/js/vendor/popper.min.js"></script>
     <script src="../../../../dist/js/bootstrap.min.js"></script>
   </body>
+  {% else %}
+  Access Denied
+  {% endif %}
 </html>
