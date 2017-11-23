@@ -9,6 +9,12 @@ import time
 from datetime import date, datetime
 
 
+class Course (models.Model):
+    code = models.CharField(max_length=10, default="")
+    subject = models.CharField(max_length=100, default="")
+    def __str__(self):
+        return str(self.subject)+','+str(self.code)
+
 class Tutor(models.Model):
     last_name = models.CharField(max_length=100, default="")
     first_name = models.CharField(max_length=100, default="")
@@ -18,10 +24,10 @@ class Tutor(models.Model):
     tutortype = models.CharField(max_length=10)
     isStudent = models.BooleanField(default=False)
     rate = models.IntegerField(default=0)
-    course = models.CharField(max_length=10, default="")
+    course = models.ManyToManyField(Course)
     subject = models.CharField(max_length=100, default="")
     phoneNumber = models.IntegerField(default=99999999)
-    avatar = models.FileField(default="http://s3.amazonaws.com/37assets/svn/765-default-avatar.png")
+    avatar = models.FileField(default='anonymous.png')
     isHidden =  models.BooleanField(default=False)
     rating = models.DecimalField(decimal_places=2,max_digits=3,default=0)
     hasRating = models.BooleanField(default=False)
@@ -104,9 +110,6 @@ class Coupon(models.Model):
 def send_notif(sender, **kwargs):
     print("New Notification")
 
-class Course(models.Model):
-    code = models.CharField(max_length=10, default="")
-    subject = models.CharField(max_length=100, default="")
 
 class Wallet(models.Model):
     username = models.CharField(max_length=100)

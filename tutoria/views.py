@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm
-from .models import Tutor, Student, Session, Transaction, MyTutorsWallet, Notification, Review, Wallet, Coupon
+from .models import Tutor, Student, Session, Transaction, MyTutorsWallet, Notification, Review, Wallet, Coupon, Course
 from django.db.models import Q
 import datetime
 from dateutil import parser
@@ -136,6 +136,11 @@ def set_profile(request):
         )
         wallet.save()
         if temp[0] == 'tutor':
+            course_tut=""
+            try:
+                course_tut = Course.objects.get(subject=request.POST['sub'],code=request.POST['code'])
+            except:
+                return render(request, 'tutoria/profile/editProfile.html', {'error': 'Invalid Course Specified'})
             tutor = Tutor(
                 first_name = request.user.first_name,
                 last_name = request.user.last_name,
@@ -149,6 +154,8 @@ def set_profile(request):
                 phoneNumber = request.POST['tel'],
             )
             tutor.save()
+            tutor.course.add(course_tut)
+            tutor.save()
         if 'student' in temp:
             student = Student(
                 name = request.user.first_name + request.user.last_name,
@@ -159,21 +166,26 @@ def set_profile(request):
         return redirect('/tutoria/dashboard')
     return render(request, 'tutoria/profile/setProfile.html')
 
+
 @login_required()
 def search(request):
-    tutors = Tutor.objects.all()
-    return render(request, 'tutoria/search.html', {'tutors': tutors})
+    tutors = Tutor.objects.filter(isHidden=False)
+    username = request.user.username
+    student, tutor = check_person(username)
+    return render(request, 'tutoria/search.html', {'tutors': tutors,'student':student,'tutor':tutor})
 
 @login_required()
 def nameSearch(request):
+    username = request.user.username
+    student, tutor = check_person(username)
     if request.method =='GET':
-        tutors = Tutor.objects.all()
-        return render(request, 'tutoria/search.html', {'tutors': tutors})
+        tutors = Tutor.objects.filter(isHidden=False)
+        return render(request, 'tutoria/search.html', {'tutors': tutors,'student':student,'tutor':tutor})
     else:
         field_name = request.POST['nameSearch']
         if field_name:
-            tutors = Tutor.objects.filter(Q(first_name__startswith=field_name) | Q(last_name__startswith=field_name))
-            return render(request, 'tutoria/search.html', {'tutors': tutors, 'nameSearch':1})
+            tutors = Tutor.objects.filter(Q(first_name__startswith=field_name) | Q(last_name__startswith=field_name),isHidden=False)
+            return render(request, 'tutoria/search.html', {'tutors': tutors,'student':student,'tutor':tutor})
 
 
         '''try:'''
@@ -184,21 +196,32 @@ def nameSearch(request):
         field_rateTo = request.POST['rateTo']
         field_type = request.POST['typeSearch']
         field_day = request.POST['daySearch']
+        field_tags = request.POST['tags']
 
         #print(field_uni,field_course,field_sub,field_type)
-        try:
+        #print(field_course,field_sub,'hi')
+        kk=Course.objects.filter(code__startswith=field_course,subject__startswith=field_sub)
+        tutors=""
+        if (field_rateTo or field_rateFrom):
+            print(*kk)
             tutors = Tutor.objects.filter(university__startswith=field_uni,
                                           tutortype__startswith=field_type,
-                                          course__startswith=field_course,
-                                          subject__startswith=field_sub,
+                                          course__in=kk,
                                           rate__lt=field_rateTo,
-                                          rate__gt=field_rateFrom)
-        except:
+                                          rate__gt=field_rateFrom,
+                                          tags__icontains=field_tags,
+                                          isHidden=False).distinct()
+            print([k for k in tutors])
+
+        else:
+            print(*kk)
+            #print('wtf')
             tutors = Tutor.objects.filter(university__startswith=field_uni,
                                           tutortype__startswith=field_type,
-                                          course__startswith=field_course,
-                                          subject__startswith=field_sub)
-
+                                          course__in=kk,
+                                          tags__icontains=field_tags,
+                                          isHidden=False).distinct()
+            print([k for k in tutors])
         if field_day =="Seven":
             t_remove=[]
             for t in tutors:
@@ -210,12 +233,9 @@ def nameSearch(request):
 
             tutors=tutors.exclude(id__in=[o.id for o in t_remove])
 
-        return render(request, 'tutoria/search.html', {'tutors': tutors, 'nameSearch':1})
+        return render(request, 'tutoria/search.html', {'tutors': tutors,'student':student,'tutor':tutor})
 
-        '''except Exception as e:
-            print(e)
-            tutors = Tutor.objects.all()
-            return render(request, 'tutoria/search.html', {'tutors': tutors})'''
+
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def view_tutor_profile(request, tutor_id):
@@ -526,6 +546,12 @@ def edit_profile(request):
         tutor.isHidden = isHidden
         tutor.phoneNumber = request.POST['tel']
         tutor.tags = request.POST['tags']
+        course_tut=""
+        try:
+            course_tut = Course.objects.get(subject=request.POST['sub'],code=request.POST['code'])
+        except:
+            return render(request, 'tutoria/profile/editProfile.html', {'error': 'Invalid Course Specified'})
+        tutor.course.add(course_tut)
         if len(request.FILES) != 0:
             myfile = request.FILES['myfile']
             fs = FileSystemStorage()
