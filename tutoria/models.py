@@ -25,7 +25,6 @@ class Tutor(models.Model):
     isStudent = models.BooleanField(default=False)
     rate = models.IntegerField(default=0)
     course = models.ManyToManyField(Course)
-    subject = models.CharField(max_length=100, default="")
     phoneNumber = models.IntegerField(default=99999999)
     avatar = models.FileField(default='anonymous.png')
     isHidden =  models.BooleanField(default=False)

@@ -53,6 +53,17 @@ def coupon(request, code):
 @login_required()
 def dashboard(request):
     if request.user.username ==  "administrator":
+
+        if request.method == 'POST':
+            sub=request.POST['sub']
+            code=request.POST['code']
+            course = Course(
+            subject = sub,
+            code = code,
+            )
+            course.save()
+            return render(request, 'tutoria/admin.html',{'notify':'Course Added'})
+
         return render(request, 'tutoria/admin.html')
 
     if request.user.username ==  "mytutors":
