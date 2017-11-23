@@ -342,22 +342,22 @@ def check_conflict(tutor, student, date_time):
     tdy = datetime.datetime.today() + datetime.timedelta(hours=8)
     print(date_time < datetime.datetime.today() + datetime.timedelta(hours=24))
     if student.username == tutor.username:
-        return False
+        return False, "You cannot book a session with yourself."
     if date_time < tdy + datetime.timedelta(hours=24):
-        return False
+        return False, "You cannot book a timeslot which start within 24 hours."
     tutor_sessions = filter_sessions(get_tutor_sessions(tutor.username), 7)
     student_sessions  = filter_sessions(get_student_sessions(student.username), 7)
     sessions = tutor_sessions + student_sessions
     for item in sessions:
         if item.start_time <= date_time and date_time < item.end_time:
-            return False
+            return False, "You have a conflict with another session."
     for item in student_sessions:
         if item.tutor == tutor:
             comp = item.start_time
             if comp.day == date_time.day and comp.month == date_time.month and comp.year == date_time.year:
-             return False
+             return False, "You can only book one session per tutor per day."
 
-    return True
+    return True, ""
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def book(request, tutor_id, date_time):
@@ -367,7 +367,8 @@ def book(request, tutor_id, date_time):
         print("**********", request.POST['final'])
         due = float(request.POST['final'])
         student = get_object_or_404(Student, username=request.user.username)
-        if check_conflict(tutor, student, start_time):
+        flag, error = check_conflict(tutor, student, start_time)
+        if flag:
             duration = 60 if tutor.tutortype == 'private' else 30
             td = datetime.timedelta(minutes=60) if tutor.tutortype == 'private' else datetime.timedelta(minutes=30)
             #  Deduct from wallet
@@ -445,7 +446,7 @@ def book(request, tutor_id, date_time):
                 sendFundsToAdmin(student.username, costOfBooking)
                 return redirect('/tutoria/dashboard')
         else:
-            return render(request, 'tutoria/session/bookSession.html', {'error' : 'conflict with another booked slot.'})
+            return render(request, 'tutoria/session/bookSession.html', {'error' : error})
     else:
         context = {
             'date': date_time,
