@@ -1,9 +1,36 @@
   {% extends 'tutoria/base.html' %}
   {% block body %}
+  <style media="screen">
+  .header img {
+float: left;
+width: 100px;
+height: 100px;
+background: #555;
+}
+
+.header h1 {
+position: relative;
+top: 18px;
+left: 0px;
+}
+  </style>
       <main role="main" class="container">
         <div class="jumbotron main-container page-title">
           <div>
+            <div class="header">
+          {% if tutor %}
+
+            <img src="{{tutor.avatar.url}}" alt="">
+
+          {% else %}
+
+            <img src="{{student.avatar.url}}" alt="">
+
+          {% endif %}
           <h1>Dashboard</h1></div>
+        </div>
+        <br>
+        <br>
 
   <h4>Hey {{name}}</h4>
   <div class="content-container">
@@ -82,8 +109,10 @@
   {% if tutor %}
   <button type="button" name="button">
   <a href="/tutoria/withdraw_funds">Withdraw money</a><br></button>
+
   <button type="button" name="button">
-  <a href="/tutoria/edit_profile">Update</a></br></button>
+    <a href="/tutoria/view_profile/{{tutor.id}}">View Profile</a></br>
+  </button>
   {% endif %}
 
   <br><br>

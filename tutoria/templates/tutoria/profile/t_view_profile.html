@@ -1,0 +1,47 @@
+{% extends 'tutoria/base.html' %}
+{% block body %}
+<main role="main" class="container">
+  <div class="jumbotron main-container page-title">
+    <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                    <div class="well well-sm">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-4">
+                                <img src="http://placehold.it/380x500" alt="" class="img-rounded img-responsive" />
+                            </div>
+                            <div class="col-sm-6 col-md-8">
+                                <p><b>Biography:</b> {{tutor.biography}}<br>
+                                <b>University:</b> {{tutor.university}}<br>
+                                <b>Tutor Type:</b> {{tutor.tutortype}}<br></p>
+                                <b>Tutor Rate:</b> {{tutor.rate}}<br></p>
+                                <!-- Split button -->
+                                <div class="btn-group">
+                                    <a class="btn btn-primary" href="/tutoria/viewTimetable/{{tutor.id}}">Book Session</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="well well-sm">
+                <h3>Reviews</h3>
+                <br>
+                {%for rev in reviews%}
+                <h4>{{rev.student.username}}</h4>
+                <h4>{{rev.rating}}/5</h4>
+                <p>{{rev.text}}</p>
+                <br>
+                {%endfor%}
+            </div>
+            <button type="button" name="button">
+              <a href="/tutoria/edit_profile/{{tutor.id}}">Update Profile</a></br>
+            </button>
+
+        </div>
+  </div>
+
+</main>
+
+{% endblock %}
