@@ -2,7 +2,7 @@
 {% block body %}
 
 {%if error%} <h1>{{error}}</h1>
-{% else %}
+  {% endif %}
     <form class="well form-horizontal" action="" method="post" enctype="multipart/form-data">
       {% csrf_token %}
 
@@ -17,13 +17,13 @@
           Upload Profile Photo <input type="file" name="myfile" value="">
           Rate <input type="number" name="rate" value="{{tutor.rate}}">
           Phone Number: <input type="tel" name="tel" value="{{tutor.phoneNumber}}"><br>
-          Add Subject <input type="text" name="sub" value="">
-          Course Code <input type="text" name="code" value=""> <br>
+          Remove Subject <input type="text" name="remsub" value="{% for course in tutor.course.all%}{{course}}{%endfor%}"data-role="tagsinput"> <br>
+          Add Subject <input type="text" name="sub">
+          Course Code <input type="text" name="code"> <br><br>
           Tags <input type="text" name="tags" value="{{tutor.tags}}" data-role="tagsinput">
 
         </div>
       <button type="submit" name="button">Submit</button>
 
     </form>
-  {% endif %}
 {% endblock %}
