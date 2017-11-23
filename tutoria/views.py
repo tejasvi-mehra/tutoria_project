@@ -372,7 +372,7 @@ def book(request, tutor_id, date_time):
                 transaction.save()
 
                 """ Notification object """
-                title="{} booked a session with {} on {}.".format(session.student,session.tutor,session.start_time)
+                title="{} booked a session with you on {}.".format(session.student,session.start_time)
                 today=datetime.datetime.today()
                 str_date="{}/{}/{}".format(today.day,today.month,today.year)
                 str_time="{}:{}".format(today.hour,today.minute)
@@ -381,7 +381,7 @@ def book(request, tutor_id, date_time):
 
                     title=title,
                     tutor=session.tutor,
-                    student=session.student,
+                    student=None,
                     now=now,
                     date=str_date,
                     time=str_time,
@@ -393,6 +393,23 @@ def book(request, tutor_id, date_time):
                 )
                 print(notif.title)
                 notif.save()
+                title2="You booked a session with {} on {}.".format(session.tutor,session.start_time)
+                notif2=Notification(
+
+                    title=title2,
+                    tutor=None,
+                    student=session.student,
+                    now=now,
+                    date=str_date,
+                    time=str_time,
+                    start_time = start_time,
+                    end_time = start_time + td,
+                    forSession = True,
+                    session=session
+
+                )
+                print(notif2.title)
+                notif2.save()
                 """ Notification object """
                 sendFundsToAdmin(student.username, costOfBooking)
                 return redirect('/tutoria/dashboard')
@@ -422,10 +439,10 @@ def detail_cancel(request, date_time):
             transaction.delete()
             today=datetime.datetime.today()
             notif=Notification(
-                title="{} cancelled session with {} scheduled for {}".format(student.username,session.tutor.username,session.start_time),
+                title="You cancelled session with {} scheduled for {}".format(session.tutor,session.start_time),
                 forSession=False,
                 student=student,
-                tutor=session.tutor,
+                tutor=None,
                 now=int(ttime.time()),
                 date="{}/{}/{}".format(today.day,today.month,today.year),
                 time="{}:{}".format(today.hour,today.minute)
@@ -433,6 +450,20 @@ def detail_cancel(request, date_time):
                 )
             print(notif.title)
             notif.save()
+            notif2=Notification(
+                title="{} cancelled session with you scheduled for {}".format(session.student,session.start_time),
+                forSession=False,
+                student=None,
+                tutor=session.tutor,
+                now=int(ttime.time()),
+                date="{}/{}/{}".format(today.day,today.month,today.year),
+                time="{}:{}".format(today.hour,today.minute)
+
+                )
+            print("To: {}".format(session.tutor.username)+"\nFrom: MyTutors\nSubject: Session Activity")
+            print("Dear {},\n".format(session.tutor.first_name+" "+session.tutor.last_name))
+            print(notif2.title)
+            notif2.save()
             return redirect('/tutoria/dashboard')
         else:
             error = "You cant cancel a session which starts in less than 24 hours. Sorry."
@@ -500,18 +531,21 @@ def notifications(request):
             s=None
         tutor=None
         student=None
+        notifs=[]
         if s:
             student=s
+            stu_notifs=Notification.objects.filter(student=student)
+            for y in stu_notifs:
+                notifs.append(y)
         else:
             tutor=Tutor.objects.filter(username=request.user.username)
-        stu_notifs=Notification.objects.filter(student=student)
-        tut_notifs=Notification.objects.filter(tutor=tutor)
+            tut_notifs=Notification.objects.filter(tutor=tutor)
+            for x in tut_notifs:
+                notifs.append(x)
         # stu_notifs=Notification.objects.filter(student=user)
-        notifs=[]
-        for x in tut_notifs:
-            notifs.append(x)
-        for y in stu_notifs:
-            notifs.append(y)
+        
+        
+        
 
         notifs.sort(key=lambda x: x.now, reverse=True)
 

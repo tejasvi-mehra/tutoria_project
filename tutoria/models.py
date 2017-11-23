@@ -81,8 +81,8 @@ class MyTutorsWallet(models.Model):
 class Notification(models.Model):
 
     title = models.CharField(max_length=250)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, null=True,on_delete=models.CASCADE)
+    tutor = models.ForeignKey(Tutor, null=True,on_delete=models.CASCADE)
     forSession=models.BooleanField(default=True)
     viewed_stu = models.BooleanField(default=False)
     viewed_tut = models.BooleanField(default=False)
