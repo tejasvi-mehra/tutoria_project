@@ -394,7 +394,10 @@ def book(request, tutor_id, date_time):
                     session=session
 
                 )
+                print("To: {}".format(session.tutor.username)+"\nFrom: MyTutors\nSubject: Session Activity")
+                print("Dear {},\n".format(session.tutor.first_name+" "+session.tutor.last_name))
                 print(notif.title)
+                # notif2.save()
                 notif.save()
                 title2="You booked a session with {} on {}.".format(session.tutor,session.start_time)
                 notif2=Notification(
@@ -411,7 +414,7 @@ def book(request, tutor_id, date_time):
                     session=session
 
                 )
-                print(notif2.title)
+                # print(notif2.title)
                 notif2.save()
                 """ Notification object """
                 sendFundsToAdmin(student.username, costOfBooking)
