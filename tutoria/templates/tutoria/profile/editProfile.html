@@ -1,29 +1,82 @@
 {% extends 'tutoria/base.html' %}
 {% block body %}
+<style media="screen">
+  #yo{
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 70%;
+  }
+  td{
+    padding-right: 100px;
+  }
+</style>
 
 {%if error%} <h1>{{error}}</h1>
 {% else %}
-    <form class="well form-horizontal" action="" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
+  <main role="main" class="container">
+    <div class="jumbotron main-container page-title" id="yo">
+      <div class="page-title">
+      <h1>Update Profile</h1></div>
 
-      <h3>Update Profile</h3>
-        <br>
-        <div>
-          First Name <input type="text" name="first_name" value="{{tutor.first_name}}"><br>
-          Last Name <input type="text" name="last_name" value="{{tutor.last_name}}"><br>
-          University <input type="text" name="university" value="{{tutor.university}}"><br>
-          Biography <input type="text" name="biography" value="{{tutor.biography}}"><br>
-          Deactivate Profile<input type="checkbox" name="isHidden" value="True"><br>
-          Upload Profile Photo <input type="file" name="myfile" value="">
-          Rate <input type="number" name="rate" value="{{tutor.rate}}">
-          Phone Number: <input type="tel" name="tel" value="{{tutor.phoneNumber}}"><br>
-          Add Subject <input type="text" name="sub" value="">
-          Course Code <input type="text" name="code" value=""> <br>
-          Tags <input type="text" name="tags" value="{{tutor.tags}}" data-role="tagsinput">
+      {% if error %}
+        {{error}} <br>
+        <a href="/tutoria/dashboard"> Dashboard </a>
+      {% endif %}
+      <br>
+      <div align="center">
+        <form class="well form-horizontal" action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+          <table style="text-align: center">
+          <tr>
+            <td><label> First Name </label></td>
+            <td><input type="text" name="first_name" value="{{tutor.first_name}}"></td>
+          </tr>
+          <tr>
+            <td><label> Last Name </label></td>
+            <td><input type="text" name="last_name" value="{{tutor.last_name}}"></td>
+          </tr>
+          <tr>
+            <td><label> University </label></td>
+            <td><input type="text" name="university" value="{{tutor.university}}"></td>
+          </tr>
+          <tr>
+            <td><label> Biography </label></td>
+            <td><input type="text" name="biography" value="{{tutor.biography}}"></td>
+          </tr>
+          <tr>
+            <td><label> Deactivate Profile </label></td>
+            <td><input type="checkbox" name="isHidden" value="True"></td>
+          </tr>
+          <tr>
+            <td><label> Upload Profile Photo </label></td>
+            <td><input type="file" name="myfile" value=""></td>
+          </tr>
+          <tr>
+            <td><label> Rate </label></td>
+            <td><input type="number" name="rate" value="{{tutor.rate}}"></td>
+          </tr>
+          <tr>
+            <td><label> Phone Number: </label></td>
+            <td><input type="number" name="rate" value="{{tutor.rate}}"></td>
+          </tr>
+          <tr>
+            <td><label> Add Subject </label></td>
+            <td><input type="text" name="sub" value=""></td>
+          </tr>
+          <tr>
+            <td><label> Course Code </label></td>
+            <td><input type="text" name="code" value=""> <br></td>
+          </tr>
+          <tr>
+            <td><label> Tags </label></td>
+            <td><input type="text" name="tags" value="{{tutor.tags}}" data-role="tagsinput"></td>
+          </tr>
+        </table>
+          <button type="submit" name="button">Submit</button>
+      </form>
+      </div>
 
-        </div>
-      <button type="submit" name="button">Submit</button>
+  </main>
 
-    </form>
   {% endif %}
 {% endblock %}

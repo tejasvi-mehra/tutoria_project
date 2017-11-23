@@ -14,112 +14,95 @@
       padding-bottom: 0.5rem;
     }
   </style>
-  <main role="main" class="container">
-    <div class="jumbotron main-container page-title">
-      <div>
-        <h1>Your Timetable</h1>
-      </div>
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-              <tr>
-                <th>
+<main role="main" class="container">
+<div class="jumbotron main-container page-title">
+  <div>
+    <h1>Your Timetable</h1>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+          <tr>
+            <th>
 
-                </th>
-                <th>
-                  09:00
-                </th>
-                <th>
-                  09:30
-                </th>
-                <th>
-                  10:00
-                </th>
-                <th>
-                  10:30
-                </th>
-                <th>
-                  11:00
-                </th>
-                <th>
-                  11:30
-                </th>
-                <th>
-                  12:00
-                </th>
-                <th>
-                  12:30
-                </th>
-                <th>
-                  13:00
-                </th>
-                <th>
-                  13:30
-                </th>
-                <th>
-                  14:00
-                </th>
-                <th>
-                  14:30
-                </th>
-                <th>
-                  15:00
-                </th>
-                <th>
-                  15:30
-                </th>
-                <th>
-                  16:00
-                </th>
-                <th>
-                  16:30
-                </th>
-              </tr>
-            </thead>
-          <tbody>
-            <tr>
-              {% for sesh in sessions %}
-                  {% if forloop.counter0|divisibleby:16  %}
-                    </tr>
-                  {% endif %}
-                  {% if forloop.counter0|divisibleby:16 %}
-                    <tr>
-                    <th>{{sesh.time | date:'Y-m-d'}}</th>
-                  {% endif %}
-                  <td style="text-align:center;">
-                    {% ifnotequal sesh.status 'vacant'  %}
-                      {% ifnotequal sesh.status 'MIDDLE'  %}
-                        <p><a href="/tutoria/session_detail/{{sesh.time | date:'Y-m-d H:i'}}/">BOOKED</a></p>
-                      {% else %}
-                        <p><a href="/tutoria/session_detail/{{sesh.time | date:'Y-m-d H:i'}}/">BOOKED</a></p>
-                      {% endifnotequal %}
-                      {% else %}
-                        <p style="margin-bottom:0px; font-color:green">VACANT</p>
-                        <!-- <a href="/tutoria/search"><span style="font-size:75%;">Book</a></span> -->
-                      {% endifnotequal %}
-                    </td>
-                  {% endfor %}
+            </th>
+            <th>
+              09:00
+            </th>
+            <th>
+              09:30
+            </th>
+            <th>
+              10:00
+            </th>
+            <th>
+              10:30
+            </th>
+            <th>
+              11:00
+            </th>
+            <th>
+              11:30
+            </th>
+            <th>
+              12:00
+            </th>
+            <th>
+              12:30
+            </th>
+            <th>
+              13:00
+            </th>
+            <th>
+              13:30
+            </th>
+            <th>
+              14:00
+            </th>
+            <th>
+              14:30
+            </th>
+            <th>
+              15:00
+            </th>
+            <th>
+              15:30
+            </th>
+            <th>
+              16:00
+            </th>
+            <th>
+              16:30
+            </th>
+          </tr>
+        </thead>
+      <tbody>
+        <tr>
+          {% for sesh in sessions %}
+              {% if forloop.counter0|divisibleby:16  %}
                 </tr>
-              </tbody>
-            </table>
-        </div>
-      </div>
-    </main>
+              {% endif %}
+              {% if forloop.counter0|divisibleby:16 %}
+                <tr>
+                <th>{{sesh.time | date:'Y-m-d'}}</th>
+              {% endif %}
+              <td style="text-align:center;">
+                {% ifnotequal sesh.status 'vacant'  %}
+                  {% ifnotequal sesh.status 'MIDDLE'  %}
+                    <p><a href="/tutoria/session_detail/{{sesh.time | date:'Y-m-d H:i'}}/">BOOKED</a></p>
+                  {% else %}
+                    <p><a href="/tutoria/session_detail/{{sesh.time | date:'Y-m-d H:i'}}/">BOOKED</a></p>
+                  {% endifnotequal %}
+                  {% else %}
+                    <p style="margin-bottom:0px; font-color:green">VACANT</p>
+                    <!-- <a href="/tutoria/search"><span style="font-size:75%;">Book</a></span> -->
+                  {% endifnotequal %}
+                </td>
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+</main>
 {% endblock %}
-<!--
-<h1>Your timetable</h1>
-{% for sesh in sessions %}
-<ul>
-  <li>
-    {% ifnotequal sesh.status 'vacant'  %}
-      {% ifnotequal sesh.status 'MIDDLE'  %}
-        <a href="/tutoria/session_detail/{{sesh.time | date:'Y-m-d H:i'}}/"> {{sesh.time}} - {{sesh.status}} </a>
-      {% else %}
-        {{sesh.time}} - BOOKED
-      {% endifnotequal %}
-    {% else %}
-      {{sesh.time}} - {{sesh.status}}
-    {% endifnotequal %}
-  </li>
-</ul>
-{% endfor %} -->

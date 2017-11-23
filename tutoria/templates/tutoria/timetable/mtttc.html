@@ -1,43 +1,81 @@
-{% if error %}
-{{error}} <br>
-<a href="/tutoria/dashboard"> Dashboard </a>
-{% endif %}
-<h1>Your timetable</h1>
+{% extends 'tutoria/base.html' %}
+{% block body %}
+<style media="screen">
+      a:link{
+        /*color:blue;*/
+      }
+      td,th{
+        width:10%;
+      }
+      td{
+        background: white;
+      }
+      .main-container{
+        padding-bottom: 0.5rem;
+      }
+    </style>
+<main role="main" class="container">
+      <div class="jumbotron main-container page-title">
+        <div>
+          <h1>Timetable</h1>
+        </div>
 
 
+        <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>
 
-<table>
-
-
-{% for sesh in sessions %}
-    {% ifequal forloop.counter 15 %}
-    <tr>
-    {% endifequal %}
-    <td>
-         {% ifnotequal sesh.status 'vacant' %}
-          {{sesh.time}} - {{sesh.status}}
-         {% else %}
-          <a href="/tutoria/tutor_lock_session/{{sesh.time | date:'Y-m-d H:i'}}">{{sesh.time}} - {{sesh.status}} -- lock</a>
-         {% endifnotequal %}
-    </td>
-    {% ifequal forloop.counter 15 %}
-      </tr>
-    {% endifequal %}
-
-{% endfor %}
-
-</table>
-
-
-
-
-<!--
-<ul>
-  <li>
-    {% ifnotequal sesh.status 'vacant' %}
-      {{sesh.time}} - {{sesh.status}}
-    {% else %}
-      <a href="/tutoria/tutor_lock_session/{{sesh.time | date:'Y-m-d H:i'}}">{{sesh.time}} - {{sesh.status}} -- lock</a>
-    {% endifnotequal %}
-  </li>
-</ul> -->
+                  </th>
+                  <th>
+                    09:00
+                  </th>
+                  <th>
+                    10:00
+                  </th>
+                  <th>
+                    11:00
+                  </th>
+                  <th>
+                    12:00
+                  </th>
+                  <th>
+                    13:00
+                  </th>
+                  <th>
+                    14:00
+                  </th>
+                  <th>
+                    15:00
+                  </th>
+                  <th>
+                    16:00
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {% for sesh in sessions %}
+                      {% if forloop.counter0|divisibleby:8  %}
+                        </tr>
+                      {% endif %}
+                      {% if forloop.counter0|divisibleby:8 %}
+                        <tr>
+                        <th>{{sesh.time | date:'Y-m-d'}}</th>
+                      {% endif %}
+                      <td>
+                        {% ifnotequal sesh.status 'vacant' %}
+                          <p>{{sesh.status}}</p>
+                        {% else %}
+                          <p><a href="/tutoria/tutor_lock_session/{{sesh.time | date:'Y-m-d H:i'}}">BLOCK</a></p>
+                        {% endifnotequal %}
+                      </td>
+                  {% endfor %}
+                </tr>
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </main>
+{% endblock %}
