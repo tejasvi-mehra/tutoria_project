@@ -13,7 +13,7 @@ class Course (models.Model):
     code = models.CharField(max_length=10, default="")
     subject = models.CharField(max_length=100, default="")
     def __str__(self):
-        return str(self.subject)+','+str(self.code)
+        return str(self.code)+':'+str(self.subject)+','
 
 class Tutor(models.Model):
     last_name = models.CharField(max_length=100, default="")

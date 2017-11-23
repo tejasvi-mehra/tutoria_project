@@ -73,6 +73,7 @@ def dashboard(request):
     username = request.user.username
     tutor_sessions, student_sessions = get_sessions(username)
     student, tutor = check_person(username)
+    print(student,tutor)
     balance = get_balance(username)
     transactions_outgoing = get_transactions_outgoing(username)
     transactions_incoming = get_transactions_incoming(username)
@@ -151,7 +152,7 @@ def set_profile(request):
             try:
                 course_tut = Course.objects.get(subject=request.POST['sub'],code=request.POST['code'])
             except:
-                return render(request, 'tutoria/profile/editProfile.html', {'error': 'Invalid Course Specified'})
+                return render(request, 'tutoria/profile/setProfile.html', {'error': 'Invalid Course Specified'})
             tutor = Tutor(
                 first_name = request.user.first_name,
                 last_name = request.user.last_name,
@@ -597,19 +598,36 @@ def edit_profile(request):
         tutor.isHidden = isHidden
         tutor.phoneNumber = request.POST['tel']
         tutor.tags = request.POST['tags']
+        remsub = request.POST['remsub']
+        print(remsub)
         course_tut=""
-        try:
-            course_tut = Course.objects.get(subject=request.POST['sub'],code=request.POST['code'])
-        except:
-            return render(request, 'tutoria/profile/editProfile.html', {'error': 'Invalid Course Specified'})
-        tutor.course.add(course_tut)
+        ls =[]
+
+        tutor.course.clear()
+        courselist = str(remsub).split(',')
+        xs = [str(x).split(':') for x in courselist]
+        for id_i,code in enumerate(xs):
+            try:
+                courselist = Course.objects.get(subject=xs[id_i][1],code=xs[id_i][0])
+                print(courselist)
+                tutor.course.add(courselist)
+            except:
+                print('y')
+
+        if request.POST['sub']:
+            try:
+                course_tut = Course.objects.get(subject=request.POST['sub'],code=request.POST['code'])
+                tutor.course.add(course_tut)
+            except:
+                return render(request, 'tutoria/profile/editProfile.html', {'error': 'Invalid Course Specified'})
+
         if len(request.FILES) != 0:
             myfile = request.FILES['myfile']
             fs = FileSystemStorage()
             avatar = fs.save(str(myfile),myfile)
             tutor.avatar = avatar
         tutor.save()
-        return redirect('/tutoria/dashboard')
+        return redirect('/tutoria/edit_profile')
     else:
         tutor = Tutor.objects.get(username=request.user.username)
         return render(request, 'tutoria/profile/editProfile.html',{"tutor" : tutor})
