@@ -52,4 +52,6 @@ urlpatterns = [
     url(r'^coupon/(?P<code>.*)/$',views.coupon, name='coupon'),
 
     url(r'^mytutors/withdraw/$', views.mytutors_withdraw , name='mytutors_withdraw'),
+
+    url(r'^admin_panel/$', views.admin_panel , name='mytutors_withdraw'),
 ]
