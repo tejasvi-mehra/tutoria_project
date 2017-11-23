@@ -3,17 +3,44 @@
   <head>
     <meta charset="utf-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css" />
+    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
   </head>
+  <style media="screen" type="text/css">
+  .bootstrap-tagsinput {
+      width: 50%;
+  }
+  .label {
+      line-height: 2 !important;
+  }
+.bootstrap-tagsinput .tag {
+      margin-right: 2px;
+      color: #bb6767;
+  }
+  </style>
   <body>
+    <nav class="navbar navbar-expand-lg navbar-shrink fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">Tutoria</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+    </nav>
 <h1>Add courses</h1>
 {%if notify%}{{notify}}{%endif%}
-<form class="well form-horizontal" action="" method="post" enctype="multipart/form-data">
+<form class="well form-horizontal" action="/tutoria/admin_panel/" method="post" enctype="multipart/form-data">
   {% csrf_token %}
 
     <br>
     <div>
       Add Subject <input type="text" name="sub" value="">
       Course Code <input type="text" name="code" value=""> <br>
+    </div>
+
+    <div>
+      <label> Remove Courses </label> <input type="text" name="remsub" value="{% for course in courses %}{{course}}{%endfor%}"data-role="tagsinput"> <br>
+
     </div>
   <button type="submit" name="button">Submit</button>
 

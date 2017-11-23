@@ -50,11 +50,22 @@ def coupon(request, code):
     except:
         return JsonResponse({"success" : False})
 
-@login_required()
-def dashboard(request):
-    if request.user.username ==  "administrator":
+def admin_panel(request):
 
-        if request.method == 'POST':
+    if request.method == 'POST':
+
+        if request.POST['remsub']:
+            Course.objects.all().delete()
+            remsub = request.POST['remsub']
+            courselist = str(remsub).split(',')
+            xs = [str(x).split(':') for x in courselist]
+            for id_i,code in enumerate(xs):
+                course = Course(subject=xs[id_i][1],code=xs[id_i][0])
+                course.save()
+        else:
+            Course.objects.all().delete()
+
+        if request.POST['sub']:
             sub=request.POST['sub']
             code=request.POST['code']
             course = Course(
@@ -62,9 +73,13 @@ def dashboard(request):
             code = code,
             )
             course.save()
-            return render(request, 'tutoria/admin.html',{'notify':'Course Added'})
 
-        return render(request, 'tutoria/admin.html')
+    return render(request, 'tutoria/admin.html',{'courses':Course.objects.all()})
+
+@login_required()
+def dashboard(request):
+    if request.user.username ==  "administrator":
+        return render(request, 'tutoria/admin.html',{'courses':Course.objects.all()})
 
     if request.user.username ==  "mytutors":
         wallet = MyTutorsWallet.objects.get(username="mytutors")
@@ -246,7 +261,6 @@ def nameSearch(request):
             tutors=tutors.exclude(id__in=[o.id for o in t_remove])
 
         return render(request, 'tutoria/search.html', {'tutors': tutors,'student':student,'tutor':tutor})
-
 
 
 @login_required(redirect_field_name='/tutoria/dashboard')
@@ -550,9 +564,9 @@ def notifications(request):
             for x in tut_notifs:
                 notifs.append(x)
         # stu_notifs=Notification.objects.filter(student=user)
-        
-        
-        
+
+
+
 
         notifs.sort(key=lambda x: x.now, reverse=True)
 
