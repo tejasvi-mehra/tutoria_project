@@ -162,6 +162,12 @@ def set_profile(request):
         balance = request.POST['balance'],
         )
         wallet.save()
+
+        if len(request.FILES) != 0:
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage()
+            avatar = fs.save(str(myfile),myfile)
+
         if temp[0] == 'tutor':
             course_tut=""
             try:
@@ -179,6 +185,7 @@ def set_profile(request):
                 rate = request.POST['rate'],
                 tags = request.POST['tags'],
                 phoneNumber = request.POST['tel'],
+                avatar = avatar
             )
             tutor.save()
             tutor.course.add(course_tut)
@@ -187,7 +194,8 @@ def set_profile(request):
             student = Student(
                 name = request.user.first_name + request.user.last_name,
                 username = request.user.username,
-                isTutor = isTutor
+                isTutor = isTutor,
+                avatar = avatar
             )
             student.save()
         return redirect('/tutoria/dashboard')
@@ -267,12 +275,14 @@ def nameSearch(request):
 def view_tutor_profile(request, tutor_id):
     tutor = get_object_or_404(Tutor, pk=tutor_id)
     reviews=Review.objects.filter(tutor=tutor)
-    return render(request, 'tutoria/profile/viewProfile.html', {'tutor':tutor, 'reviews':reviews[::-1]})
-    reviews=Review.objects.filter(tutor=tutor)
     hasRating=False
     if len(reviews)>3:
         hasRating=True
-    return render(request, 'tutoria/profile/viewProfile.html', {'tutor':tutor, 'reviews':reviews[::-1], 'hasRating':hasRating})
+    if request.user.username == tutor.username:
+        return render(request, 'tutoria/profile/t_view_profile.html', {'tutor':tutor, 'reviews':reviews[::-1], 'hasRating':hasRating})
+    else:
+        return render(request, 'tutoria/profile/s_view_profile.html', {'tutor':tutor, 'reviews':reviews[::-1], 'hasRating':hasRating})
+
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def tutor_block_session(request, date_time):
@@ -600,7 +610,7 @@ def review(request,session_id):
         return render(request, 'tutoria/writeReview.html')
 
 @login_required()
-def edit_profile(request):
+def edit_profile(request, tutor_id):
     if request.method == 'POST':
         tutor = Tutor.objects.get(username=request.user.username)
         tutor.first_name = request.POST['first_name']

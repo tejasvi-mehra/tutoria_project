@@ -23,7 +23,7 @@ urlpatterns = [
 
     url(r'^cancel/(?P<date_time>.*)/$', views.detail_cancel, name='cancel'),
 
-    url(r'^viewProfile/(?P<tutor_id>[0-9]+)/$', views.view_tutor_profile, name='view_profile'),
+    url(r'^view_profile/(?P<tutor_id>[0-9]+)/$', views.view_tutor_profile, name='view_profile'),
 
     url(r'^viewTimetable/(?P<tutor_id>[0-9]+)/$', views.view_tutor_timetable, name='view_timetable'),
 
@@ -47,7 +47,7 @@ urlpatterns = [
 
     url(r'^writeReview/(?P<session_id>.*)/$',views.review,name='review'),
 
-    url(r'^edit_profile/$', views.edit_profile, name='edit_profile'),
+    url(r'^edit_profile/(?P<tutor_id>[0-9]+)/$', views.edit_profile, name='edit_profile'),
 
     url(r'^coupon/(?P<code>.*)/$',views.coupon, name='coupon'),
 
