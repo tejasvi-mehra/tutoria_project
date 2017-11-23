@@ -117,6 +117,72 @@ li {
     overflow: scroll;
 
 }
+.profile-container{
+
+  display: inline-block;
+  margin: 10px;
+  /*padding: 10px;*/
+  border-radius: 10px;
+  background: #fff;
+  /*width: 100%;*/
+
+}
+.profile-container-deets{
+
+  display: inline-block;
+  float: right;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: #fff;
+  width: 61%;
+
+}
+
+.profile-container-deets h1{
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.profile-sub-deets {
+
+  padding: 10px;
+}
+
+.detail{
+
+  padding: 5px;
+  border-bottom: solid black;
+  border-bottom-width: 0.5px;
+}
+.profile-sub-deets h3{
+  color: #5bc0de;
+}
+
+.profile-sub-deets p{
+
+  font-family: 'Hind', sans-serif;
+  font-size: 24px;
+  text-transform: capitalize;
+  text-align: end;
+}
+
+.reviews-container{
+padding: 10px;
+background-color: #fff;
+border-radius: 10px;
+/*width: 90%;*/
+
+}
+
+.review{
+margin: 5px;
+border-radius: 10px;
+border-color: #fc2;
+padding: 10px;
+border-width: 1px;
+
+}
 
 
 .brief-container{
