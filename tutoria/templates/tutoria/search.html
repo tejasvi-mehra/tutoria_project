@@ -173,14 +173,20 @@
                       <p>{{tutor.rating}}</p>
                       {%else%}
                       <p>Unrated</p>
-                      {%endif%}
+                  {%endif%}
 
-            </div>
+            </div></span>
+            <br>
           <div class="head-descript">
-                    <span class="prof-detail"><h4>University :</h4>&nbsp<p>{{tutor.university}}</p></span>
-                    <span class="prof-detail"><h4>Tutor Type :</h4>
-                    <p>{% if tutor.tutortype == "private" %}Rate: {{tutor.rate}} HKD {% else %} {{tutor.tutortype}} {% endif %} </p></span>
-                    <span class="prof-detail"><h4>Bio :</h4><p>{{tutor.biography}}</p></span></div>
+                    <span class="prof-detail"><h4>University :</h4><p>{{tutor.university}}</p></span>
+                    {% if tutor.tutortype == "private" %}<span class="prof-detail"><h4>Tutor Type :</h4>
+                    <p>Private</p></span>
+                    <span class="prof-detail"><h4>Rate :</h4>
+                    <p>  {{tutor.rate}} HKD </p></span>
+                  {% else %} 
+                  <span class="prof-detail"><h4>Tutor Type :</h4><p>Contracted</p></span>
+                   {% endif %} 
+                    <span class="prof-detail"><h4>Tags :</h4><p>{{tutor.tags}}</p></span></div>
         </div>
         </span>
         <br>
