@@ -81,8 +81,8 @@
             <a href="/tutoria/session_detail/{{notif.start_time | date:'Y-m-d H:i'}}/">View Session</a></button>
             {%elif notif.forReview%}
             <br>
-            <button class="btn btn-primary tutoria-button1" style="float: right;" >
-              <a href="/tutoria/write_review/{{session_id}}/">Write a review</a>
+            <button class="btn btn-primary tutoria-button1">
+              <a href="/tutoria/write_review/{{notif.session.pk}}/">Write a review</a>
             </button>
             {%endif%}
             

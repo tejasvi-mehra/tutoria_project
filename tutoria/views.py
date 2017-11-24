@@ -418,7 +418,8 @@ def book(request, tutor_id, date_time):
                     start_time = start_time,
                     end_time = start_time + td,
                     amount = due,
-                    commission = commission
+                    commission = commission,
+                    session = session
                 )
                 transaction.save()
 
@@ -559,12 +560,15 @@ def withdraw_funds(request):
 @login_required()
 def notifications(request):
     if request.method=="GET":
+        print(request.user.username)
         s1=Student.objects.filter(username=request.user.username)
         if len(s1)>=0:
             s=s1
         else:
             s=None
-        tutor=None
+        tutor=Tutor.objects.filter(username=request.user.username)
+        print(tutor)
+        print(s)
         student=None
         notifs=[]
         if s:
@@ -572,18 +576,19 @@ def notifications(request):
             stu_notifs=Notification.objects.filter(student=student)
             for y in stu_notifs:
                 notifs.append(y)
-        else:
+        if tutor:
             tutor=Tutor.objects.filter(username=request.user.username)
             tut_notifs=Notification.objects.filter(tutor=tutor)
             for x in tut_notifs:
                 notifs.append(x)
+
         # stu_notifs=Notification.objects.filter(student=user)
 
 
 
 
         notifs.sort(key=lambda x: x.now, reverse=True)
-
+        print(notifs)
         return render(request,'tutoria/notifications.html/',{'notifs':notifs})
 
 @login_required(redirect_field_name='/tutoria/dashboard')
