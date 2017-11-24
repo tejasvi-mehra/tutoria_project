@@ -1,9 +1,6 @@
 {% extends 'tutoria/base.html' %}
 {% block body %}
   <style media="screen">
-    a:link{
-      /*color:blue;*/
-    }
     td,th{
       width:5%;
     }
@@ -91,7 +88,7 @@
                   {% ifnotequal sesh.status 'MIDDLE'  %}
                     <p><a href="/tutoria/session_detail/{{sesh.time | date:'Y-m-d H:i'}}/">BOOKED</a></p>
                   {% else %}
-                    <p><a href="/tutoria/session_detail/{{sesh.time | date:'Y-m-d H:i'}}/">BOOKED</a></p>
+                    <p style="color:#F05F40">BOOKED</p>
                   {% endifnotequal %}
                   {% else %}
                     <p style="margin-bottom:0px; color:#1abf5d">VACANT</p>

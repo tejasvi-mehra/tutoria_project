@@ -15,33 +15,39 @@ def moneyTransfer(amount, username):
 
 def start():
     tdy = datetime.datetime.today()
-    transactions = Transaction.objects.filter(completed=False,end_time__lte=tdy)
-    for transaction in transactions:
-         transaction.completed=True
-         transaction.save()
-         moneyTransfer(transaction.amount, transaction.tutor.username)
-         notif=Notification(
-                     title="Click to write a review for your session with {}".format(transaction.tutor),
-                     forSession=False,
-                     student=transaction.student,
-                     now=int(ttime.time()),
-                     date="{}/{}/{}".format(tdy.day,tdy.month,tdy.year),
-                     time="{}:{}".format(tdy.hour,tdy.minute),
-                     forReview=True
-                     )
-         notif.save()
-         notif2=Notification(
-                     title="{} was paid by {} to you.".format(transaction.amount,transaction.student),
-                     forSession=False,
-                     tutor=transaction.tutor,
-                     now=int(ttime.time()),
-                     date="{}/{}/{}".format(tdy.day,tdy.month,tdy.year),
-                     time="{}:{}".format(tdy.hour,tdy.minute)
-                     )
-         notif2.save()
-         print("To: {}".format(transaction.tutor.username)+"\nFrom: MyTutors\nSubject: Session Activity")
-         print("Dear {},\n".format(transaction.tutor.first_name+" "+transaction.tutor.last_name))
-         print(notif2.title)
+    sessions = Session.objects.filter(end_time__lte=tdy)
+    print(sessions)
+    for session in sessions:
+         transaction = Transaction.objects.get(session = session)
+         if transaction.completed == False :
+             print(session)
+             transaction.completed=True
+             transaction.save()
+             moneyTransfer(transaction.amount, transaction.tutor.username)
+             notif=Notification(
+                         title="Click to write a review for your session with {}".format(transaction.tutor),
+                         forSession=False,
+                         student=session.student,
+                         now=int(ttime.time()),
+                         date="{}/{}/{}".format(tdy.day,tdy.month,tdy.year),
+                         time="{}:{}".format(tdy.hour,tdy.minute),
+                         forReview=True,
+                         session=session
+                         )
+             notif.save()
+             notif2=Notification(
+                         title="{} was paid by {} to you.".format(transaction.amount,transaction.student),
+                         forSession=False,
+                         tutor=session.tutor,
+                         now=int(ttime.time()),
+                         date="{}/{}/{}".format(tdy.day,tdy.month,tdy.year),
+                         time="{}:{}".format(tdy.hour,tdy.minute),
+                         session=session
+                         )
+             notif2.save()
+             print("To: {}".format(transaction.tutor.username)+"\nFrom: MyTutors\nSubject: Session Activity")
+             print("Dear {},\n".format(transaction.tutor.first_name+" "+transaction.tutor.last_name))
+             print(notif2.title)
 
 
 def clear_history():

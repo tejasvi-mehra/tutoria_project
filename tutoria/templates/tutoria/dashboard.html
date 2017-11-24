@@ -47,7 +47,7 @@ left: 0px;
 <div class="dash-sub dash-content">
   {% if tutor %}
 
- 
+
   {% if student and tutor %}
   <h3>Tutor Dashboard</h3><br>
   {%else%}
@@ -72,19 +72,19 @@ left: 0px;
 
   {% endif %}
 
-  
-  
+
+
 
   {%if student%}
 
     {% if student and tutor %}
     <div class="dash-sub dash-content">
   <h3>Student Dashboard</h3>
-  
+
   {%else%}
   <h3>Upcoming Sessions</h3>
   <div class="content-container dash-content">
-  
+
   {%endif%}
   <br>
   {%if not student_sessions%}
@@ -99,7 +99,7 @@ left: 0px;
   <button style="float: right;" class="btn btn-primary tutoria-button1"><a href="/tutoria/manage_timetable/student">Manage student timetable</a></button>
   <br>
   <br>
-  
+
   </div>
 
 {% endif %}
@@ -112,8 +112,8 @@ left: 0px;
     <div class="dash-sub ">
       <h3>Transaction History</h3>
       <div class="content-container dash-content">
-  
-  
+
+
   <br>
   <h5 style="color: #ffa028;
   text-transform: uppercase;">Outgoing Transactions</h5>
@@ -122,11 +122,13 @@ left: 0px;
   <p>No transactions to show!</p>
   {%else%}
 
-  {% for transaction in transactions_outgoing %}
-  <p>
-      HK$ {{transaction.amount}} paid to {{transaction.tutor}} for session on {{transaction.start_time}}
-    </p>
-  {% endfor %}
+    {% for transaction in transactions_outgoing %}
+      {% ifnotequal transaction.amount 0 %}
+        <p>
+          HK$ {{transaction.amount}} paid to {{transaction.tutor}} for session on {{transaction.start_time}}
+        </p>
+      {% endifnotequal %}
+    {% endfor %}
   {%endif%}
   <br>
   <h5 style="color: #ffa028;
@@ -139,7 +141,7 @@ left: 0px;
  <p>
       HK$ {{transaction.amount}} paid by {{transaction.student}} for session on {{transaction.start_time}}
     <p>
-  
+
   {% endfor %}
   {%endif%}
   <br>
@@ -152,7 +154,7 @@ left: 0px;
   <br>
   {%else%}
  <div class="buttons" style="float: right;">
-  <button style="float: right;"type="button" class="btn btn-primary tutoria-button1" type="button" name="button">
+  <button style="float: right;margin-left:10px;"type="button" class="btn btn-primary tutoria-button1" type="button" name="button">
   <a href="/tutoria/withdraw_funds">Withdraw money</a><br></button>  <button style="float: right;"type="button" class="btn btn-primary tutoria-button1" name="button">
   <a href="/tutoria/add_funds">Add money</a></button></div>
   </div>
@@ -163,9 +165,9 @@ left: 0px;
   <a href="/tutoria/search">Search for Tutors</a><br></button>
   {% endif %} -->
 
-  
 
-  
+
+
 
   <!-- <button type="button" name="button">
     <a href="/tutoria/view_profile/{{tutor.id}}">View Profile</a></br>

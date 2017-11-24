@@ -167,14 +167,14 @@ li {
 .profile-pic{
   padding: 10px;
   margin-right: auto;
-margin-right: auto;
-display: block;
+  margin-right: auto;
+  display: block;
 }
 
 .profile-pic img{
-margin-right: auto;
-margin-right: auto;
-display: block;
+  margin-right: auto;
+  margin-right: auto;
+  display: block;
   max-width:80%;
 }
 

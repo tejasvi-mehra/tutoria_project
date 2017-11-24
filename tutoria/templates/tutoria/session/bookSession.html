@@ -22,6 +22,8 @@
         <br>
         <h4>Session Rate: {{tutor.rate}}</h4>
         <br>
+        <h4>MyTutors Fees: 5%</span></h4>
+        <br>
         <h4>Amount to be payed: <span id="due_amount">{{tutor.rate}}</span></h4>
         <br>
         <h4>Add coupon code: </h4>
@@ -43,7 +45,7 @@
        <div class="modal-body">
          <div class="jumbotron main-container page-title" >
            <div class="brief-container">
-             <p>Name: {{tutor.username}}</p>
+             <p>Name: {{tutor.first_name}} {{tutor.last_name}}</p>
              <p>Date: {{date}}</p>
              <p>Due: <span id="due_amount_copy">{{tutor.rate}}</span></p>
              <form action = "/tutoria/book/{{tutor.id}}/{{date}}/" method = "post">

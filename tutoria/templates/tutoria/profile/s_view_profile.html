@@ -26,7 +26,7 @@
                               <div class="detail"><h3>Tutor Type:</h3> <p>{{tutor.tutortype}}</p></div><br>
                               {% ifequal tutor.tutortype 'private' %}
                               <div class="detail"><h3>Tutor Rate:</h3><p>{{tutor.rate}}</p></div><br>
-                          </div>
+
                           {% endifequal %}
                           {% if tutor.hasRating  %}
                             <div class="detail"><h3>Average Rating:</h3><p>{{tutor.rating}}</p></div><br>
@@ -38,6 +38,7 @@
                           {% else %}
                             <div class="detail"><h3>Availability (7 days)</h3><p>No</p></div><br>
                           {% endif %}
+                          </div>
                           <div class="btn-group">
                               <a class="btn btn-primary" href="/tutoria/view_timetable/{{tutor.id}}">Book Session</a>
                           </div>
@@ -59,7 +60,7 @@
             <tbody>
               {% for rev in reviews %}
                 <tr>
-                  <td>{{rev.student.username}}</td>
+                  <td>{{rev.student.name}}</td>
                   <td>{{rev.text}}</td>
                   <td>{{rev.rating}}/5</td>
                 </tr>

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
-from .models import MyTutorsWallet, Course, Tutor, Student, Transaction, Wallet, Session, Review, Coupon
+from .models import MyTutorsWallet, Course, Tutor, Student, Transaction, Wallet, Session, Review, Coupon, Notification
 from django.contrib.admin import AdminSite
 
 
@@ -13,3 +13,4 @@ admin.site.register(Transaction)
 admin.site.register(Session)
 admin.site.register(Wallet)
 admin.site.register(Coupon)
+admin.site.register(Notification)

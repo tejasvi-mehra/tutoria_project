@@ -143,7 +143,7 @@ def session_tutor(request, date_time):
 def manage_tutor_time_table(request):
     print("here whats up")
     error = ""
-    if request.GET['error']:
+    if request.GET.get('error'):
         error = request.GET['error']
     username = request.user.username
     all_sessions = get_tutor_sessions(username)
@@ -152,7 +152,8 @@ def manage_tutor_time_table(request):
     week = create_week(14, 60) if tutor.tutortype == 'private' else create_week(14, 30)
     result = manage_sessions(all_sessions, week)
     context = {
-        'sessions' : result, 'error' :error
+        'sessions' : result,
+        'error' : error
     }
     if tutor.tutortype == 'private':
         print("here whats up")
@@ -304,7 +305,7 @@ def view_tutor_profile(request, tutor_id):
     reviews=Review.objects.filter(tutor=tutor)
     hasRating=False
     available = True
-    if len(reviews)>3:
+    if len(reviews)>=3:
         hasRating=True
     num=len(Session.objects.filter(tutor=tutor))
     if tutor.tutortype == "private" and num == 56:
@@ -389,7 +390,7 @@ def book(request, tutor_id, date_time):
         if flag:
             duration = 60 if tutor.tutortype == 'private' else 30
             td = datetime.timedelta(minutes=60) if tutor.tutortype == 'private' else datetime.timedelta(minutes=30)
-            costOfBooking = (due + due*0.05) if tutor.tutortype == 'private' else 0
+            costOfBooking = (due) if tutor.tutortype == 'private' else 0
             if costOfBooking > get_balance(student.username) :
                 return render(request, 'tutoria/funds/add_funds.html', {'error' : 'Insufficient Funds !!.','date': date_time,'tutor': tutor})
             else:
@@ -404,18 +405,18 @@ def book(request, tutor_id, date_time):
                 )
                 session.save()
                 # Calculate commission
-                if due != 0:
-                    commission= float(tutor.rate)*0.05
-                    # create transaction object
-                    transaction = Transaction(
-                        tutor = tutor,
-                        student = student,
-                        start_time = start_time,
-                        end_time = start_time + td,
-                        amount = due,
-                        commission = commission
-                    )
-                    transaction.save()
+
+                # create transaction object
+                commission = float(tutor.rate)*0.05
+                transaction = Transaction(
+                    tutor = tutor,
+                    student = student,
+                    start_time = start_time,
+                    end_time = start_time + td,
+                    amount = due,
+                    commission = commission
+                )
+                transaction.save()
 
                 """ Notification object """
                 title="{} booked a session with you on {}.".format(session.student,session.start_time)
@@ -463,9 +464,11 @@ def book(request, tutor_id, date_time):
         else:
             return render(request, 'tutoria/session/bookSession.html', {'error' : error, 'date': date_time,'tutor': tutor})
     else:
+        due = float(tutor.rate)
         context = {
             'date': date_time,
-            'tutor': tutor
+            'tutor': tutor,
+            'due' : due
         }
         return render(request, 'tutoria/session/bookSession.html', context)
 
@@ -474,11 +477,15 @@ def session_detail(request, date_time):
     tocancel = parser.parse(date_time)
     student = Student.objects.get(username = request.user.username)
     session = Session.objects.get(student = student, start_time=tocancel)
-    transaction = Transaction.objects.get(student = student, start_time = tocancel)
     tdy = datetime.datetime.today() + datetime.timedelta(hours=8)
+    canCancel = True
+    if session.start_time < tdy:
+        canCancel = False
+    print(canCancel)
     error = ''
     if request.method == 'POST':
         if session.start_time > tdy + datetime.timedelta(hours=24):
+            transaction = Transaction.objects.get(student = student, start_time = tocancel)
             refund_amount = transaction.amount + transaction.commission
             refundFromAdmin(student.username, refund_amount)
             session.delete()
@@ -516,7 +523,8 @@ def session_detail(request, date_time):
 
     context = {
         'session' : session,
-        'error' : error
+        'error' : error,
+        'canCancel' : canCancel
     }
     return render(request, 'tutoria/session/session_detail.html', context)
 
@@ -549,32 +557,33 @@ def withdraw_funds(request):
 @login_required()
 def notifications(request):
     if request.method=="GET":
-        s1=Student.objects.filter(username=request.user.username)
+        print(request.user.username)
+        s = None
+        tut = None
+        s1 = Student.objects.filter(username=request.user.username)
         if len(s1)>=0:
-            s=s1
-        else:
-            s=None
-        tutor=None
-        student=None
+            s=s1[0]
+        tutor=Tutor.objects.filter(username=request.user.username)
         notifs=[]
         if s:
             student=s
             stu_notifs=Notification.objects.filter(student=student)
             for y in stu_notifs:
                 notifs.append(y)
-        else:
-            tutor=Tutor.objects.filter(username=request.user.username)
-            tut_notifs=Notification.objects.filter(tutor=tutor)
+        if tutor:
+            tut = tutor[0]
+            tut_notifs=Notification.objects.filter(tutor=tut)
             for x in tut_notifs:
                 notifs.append(x)
-        # stu_notifs=Notification.objects.filter(student=user)
-
-
-
 
         notifs.sort(key=lambda x: x.now, reverse=True)
-
-        return render(request,'tutoria/notifications.html/',{'notifs':notifs})
+        print(notifs)
+        context = {
+            'notifs' : notifs,
+            'tutor' : tut,
+            'student' : s
+        }
+        return render(request,'tutoria/notifications.html/', context)
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def review(request,session_id):
@@ -590,7 +599,7 @@ def review(request,session_id):
         tut=session.tutor
         revs=Review.objects.filter(tutor=tut)
 
-        if len(revs)>3:
+        if len(revs)>=3:
             tot=0
             for rev in revs:
                 tot=tot+rev.rating
@@ -617,12 +626,8 @@ def edit_profile(request, tutor_id):
         tutor.phoneNumber = request.POST['tel']
         tutor.tags = request.POST['tags']
         remsub = request.POST['remsub']
-
-
-        print(remsub)
         course_tut=""
         ls =[]
-
         tutor.course.clear()
         courselist = str(remsub).split(',')
         xs = [str(x).split(':') for x in courselist]
@@ -647,7 +652,9 @@ def edit_profile(request, tutor_id):
             avatar = fs.save(str(myfile),myfile)
             tutor.avatar = avatar
         tutor.save()
-        return render(request, 'tutoria/profile/editProfile.html',{"tutor" : tutor})
+
+        return redirect('/tutoria/view_profile/' + str(tutor.id))
+        # return render(request, 'tutoria/profile/editProfile.html',{"tutor" : tutor})
     else:
         tutor = Tutor.objects.get(username=request.user.username)
         return render(request, 'tutoria/profile/editProfile.html',{"tutor" : tutor})

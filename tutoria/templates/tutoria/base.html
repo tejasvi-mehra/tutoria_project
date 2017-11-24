@@ -81,9 +81,13 @@
 
   <script type="text/javascript">
 
-    $('#due_amount_copy').text('{{tutor.rate}}');
+    due = parseFloat('{{due}}');
 
-    $('#final_due_amount').val('{{tutor.rate}}');
+    $('#due_amount').text(due);
+
+    $('#due_amount_copy').text(due);
+
+    $('#final_due_amount').val(due);
 
     var code = "";
 
@@ -107,9 +111,10 @@
             $('#final_due_amount').val(final);
             console.log(final);
             $(".invalid").empty();
+            $(".invalid").append('<h5 style="color:green;">Applied</h5>')
           }
           else{
-            $(".invalid").append("<h3>fuck off</h3>")
+            $(".invalid").append('<h5 style="color:red;">Invalid Code</h5>')
           }
         }
       })

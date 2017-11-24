@@ -10,7 +10,7 @@
         </div>
         {% endif %}
         <br>
-        Funds - {{balance}}<br><br>
+        Funds : {{balance}}<br><br>
         <h1>Withdraw Amount</h1>
         <form onSubmit="return confirm('Are you sure you wish to withdraw?');" class="" action="/tutoria/withdraw_funds/" method="post">
           {% csrf_token %}

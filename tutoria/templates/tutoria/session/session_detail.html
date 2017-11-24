@@ -20,18 +20,20 @@
         <div class="brief-container">
           <h4>Tutor Name: {{session.tutor.first_name}} {{session.tutor.last_name}}</h3>
           <br>
-          <h4>Start Time : {{session.start_tim}}</h4>
+          <h4>Start Time : {{session.start_time}}</h4>
           <br>
-          <h4>End Time: {{session.end_tim}}</h4>
+          <h4>End Time: {{session.end_time}}</h4>
           <br>
           <h4>Duration: {{session.duration}}</h4>
           <br>
+          {% if canCancel %}
           <div class="buttons">
-            <form onSubmit="return confirm('Are you sure you wish to cancel this session?');" action = "/tutoria/cancel/{{start |date:'Y-m-d H:i'}}/" method = "post">
+            <form onSubmit="return confirm('Are you sure you wish to cancel this session?');" action = "/tutoria/cancel/{{session.start_time |date:'Y-m-d H:i'}}/" method = "post">
                     {% csrf_token %}
                     <input class="btn btn-primary tutoria-button1" type="submit" name="cancel" value="Cancel" />
             </form>
         </div>
+        {% endif %}
       </div>
     </div>
  </main>
