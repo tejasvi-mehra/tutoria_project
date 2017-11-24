@@ -9,18 +9,33 @@
   td{
     padding-right: 100px;
   }
+  .label-info{
+    background-color: #5bc0de;
+  }
+
+  .bootstrap-tagsinput {
+      width: 50%;
+  }
+
+    .bootstrap-tagsinput .tag {
+          margin-right: 2px;
+          color: white;
+          font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    }
 </style>
 
-{%if error%} <h1>{{error}}</h1>  {% endif %}
 
   <main role="main" class="container">
     <div class="jumbotron main-container page-title" id="yo">
       <div class="page-title">
       <h1>Update Profile</h1></div>
-
       {% if error %}
-        {{error}} <br>
-        <a href="/tutoria/dashboard"> Dashboard </a>
+      <div style="background:#F05F40; text-align: center">
+        <hr>
+        <h3>{{error}}</h3>
+        <a style="color:white" href="/tutoria/dashboard"> Dashboard </a>
+        <hr>
+      </div>
       {% endif %}
       <br>
       <div align="center">
@@ -49,7 +64,7 @@
           </tr>
           <tr>
             <td><label> Upload Profile Photo </label></td>
-            <td><input type="file" name="myfile" value=""></td>
+            <td style="padding-left:10%"><input type="file" name="myfile" value=""></td>
           </tr>
           <tr>
             <td><label> Rate </label></td>

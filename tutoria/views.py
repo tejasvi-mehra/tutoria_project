@@ -161,11 +161,7 @@ def set_profile(request):
         if 'tutor' in temp:
             isTutor = True
         # Create wallet object
-        wallet = Wallet(
-        username = request.user.username,
-        balance = request.POST['balance'],
-        )
-        wallet.save()
+
         avatar = ""
 
         if len(request.FILES) != 0:
@@ -217,6 +213,11 @@ def set_profile(request):
                 avatar = avatar
             )
             student.save()
+        wallet = Wallet(
+        username = request.user.username,
+        balance = request.POST['balance'],
+        )
+        wallet.save()
         return redirect('/tutoria/dashboard')
     return render(request, 'tutoria/profile/set_profile.html')
 
@@ -348,8 +349,10 @@ def tutor_block_session(request, date_time):
         session.save()
         return redirect('/tutoria/manage_timetable/tutor')
     else:
-        return render(request, 'tutoria/timetable/mtttp.html', {'error' : 'cant lock already been booked'})
-
+        if tutor.tutortype == "private":
+            return render(request, 'tutoria/timetable/mtttp.html', {'error' : "Can't lock already been booked"})
+        else :
+            return render(request, 'tutoria/timetable/mtttc.html', {'error' : "Can't lock already been booked"})
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def tutor_unblock_session(request, date_time):
@@ -391,10 +394,13 @@ def book(request, tutor_id, date_time):
             duration = 60 if tutor.tutortype == 'private' else 30
             td = datetime.timedelta(minutes=60) if tutor.tutortype == 'private' else datetime.timedelta(minutes=30)
             #  Deduct from wallet
-
+            context = {
+                'date': date_time,
+                'tutor': tutor
+            }
             costOfBooking = (due + due*0.05) if tutor.tutortype == 'private' else 0
             if costOfBooking > get_balance(student.username) :
-                return render(request, 'tutoria/funds/add_funds.html', {'error' : 'Insufficient Funds !!.'})
+                return render(request, 'tutoria/funds/add_funds.html', {'error' : 'Insufficient Funds !!.','date': date_time,'tutor': tutor})
             else:
                 session = Session(
                     tutor = tutor,
@@ -465,12 +471,11 @@ def book(request, tutor_id, date_time):
                 sendFundsToAdmin(student.username, costOfBooking)
                 return redirect('/tutoria/dashboard')
         else:
-            return render(request, 'tutoria/session/bookSession.html', {'error' : error})
+            return render(request, 'tutoria/session/bookSession.html', {'error' : error, 'date': date_time,'tutor': tutor})
     else:
         context = {
             'date': date_time,
-            'tutor': tutor,
-            'coupon' : ["1", "2"]
+            'tutor': tutor
         }
         return render(request, 'tutoria/session/bookSession.html', context)
 
@@ -517,7 +522,7 @@ def detail_cancel(request, date_time):
             notif2.save()
             return redirect('/tutoria/dashboard')
         else:
-            error = "You cant cancel a session which starts in less than 24 hours. Sorry."
+            error = "You can't cancel a session which starts in less than 24 hours. Sorry."
 
     context = {
         'session_id':session.id,
@@ -548,7 +553,7 @@ def withdraw_funds(request):
     if request.method == 'POST':
         amount = request.POST['amount']
         if float(amount) > float(wallet.balance) :
-            return render(request, 'tutoria/funds/withdraw_funds.html', {error : "Insufficient funds !!!"})
+            return render(request, 'tutoria/funds/withdraw_funds.html', {"error" : "Insufficient funds !!!", 'balance' : wallet.balance})
         else :
             wallet.balance = float(wallet.balance)-float(amount)
             wallet.save()
@@ -644,12 +649,12 @@ def edit_profile(request, tutor_id):
             except:
                 print('y')
 
-        if request.POST['sub']:
+        if request.POST['sub'] or request.POST['code']:
             try:
                 course_tut = Course.objects.get(subject__iexact=request.POST['sub'],code=request.POST['code'])
                 tutor.course.add(course_tut)
             except:
-                return render(request, 'tutoria/profile/editProfile.html', {'error': 'Invalid Course Specified'})
+                return render(request, 'tutoria/profile/editProfile.html', {'error': 'Invalid Course Specified', 'tutor' : tutor})
 
         if len(request.FILES) != 0:
             myfile = request.FILES['myfile']
