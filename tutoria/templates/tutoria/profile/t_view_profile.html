@@ -9,7 +9,17 @@
 
         <div class="row profile-container">
           <div class="profile-pic">
-            <img src="{{tutor.avatar.url}}" alt="" class="img-rounded img-responsive" /></div>
+            <img src="{{tutor.avatar.url}}" alt="" class="img-rounded img-responsive" />
+          </div>
+          <br><br>
+          <div class="">
+            <h1><a href="#"> Tags</a></h1>
+            <ul class="list-group">
+              {% for tag in tags %}
+                <li class="list-group-item">{{tag}}</li>
+              {% endfor %}
+            </ul>
+          </div>
           </div>
 
 
@@ -27,25 +37,30 @@
               </div></div>
             </div>
 
-
-
           </div>
           <br>
           <div class="reviews-container">
-            <h1>Reviews</h1>
-            <br>
-            {%for rev in reviews%}
-            <div class="review">
-              <h4>{{rev.student.username}}</h4>
-              <h4>{{rev.rating}}/5</h4>
-              <p>{{rev.text}}</p></div>
-              <br>
-              {%endfor%}
-            </div>
-            <br>
-            <button type="button" name="button" class="btn-primary tutoria-button1 btn"
-            style="margin-left:auto;margin-right:auto;display:block;">
-            <a href="/tutoria/edit_profile/{{tutor.id}}">Update Profile</a></br>
+                      <h1>Reviews</h1>
+                      <br>
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Student Name</th>
+                      <th>Review</th>
+                      <th>Rating</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for rev in reviews %}
+                      <tr>
+                        <td>{{rev.student.username}}</td>
+                        <td>{{rev.text}}</td>
+                        <td>{{rev.rating}}/5</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+          </div>
           </button>
         </div>
       </div>

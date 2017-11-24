@@ -274,14 +274,22 @@ def nameSearch(request):
 @login_required(redirect_field_name='/tutoria/dashboard')
 def view_tutor_profile(request, tutor_id):
     tutor = get_object_or_404(Tutor, pk=tutor_id)
+    tags = tutor.tags.split(',');
+    print(tags)
     reviews=Review.objects.filter(tutor=tutor)
     hasRating=False
     if len(reviews)>3:
         hasRating=True
+    context = {
+        'tutor':tutor,
+        'reviews':reviews[::-1],
+        'hasRating':hasRating,
+        'tags' :tags[:6]
+    }
     if request.user.username == tutor.username:
-        return render(request, 'tutoria/profile/t_view_profile.html', {'tutor':tutor, 'reviews':reviews[::-1], 'hasRating':hasRating})
+        return render(request, 'tutoria/profile/t_view_profile.html', context)
     else:
-        return render(request, 'tutoria/profile/s_view_profile.html', {'tutor':tutor, 'reviews':reviews[::-1], 'hasRating':hasRating})
+        return render(request, 'tutoria/profile/s_view_profile.html', context)
 
 
 @login_required(redirect_field_name='/tutoria/dashboard')
@@ -492,37 +500,21 @@ def detail_cancel(request, date_time):
 
 @login_required()
 def add_funds(request):
+    wallet = Wallet.objects.get(username=request.user.username)
     if request.method == 'POST':
         amount = request.POST['amount']
-        # student = Student.objects.get(username = request.user.username)
-        # if student.isTutor:
-        #     tutor = Tutor.objects.get(username=request.user.username)
-        #     tutor.balance = float(tutor.balance) + float(amount)
-        #     tutor.save()
-        # else:
-        #     student.balance= float(student.balance) + float(amount)
-        #     student.save()
-        wallet = Wallet.objects.get(username=request.user.username)
-        wallet.balance = float(wallet.balance)+float(amount)
+        wallet.balance = float(wallet.balance) + float(amount)
         wallet.save()
         return redirect('/tutoria/dashboard')
     else:
-        return render(request, 'tutoria/funds/add_funds.html')
+        return render(request, 'tutoria/funds/add_funds.html', {'balance' : wallet.balance})
 
 # Withdraw funds for tutor
 @login_required()
 def withdraw_funds(request):
+    wallet = Wallet.objects.get(username=request.user.username)
     if request.method == 'POST':
         amount = request.POST['amount']
-        # student = Student.objects.get(username = request.user.username)
-        # if student.isTutor:
-        #     tutor = Tutor.objects.get(username=request.user.username)
-        #     tutor.balance = float(tutor.balance) + float(amount)
-        #     tutor.save()
-        # else:
-        #     student.balance= float(student.balance) + float(amount)
-        #     student.save()
-        wallet = Wallet.objects.get(username=request.user.username)
         if float(amount) > float(wallet.balance) :
             return render(request, 'tutoria/funds/withdraw_funds.html', {error : "Insufficient funds !!!"})
         else :
@@ -530,7 +522,7 @@ def withdraw_funds(request):
             wallet.save()
         return redirect('/tutoria/dashboard')
     else:
-        return render(request, 'tutoria/funds/withdraw_funds.html')
+        return render(request, 'tutoria/funds/withdraw_funds.html', {'balance' : wallet.balance})
 
 @login_required()
 def notifications(request):

@@ -2,10 +2,12 @@
 {% block body %}
     <main role="main" class="container">
       <div class="jumbotron" style="text-align:center;">
+        Funds - {{balance}}<br><br>
         <h1>Withdraw Amount</h1>
         <form onSubmit="return confirm('Are you sure you wish to withdraw?');" class="" action="/tutoria/withdraw_funds/" method="post">
           {% csrf_token %}
           $$ <input type="number" name="amount" value="" style="height:40px; width:100px">
+          <br><br>
           <button class ="btn btn-lg btn-primary" type="submit" name="button", style="height:40px">Submit</button>
         </form>
       </div>
