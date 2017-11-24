@@ -456,8 +456,6 @@ def book(request, tutor_id, date_time):
                     now=now,
                     date=str_date,
                     time=str_time,
-                    start_time = start_time,
-                    end_time = start_time + td,
                     forSession = True,
                     session=session
 
@@ -494,7 +492,7 @@ def detail_cancel(request, date_time):
             notif=Notification(
                 title="You cancelled session with {} scheduled for {}".format(session.tutor,session.start_time),
                 forSession=False,
-                student=student,
+                student=session.student,
                 tutor=None,
                 now=int(ttime.time()),
                 date="{}/{}/{}".format(today.day,today.month,today.year),
