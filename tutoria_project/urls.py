@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^tutoria/', include('tutoria.urls')),
     url('^', include('django.contrib.auth.urls')),
+    url(r'^f1d18551.ngrok.io/', include('tutoria.urls')),
 ]
 
 if settings.DEBUG:
