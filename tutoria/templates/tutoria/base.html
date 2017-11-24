@@ -81,11 +81,15 @@
 
   <script type="text/javascript">
 
-    due = parseFloat('{{due}}');
+    due = parseFloat('{{tutor.rate}}');
 
-    $('#due_amount').text(due);
+    due_commision = 0.05*due;
 
-    $('#due_amount_copy').text(due);
+    total = due + due_commision
+
+    $('#due_amount').text(total);
+
+    $('#due_amount_copy').text(total);
 
     $('#final_due_amount').val(due);
 
@@ -102,12 +106,10 @@
           console.log(data);
           if (data["success"] === true){
             var discount = parseInt(data["discount"]);
-            console.log("discount", discount);
-            var old =  $('#due_amount').text() ;
-            console.log("old", old);
-            var final = old - (discount/100)*old;
-            $('#due_amount').text(final);
-            $('#due_amount_copy').text(final);
+            var final = due - (discount/100)*due;
+            total = final + due_commision;
+            $('#due_amount').text(total);
+            $('#due_amount_copy').text(total);
             $('#final_due_amount').val(final);
             console.log(final);
             $(".invalid").empty();

@@ -404,9 +404,7 @@ def book(request, tutor_id, date_time):
                     status = 'BOOKED'
                 )
                 session.save()
-                # Calculate commission
-
-                # create transaction object
+        
                 commission = float(tutor.rate)*0.05
                 transaction = Transaction(
                     tutor = tutor,
@@ -464,11 +462,9 @@ def book(request, tutor_id, date_time):
         else:
             return render(request, 'tutoria/session/bookSession.html', {'error' : error, 'date': date_time,'tutor': tutor})
     else:
-        due = float(tutor.rate)
         context = {
             'date': date_time,
             'tutor': tutor,
-            'due' : due
         }
         return render(request, 'tutoria/session/bookSession.html', context)
 
