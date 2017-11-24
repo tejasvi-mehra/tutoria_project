@@ -17,8 +17,14 @@
           <h1>Timetable</h1>
         </div>
         {% if error %}
-        {{error}}
+        <div style="background:#F05F40; text-align: center">
+          <hr>
+          <h3>{{error}}</h3>
+          <a style="color:white" href="/tutoria/dashboard"> Dashboard </a>
+          <hr>
+        </div>
         {% endif %}
+
 
         <div class="table-responsive">
             <table class="table table-striped">

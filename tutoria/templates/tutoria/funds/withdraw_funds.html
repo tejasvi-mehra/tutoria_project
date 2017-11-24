@@ -2,6 +2,14 @@
 {% block body %}
     <main role="main" class="container">
       <div class="jumbotron" style="text-align:center;">
+        {% if error %}
+        <div style="background:#F05F40">
+          <hr>
+          <h3>{{error}}</h3>
+          <hr>
+        </div>
+        {% endif %}
+        <br>
         Funds - {{balance}}<br><br>
         <h1>Withdraw Amount</h1>
         <form onSubmit="return confirm('Are you sure you wish to withdraw?');" class="" action="/tutoria/withdraw_funds/" method="post">
