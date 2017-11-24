@@ -171,7 +171,7 @@ def set_profile(request):
         if temp[0] == 'tutor':
             course_tut=""
             try:
-                course_tut = Course.objects.get(subject=request.POST['sub'],code=request.POST['code'])
+                course_tut = Course.objects.get(subject__iexact=request.POST['sub'],code=request.POST['code'])
             except:
                 return render(request, 'tutoria/profile/setProfile.html', {'error': 'Invalid Course Specified'})
             tutor = Tutor(
@@ -219,11 +219,15 @@ def nameSearch(request):
     else:
         field_name = request.POST['nameSearch']
         if field_name:
-            tutors = Tutor.objects.filter(Q(first_name__startswith=field_name) | Q(last_name__startswith=field_name),isHidden=False)
-            return render(request, 'tutoria/search.html', {'tutors': tutors,'student':student,'tutor':tutor})
+            try:
+                name=str(field_name).split(' ') #both first_name and last_name
+                tutors = Tutor.objects.filter(Q(first_name__startswith=name[0],last_name__startswith=name[1]),isHidden=False)
+                return render(request, 'tutoria/search.html', {'tutors': tutors,'student':student,'tutor':tutor})
+            except:
+                tutors = Tutor.objects.filter(Q(first_name__startswith=field_name) | Q(last_name__startswith=field_name),isHidden=False)
+                return render(request, 'tutoria/search.html', {'tutors': tutors,'student':student,'tutor':tutor})
 
 
-        '''try:'''
         field_uni = request.POST['uniSearch']
         field_course = request.POST['courseSearch']
         field_sub = request.POST['subSearch']
@@ -235,15 +239,15 @@ def nameSearch(request):
 
         #print(field_uni,field_course,field_sub,field_type)
         #print(field_course,field_sub,'hi')
-        kk=Course.objects.filter(code__startswith=field_course,subject__startswith=field_sub)
+        kk=Course.objects.filter(code__startswith=field_course,subject__istartswith=field_sub)
         tutors=""
         if (field_rateTo or field_rateFrom):
             print(*kk)
-            tutors = Tutor.objects.filter(university__startswith=field_uni,
+            tutors = Tutor.objects.filter(university__istartswith=field_uni,
                                           tutortype__startswith=field_type,
                                           course__in=kk,
-                                          rate__lt=field_rateTo,
-                                          rate__gt=field_rateFrom,
+                                          rate__lte=field_rateTo,
+                                          rate__gte=field_rateFrom,
                                           tags__icontains=field_tags,
                                           isHidden=False).distinct()
             print([k for k in tutors])
@@ -251,7 +255,7 @@ def nameSearch(request):
         else:
             print(*kk)
             #print('wtf')
-            tutors = Tutor.objects.filter(university__startswith=field_uni,
+            tutors = Tutor.objects.filter(university__istartswith=field_uni,
                                           tutortype__startswith=field_type,
                                           course__in=kk,
                                           tags__icontains=field_tags,
@@ -640,7 +644,7 @@ def edit_profile(request, tutor_id):
 
         if request.POST['sub']:
             try:
-                course_tut = Course.objects.get(subject=request.POST['sub'],code=request.POST['code'])
+                course_tut = Course.objects.get(subject__iexact=request.POST['sub'],code=request.POST['code'])
                 tutor.course.add(course_tut)
             except:
                 return render(request, 'tutoria/profile/editProfile.html', {'error': 'Invalid Course Specified'})
@@ -651,7 +655,7 @@ def edit_profile(request, tutor_id):
             avatar = fs.save(str(myfile),myfile)
             tutor.avatar = avatar
         tutor.save()
-        return redirect('/tutoria/edit_profile')
+        return render(request, 'tutoria/profile/editProfile.html',{"tutor" : tutor})
     else:
         tutor = Tutor.objects.get(username=request.user.username)
         return render(request, 'tutoria/profile/editProfile.html',{"tutor" : tutor})
