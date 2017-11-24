@@ -678,6 +678,7 @@ def add_coupon(request):
     if request.method == "POST":
         code = request.POST['code']
         discount = request.POST['discount']
+        expire = request.POST['expire']
         coupon = Coupon(code=code, discount=discount)
         coupon.save()
         return render(request, 'tutoria/admin.html')

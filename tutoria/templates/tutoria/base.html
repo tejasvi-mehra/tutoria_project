@@ -65,7 +65,7 @@
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="/tutoria/notifications"><img src="{% static "img/star.png" %}"></a>
             </li>
-            
+
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="/tutoria/logout"><img src="{% static "img/logout.png" %}"></a>
             </li>
@@ -115,4 +115,29 @@
       })
     })
 
+  </script>
+
+  <script>
+  $(document).ready(function() {
+
+    $(".sort").change(function() {
+
+      if (this.checked) {
+        $(".result li").sort(sort_li).appendTo('.result');
+        console.log('hi');
+
+        function sort_li(a, b) {
+          return parseInt($(b).data('position')) < parseInt($(a).data('position')) ? 1 : -1;
+        }
+      } else {
+
+        $(".result li").sort(sort_li).appendTo('.result');
+
+        function sort_li(a, b) {
+          return parseInt($(b).data('position')) > parseInt($(a).data('position')) ? 1 : -1;
+        }
+      }
+    }
+  );
+  });
   </script>
