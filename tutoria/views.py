@@ -98,6 +98,9 @@ def dashboard(request):
 
     username = request.user.username
     tutor_sessions, student_sessions = get_sessions(username)
+    tutor_sessions.sort(key=lambda x:x.start_time)
+    student_sessions.sort(key=lambda x:x.start_time)
+
     student, tutor = check_person(username)
     print(student,tutor)
     if tutor == False:
@@ -386,15 +389,12 @@ def book(request, tutor_id, date_time):
     tutor = get_object_or_404(Tutor, id=tutor_id)
     start_time = parser.parse(date_time)
     if request.method == 'POST':
-        print("**********", request.POST['final'])
         due = float(request.POST['final'])
         student = get_object_or_404(Student, username=request.user.username)
         flag, error = check_conflict(tutor, student, start_time)
         if flag:
             duration = 60 if tutor.tutortype == 'private' else 30
             td = datetime.timedelta(minutes=60) if tutor.tutortype == 'private' else datetime.timedelta(minutes=30)
-            #  Deduct from wallet
-
             costOfBooking = (due + due*0.05) if tutor.tutortype == 'private' else 0
             if costOfBooking > get_balance(student.username) :
                 return render(request, 'tutoria/funds/add_funds.html', {'error' : 'Insufficient Funds !!.'})
@@ -466,14 +466,13 @@ def book(request, tutor_id, date_time):
                 notif2.save()
                 """ Notification object """
                 sendFundsToAdmin(student.username, costOfBooking)
-                return redirect('/tutoria/dashboard')
+                return redirect('/tutoria/session_detail/' + str(session.start_time))
         else:
             return render(request, 'tutoria/session/bookSession.html', {'error' : error})
     else:
         context = {
             'date': date_time,
             'tutor': tutor,
-            'coupon' : ["1", "2"]
         }
         return render(request, 'tutoria/session/bookSession.html', context)
 
@@ -664,3 +663,13 @@ def edit_profile(request, tutor_id):
     else:
         tutor = Tutor.objects.get(username=request.user.username)
         return render(request, 'tutoria/profile/editProfile.html',{"tutor" : tutor})
+
+@login_required()
+def add_coupon(request):
+    print("here")
+    if request.method == "POST":
+        code = request.POST['code']
+        discount = request.POST['discount']
+        coupon = Coupon(code=code, discount=discount)
+        coupon.save()
+        return render(request, 'tutoria/admin.html')

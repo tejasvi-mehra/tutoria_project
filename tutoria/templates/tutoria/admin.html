@@ -14,6 +14,22 @@ td {
   <div class="jumbotron" style="text-align:center;">
     {%if notify%}{{notify}}{%endif%}
     <h1>Add / Remove Courses</h1>
+    <form class="" action="/tutoria/add_coupon/" method="post">
+        {% csrf_token %}
+      <table style="text-align: center; align:center" align="center">
+        <tr>
+          <td>Add Coupon</td>
+          <td><input type="text" name="code" value=""></td>
+        </tr>
+        <tr>
+          <td>Discount</td>
+          <td><input type="number" name="discount" value=""></td>
+        </tr>
+      </table>
+      <button class ="btn btn-lg btn-primary" type="submit" name="button", style="height:40px">
+        Submit
+      </button>
+    </form>
     <form class="well form-horizontal" action="/tutoria/admin_panel/" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       <br>
