@@ -282,12 +282,18 @@ def view_tutor_profile(request, tutor_id):
     tutor = get_object_or_404(Tutor, pk=tutor_id)
     reviews=Review.objects.filter(tutor=tutor)
     hasRating=False
+    available = True
     if len(reviews)>3:
         hasRating=True
+    num=len(Session.objects.filter(tutor=tutor))
+    if tutor.tutortype == "private" and num == 56:
+        available = False
+    elif tutor.tutortype == "contracted" and num == 112:
+        available = False
     if request.user.username == tutor.username:
-        return render(request, 'tutoria/profile/t_view_profile.html', {'tutor':tutor, 'reviews':reviews[::-1], 'hasRating':hasRating})
+        return render(request, 'tutoria/profile/t_view_profile.html', {'tutor':tutor, 'reviews':reviews[::-1], 'hasRating':hasRating, 'isAvailable':available})
     else:
-        return render(request, 'tutoria/profile/s_view_profile.html', {'tutor':tutor, 'reviews':reviews[::-1], 'hasRating':hasRating})
+        return render(request, 'tutoria/profile/s_view_profile.html', {'tutor':tutor, 'reviews':reviews[::-1], 'hasRating':hasRating, 'isAvailable':available})
 
 
 @login_required(redirect_field_name='/tutoria/dashboard')
@@ -609,7 +615,7 @@ def edit_profile(request, tutor_id):
         tutor.phoneNumber = request.POST['tel']
         tutor.tags = request.POST['tags']
         remsub = request.POST['remsub']
-        
+
 
         print(remsub)
         course_tut=""

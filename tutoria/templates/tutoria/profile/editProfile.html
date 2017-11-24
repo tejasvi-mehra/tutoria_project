@@ -45,7 +45,7 @@
           </tr>
           <tr>
             <td><label> Deactivate Profile </label></td>
-            <td><input type="checkbox" name="isHidden" value="True"></td>
+            <td><input type="checkbox" name="isHidden" value="True" {%if tutor.isHidden%}checked{%endif%} ></td>
           </tr>
           <tr>
             <td><label> Upload Profile Photo </label></td>
