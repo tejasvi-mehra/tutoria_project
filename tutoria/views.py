@@ -142,18 +142,24 @@ def session_tutor(request, date_time):
 @login_required()
 def manage_tutor_time_table(request):
     print("here whats up")
+    error = ""
+    if request.GET['error']:
+        error = request.GET['error']
     username = request.user.username
     all_sessions = get_tutor_sessions(username)
     all_sessions = filter_sessions(all_sessions, 14)
     tutor = Tutor.objects.get(username=username)
     week = create_week(14, 60) if tutor.tutortype == 'private' else create_week(14, 30)
     result = manage_sessions(all_sessions, week)
+    context = {
+        'sessions' : result, 'error' :error
+    }
     if tutor.tutortype == 'private':
         print("here whats up")
-        return render(request, 'tutoria/timetable/mtttp.html', {'sessions' : result})
+        return render(request, 'tutoria/timetable/mtttp.html', context)
     else:
         print("here whats up")
-        return render(request, 'tutoria/timetable/mtttc.html', {'sessions' : result})
+        return render(request, 'tutoria/timetable/mtttc.html', context)
 
 
 @login_required(redirect_field_name='/tutoria/dashboard')
@@ -354,7 +360,7 @@ def tutor_block_session(request, date_time):
         session.save()
         return redirect('/tutoria/manage_timetable/tutor')
     else:
-        return render(request, 'tutoria/timetable/mtttp.html', {'error' : 'cant lock already been booked'})
+        return redirect('/tutoria/manage_timetable/tutor?error=This session has already been booked')
 
 
 @login_required(redirect_field_name='/tutoria/dashboard')
@@ -410,17 +416,18 @@ def book(request, tutor_id, date_time):
                 )
                 session.save()
                 # Calculate commission
-                commission= float(tutor.rate)*0.05
-                # create transaction object
-                transaction = Transaction(
-                    tutor = tutor,
-                    student = student,
-                    start_time = start_time,
-                    end_time = start_time + td,
-                    amount = due,
-                    commission = commission
-                )
-                transaction.save()
+                if due != 0:
+                    commission= float(tutor.rate)*0.05
+                    # create transaction object
+                    transaction = Transaction(
+                        tutor = tutor,
+                        student = student,
+                        start_time = start_time,
+                        end_time = start_time + td,
+                        amount = due,
+                        commission = commission
+                    )
+                    transaction.save()
 
                 """ Notification object """
                 title="{} booked a session with you on {}.".format(session.student,session.start_time)

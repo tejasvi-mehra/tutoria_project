@@ -1,4 +1,4 @@
-{% extends 'tutoria/base.html' %}
+  {% extends 'tutoria/base.html' %}
   {% block body %}
   <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
   <style media="screen">
@@ -8,6 +8,7 @@ width: 100px;
 height: 100px;
 background: #555;
 }
+
 .header h1 {
 position: relative;
 top: 18px;
@@ -33,7 +34,7 @@ left: 0px;
         <br>
 
 
-  <div class="content-container">
+  <div class="content-container ">
 <div class="dash-sub-header">
   <span><h4 style="text-transform: uppercase; color: #F05F40;">Hey {{name}}</h4>
 {%if tutor%}
@@ -43,10 +44,10 @@ left: 0px;
 
 {%endif%}
   </div>
+<div class="dash-sub dash-content">
   {% if tutor %}
 
- <div class="dash-sub">
-<div class="dash-sub dash-content">
+ 
   {% if student and tutor %}
   <h3>Tutor Dashboard</h3><br>
   {%else%}
@@ -56,7 +57,7 @@ left: 0px;
   {%else%}
   {% for sesh in tutor_sessions %}
       {% ifnotequal sesh.status 'BLOCKED' %}
-        <p>Session at {{sesh.start_time}} with {{sesh.student.first_name}} {{sesh.student.last_name}}</p>
+        <p>Session at {{sesh.start_time}} with {{sesh.student.name}}</p>
       {% endifnotequal %}
 
   </ul>
@@ -70,52 +71,64 @@ left: 0px;
   </div>
 
   {% endif %}
-  {% if student %}
 
+  
+  
 
-  <div class="content-container dash-content">
+  {%if student%}
 
     {% if student and tutor %}
+    <div class="dash-sub dash-content">
   <h3>Student Dashboard</h3>
-
+  
   {%else%}
-  <h4>Upcoming Sessions</h4>{%endif%}
+  <h3>Upcoming Sessions</h3>
+  <div class="content-container dash-content">
+  
+  {%endif%}
   <br>
-  {% if not student_sessions %}
-    <p>No upcoming sessions!</p>
+  {%if not student_sessions%}
+  <p>No upcoming sessions!</p>
   {%else%}
   {% for sesh in student_sessions %}
     <p>
       Session at {{sesh.start_time}} with {{sesh.tutor.first_name}} {{sesh.tutor.last_name}}
     </p>
   {% endfor %}
-  {% endif %}
+  {%endif%}
   <button style="float: right;" class="btn btn-primary tutoria-button1"><a href="/tutoria/manage_timetable/student">Manage student timetable</a></button>
   <br>
-  </div></div>
+  <br>
+  
+  </div>
 
-  {% endif %}
+{% endif %}
 
-    <div class="dash-sub">
+{%if not tutor%}
+  </div>
+{%endif%}
+
+
+    <div class="dash-sub ">
+      <h3>Transaction History</h3>
       <div class="content-container dash-content">
-  <h4>Transaction History</h4>
-
+  
+  
   <br>
   <h5 style="color: #ffa028;
   text-transform: uppercase;">Outgoing Transactions</h5>
   <br>
-  {%if not transactions_outgoing%}
-    <p>No transactions to show!</p>
+{%if not transactions_outgoing%}
+  <p>No transactions to show!</p>
   {%else%}
 
   {% for transaction in transactions_outgoing %}
   <p>
-      Made to {{transaction.tutor.first_name}} {{transaction.tutor.last_name}} with amount {{transaction.amount}} --- for session: {{transaction.start_time}} to  {{transaction.end_time}}
+      HK$ {{transaction.amount}} paid to {{transaction.tutor}} for session on {{transaction.start_time}}
     </p>
   {% endfor %}
   {%endif%}
   <br>
-  {% if tutor %}
   <h5 style="color: #ffa028;
   text-transform: uppercase;">Incoming Transactions</h5>
   <br>
@@ -123,13 +136,17 @@ left: 0px;
   <p>No transactions to show!</p>
   {%else%}
   {% for transaction in transactions_incoming %}
-    <p>Made by {{transaction.student}} with amount {{transaction.amount}} --- for session: {{transaction.start_time}} to  {{transaction.end_time}}</p>
+ <p>
+      HK$ {{transaction.amount}} paid by {{transaction.student}} for session on {{transaction.start_time}}
+    <p>
+  
   {% endfor %}
   {%endif%}
   <br>
-  {% endif %}
+
   <h5>Balance: {{balance}}</h5>
   {%if not tutor%}
+
   <button style="float: right;"type="button" class="btn btn-primary tutoria-button1" name="button">
   <a href="/tutoria/add_funds">Add money</a></button><br>
   <br>
@@ -146,14 +163,14 @@ left: 0px;
   <a href="/tutoria/search">Search for Tutors</a><br></button>
   {% endif %} -->
 
+  
 
-
-
+  
 
   <!-- <button type="button" name="button">
     <a href="/tutoria/view_profile/{{tutor.id}}">View Profile</a></br>
   </button> -->
-        </div></div>
+        </div></div></div>
       </main>
 
 {% endblock %}

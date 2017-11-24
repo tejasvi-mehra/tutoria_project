@@ -55,16 +55,19 @@
         <div class="navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto nav-link-container">
             <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="/tutoria/dashboard"><img src="{% static "img/house.png" %}"></a>
+            </li>
+            {%if student%}
+            <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="/tutoria/search"><img src="{% static "img/magnifying-glass.png" %}"></a>
             </li>
+            {%endif%}
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="/tutoria/notifications"><img src="{% static "img/star.png" %}"></a>
             </li>
+            
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#portfolio"><img src="{% static "img/envelope.png" %}"></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#contact"><img src="{% static "img/settings.png" %}"></a>
+              <a class="nav-link js-scroll-trigger" href="/tutoria/logout"><img src="{% static "img/logout.png" %}"></a>
             </li>
           </ul>
         </div>
