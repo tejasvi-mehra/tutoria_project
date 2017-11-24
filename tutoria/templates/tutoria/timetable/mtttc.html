@@ -66,9 +66,14 @@
                       {% endif %}
                       <td>
                         {% ifnotequal sesh.status 'vacant' %}
-                          <p>{{sesh.status}}</p>
+                        {% ifequal sesh.status 'BLOCKED' %}
+                          <p><a href="/tutoria/tutor_unblock_session/{{sesh.time | date:'Y-m-d H:i'}}">UNBLOCK</a></p>
                         {% else %}
-                          <p><a href="/tutoria/tutor_lock_session/{{sesh.time | date:'Y-m-d H:i'}}">BLOCK</a></p>
+                          <p><a href="/tutoria/session_tutor/{{sesh.time | date:'Y-m-d H:i'}}">{{sesh.status}}</a></p>
+
+                        {% endifequal %}
+                        {% else %}
+                          <p><a style="color:#1abf5d" href="/tutoria/tutor_block_session/{{sesh.time | date:'Y-m-d H:i'}}">BLOCK</a></p>
                         {% endifnotequal %}
                       </td>
                   {% endfor %}

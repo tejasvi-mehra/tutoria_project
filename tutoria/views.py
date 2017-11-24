@@ -134,6 +134,7 @@ def session_tutor(request, date_time):
 
 @login_required()
 def manage_tutor_time_table(request):
+    print("here whats up")
     username = request.user.username
     all_sessions = get_tutor_sessions(username)
     all_sessions = filter_sessions(all_sessions, 14)
@@ -141,8 +142,10 @@ def manage_tutor_time_table(request):
     week = create_week(14, 60) if tutor.tutortype == 'private' else create_week(14, 30)
     result = manage_sessions(all_sessions, week)
     if tutor.tutortype == 'private':
+        print("here whats up")
         return render(request, 'tutoria/timetable/mtttp.html', {'sessions' : result})
     else:
+        print("here whats up")
         return render(request, 'tutoria/timetable/mtttc.html', {'sessions' : result})
 
 

@@ -2,29 +2,31 @@
 {% block body %}
 
     <main role="main" class="container">
-      <div class="jumbotron main-container page-title">
+      <div class="jumbotron main-container page-title" style="margin-left: auto;
+                    margin-right: auto;
+                    max-width: 50%;
+                    padding-bottom: 30px;">
         <div class="page-title">
         <h1>Session Details</h1></div>
-
         {% if error %}
           {{error}} <br>
           <a href="/tutoria/dashboard"> Dashboard </a>
         {% endif %}
         <br>
         <div class="brief-container">
-          <h3>Name: {{tutor}}</h3>
+          <h4>Name: {{tutor.first_name}} {{tutor.last_name}}</h3>
           <br>
-          <h4>start: {{start}}</h4>
+          <h4>Start: {{start}}</h4>
           <br>
-          <h4>end: {{end}}</h4>
+          <h4>End: {{end}}</h4>
           <br>
-          <h4>duration: {{duration}}</h4>
+          <h4>Duration: {{duration}}</h4>
           <br>
           <div class="buttons">
-            <button class="btn btn-primary tutoria-button1" style="float: right;" >
+            <!-- <button class="btn btn-primary tutoria-button1" style="float: right;" >
               <a href="/tutoria/write_review/{{session_id}}/">Write a review</a>
             </button>
-            <br><br>
+            <br><br> -->
             <form onSubmit="return confirm('Are you sure you wish to cancel this session?');" action = "/tutoria/cancel/{{start |date:'Y-m-d H:i'}}/" method = "post">
                     {% csrf_token %}
                     <input class="btn btn-primary tutoria-button1" type="submit" name="cancel" value="Cancel" />
