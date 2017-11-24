@@ -1,97 +1,100 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
 
-    <title>Tutoria</title>
-    {% load staticfiles %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../../../favicon.ico">
 
-    <!-- <link rel="stylesheet" type="text/css" href="{% static 'tutoria/style.css' %}"/> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet ">
+  <title>Tutoria</title>
+  {% load staticfiles %}
 
-    <!-- Custom fonts for this template -->
-    <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet " type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+  <!-- <link rel="stylesheet" type="text/css" href="{% static 'tutoria/style.css' %}"/> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet ">
 
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css" />
-    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
-    <!-- Plugin CSS -->
-    <link href="{% static 'vendor/magnific-popup/magnific-popup.css' %}" rel="stylesheet ">
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
-    <!-- Custom styles for this template -->
-    <link href="{% static 'css/creative.css' %}" rel="stylesheet">
+  <!-- Custom fonts for this template -->
+  <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet " type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
 
-  </head>
-  <style media="screen" type="text/css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css" />
+  <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+  <!-- Plugin CSS -->
+  <link href="{% static 'vendor/magnific-popup/magnific-popup.css' %}" rel="stylesheet ">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/creative.css' %}" rel="stylesheet">
+
+</head>
+<style media="screen" type="text/css">
   .bootstrap-tagsinput {
-      width: 50%;
+    width: 50%;
   }
+
   .label {
-      line-height: 2 !important;
+    line-height: 2 !important;
   }
 
-.bootstrap-tagsinput .tag {
-      margin-right: 2px;
-      color: #bb6767;
+  .bootstrap-tagsinput .tag {
+    margin-right: 2px;
+    color: #bb6767;
   }
-  </style>
+</style>
 
-  {% if student %}
-  <body id="page-top">
-{% load static %}
-    <nav class="navbar navbar-expand-lg navbar-shrink fixed-top" id="mainNav">
-      <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="/tutoria/dashboard">Tutoria</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+{% if student %}
+
+<body id="page-top">
+  {% load static %}
+  <nav class="navbar navbar-expand-lg navbar-shrink fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand js-scroll-trigger" href="/tutoria/dashboard">Tutoria</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto nav-link-container">
-            <li class="nav-item">
+      <div class="navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto nav-link-container">
+          <li class="nav-item">
 
-              <a class="nav-link js-scroll-trigger" href="/tutoria/search"><img src="{% static "img/magnifying-glass.png" %}"></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/tutoria/notifications"><img src="{% static "img/star.png" %}"></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#portfolio"><img src="{% static "img/envelope.png" %}"></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#contact"><img src="{% static "img/settings.png" %}"></a>
-            </li>
-          </ul>
-        </div>
+            <a class="nav-link js-scroll-trigger" href="/tutoria/search"><img src="{% static "img/magnifying-glass.png" %}"></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="/tutoria/notifications"><img src="{% static "img/star.png" %}"></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#portfolio"><img src="{% static "img/envelope.png" %}"></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#contact"><img src="{% static "img/settings.png" %}"></a>
+          </li>
+        </ul>
       </div>
-    </nav>
-    <!-- <nav class="navbar navbar-inverse bg-inverse">
+    </div>
+  </nav>
+  <!-- <nav class="navbar navbar-inverse bg-inverse">
       <a class="navbar-brand navbar-right" href="/tutoria/logout">Logout</a>
       <a class="navbar-brand " href="/tutoria/dashboard">DashBoard</a>
 
     </nav> -->
 
-    <main role="main" class="container">
-      <div class="jumbotron main-container page-title">
-        <h1>Tutor Search</h1>
-        <form class="form-horizontal" role="form" action="/tutoria/nameSearch/" method="post">
-          {% csrf_token %}
-          <!-- <p>Search by name:</p> -->
+  <main role="main" class="container">
+    <div class="jumbotron main-container page-title">
+      <h1>Tutor Search</h1>
+      <form class="form-horizontal" role="form" action="/tutoria/nameSearch/" method="post">
+        {% csrf_token %}
+        <!-- <p>Search by name:</p> -->
 
 
-  <div class="row">
-    <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12">
             <div class="input-group" id="adv-search">
-                <div class="search-div"><input type="text" name="nameSearch" class="form-control"  placeholder="Search by name" /></div>
-                <div class="input-group-btn">
-                    <div class="btn-group" role="group">
-                      <span class="buttons">
+              <div class="search-div"><input type="text" name="nameSearch" class="form-control" placeholder="Search by name" /></div>
+              <div class="input-group-btn">
+                <div class="btn-group" role="group">
+                  <span class="buttons">
                         <div class="dropdown dropdown-lg" id="myDropdown">
                             <button type="button" class="search-btn btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Filters</button>
                             <div class="dropdown-menu dropdown-menu-right" role="menu">
@@ -128,31 +131,29 @@
                                   </div>
                                   <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
 
-                            </div><button type="submit" name="button" class="btn btn-primary search-btn">Submit<span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></span>
-                        </div>
+                </div><button type="submit" name="button" class="btn btn-primary search-btn">Submit<span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></span>
+              </div>
 
-                    </div>
-                </div>
             </div>
           </div>
-          {% if nameSearch %}
-          <div class="col-md-12 col-md-offset-5">
-            <br>
-            <div>
-              <input class="sort" type="checkbox">
-              <label>Sort by Cheapest Rate</label>
-          </div>
         </div>
-          <br><br>{%endif%}&nbsp
+    </div>
 
 
-        </form>
-        <br>
-        <div class="result container">
-        <!-- <ul class="tutorlist"> -->
-          {% for tutor in tutors %}
-            <li data-position="{{tutor.rate}}">
-              <div class="brief-container"><span class="prof-container"><div class="avatar">
+    <br>
+    <div class="col-md-12 col-md-offset-6">
+      <input class="sort" type="checkbox">
+      <label>Sort by Cheapest Rate</label>
+    </div>
+
+    </form>
+
+    <br>
+    <div class="result container">
+      <!-- <ul class="tutorlist"> -->
+      {% for tutor in tutors %}
+      <li data-position="{{tutor.rate}}">
+        <div class="brief-container"><span class="prof-container"><div class="avatar">
                 {%if tutor.avatar%}
                 <img src="{{tutor.avatar.url}}">
                 {%else%}
@@ -167,55 +168,59 @@
                       <p>Unrated</p>
                       {%endif%}
 
-                    </div><div class="head-descript"><p>{{tutor.university}}</p><p>{% if tutor.tutortype == "private" %}Rate: {{tutor.rate}} HKD {% else %} {{tutor.tutortype}} {% endif %} </p></div></span>
+                    </div><div class="head-descript"><p>University: {{tutor.university}}</p><p>{% if tutor.tutortype == "private" %}Rate: {{tutor.rate}} HKD {% else %} {{tutor.tutortype}} {% endif %} </p></div></span>
 
-                  <p>{{tutor.biography}}</p></div></span>
-                  <br>
-                </div>
-            </li>
+          <p>Bio: {{tutor.biography}}</p>
+        </div>
+        </span>
+        <br>
+    </div>
+    </li>
 
-          {% endfor %}
-        <!-- </ul> -->
-      </div>
-      </div>
-    </main>
+    {% endfor %}
+    <!-- </ul> -->
+    </div>
+    </div>
+  </main>
 
-<script>
+  <script>
+    $(document).ready(function() {
 
-$(document).ready(function() {
+      $(".sort").change(function() {
 
-  $(".sort").change(function() {
+          if (this.checked) {
+            $(".result li").sort(sort_li).appendTo('.result');
+            console.log('hi');
 
-    if(this.checked){
-  $(".tutorlist li").sort(sort_li).appendTo('.tutorlist');
-  function sort_li(a, b) {
-    return parseInt($(b).data('position')) < parseInt($(a).data('position')) ? 1 : -1;
-  }
-}else{
+            function sort_li(a, b) {
+              return parseInt($(b).data('position')) < parseInt($(a).data('position')) ? 1 : -1;
+            }
+          } else {
 
-  $(".tutorlist li").sort(sort_li).appendTo('.tutorlist');
-  function sort_li(a, b) {
-    return parseInt($(b).data('position')) > parseInt($(a).data('position')) ? 1 : -1;
-  }
+            $(".result li").sort(sort_li).appendTo('.result');
+
+            function sort_li(a, b) {
+              return parseInt($(b).data('position')) > parseInt($(a).data('position')) ? 1 : -1;
+            }
 
 
-}
-}
+          }
+        }
 
-  );
+      );
 
-});
-
-</script>
-    <!-- Bootstrap core JavaScript
+    });
+  </script>
+  <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="../../../../assets/js/vendor/popper.min.js"></script>
-    <script src="../../../../dist/js/bootstrap.min.js"></script>
-  </body>
-  {% else %}
-  Access Denied
-  {% endif %}
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script>
+    window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery.min.js"><\/script>')
+  </script>
+  <script src="../../../../assets/js/vendor/popper.min.js"></script>
+  <script src="../../../../dist/js/bootstrap.min.js"></script>
+</body>
+{% else %} Access Denied {% endif %}
+
 </html>
