@@ -21,7 +21,7 @@ urlpatterns = [
 
     url(r'^book/(?P<tutor_id>[0-9]+)/(?P<date_time>.*)/$', views.book, name='book'),
 
-    url(r'^cancel/(?P<date_time>.*)/$', views.detail_cancel, name='cancel'),
+    url(r'^cancel/(?P<date_time>.*)/$', views.session_detail, name='cancel'),
 
     url(r'^view_profile/(?P<tutor_id>[0-9]+)/$', views.view_tutor_profile, name='view_tutor_profile'),
 
@@ -31,7 +31,7 @@ urlpatterns = [
 
     url(r'^manage_timetable/tutor/$', views.manage_tutor_time_table, name='manage_tutor_time_table'),
 
-    url(r'^session_detail/(?P<date_time>.*)/$', views.detail_cancel, name='detail_cancel'),
+    url(r'^session_detail/(?P<date_time>.*)/$', views.session_detail, name='session_detail'),
 
     url(r'^session_tutor/(?P<date_time>.*)/$', views.session_tutor, name='session_tutor'),
 

@@ -187,33 +187,20 @@ def set_profile(request):
                 course_tut = Course.objects.get(subject__iexact=request.POST['sub'],code=request.POST['code'])
             except:
                 return render(request, 'tutoria/profile/set_profile.html', {'error': 'Invalid Course Specified'})
+            tutor = Tutor(
+                first_name = request.user.first_name,
+                last_name = request.user.last_name,
+                username = request.user.username,
+                biography = request.POST['biography'],
+                university = request.POST['university'],
+                tutortype = temp[1],
+                isStudent = isStudent,
+                rate = request.POST['rate'],
+                tags = request.POST['tags'],
+                phoneNumber = request.POST['tel'],
+            )
             if avatar != "":
-                tutor = Tutor(
-                    first_name = request.user.first_name,
-                    last_name = request.user.last_name,
-                    username = request.user.username,
-                    biography = request.POST['biography'],
-                    university = request.POST['university'],
-                    tutortype = temp[1],
-                    isStudent = isStudent,
-                    rate = request.POST['rate'],
-                    tags = request.POST['tags'],
-                    phoneNumber = request.POST['tel'],
-                    avatar = avatar
-                )
-            else :
-                tutor = Tutor(
-                    first_name = request.user.first_name,
-                    last_name = request.user.last_name,
-                    username = request.user.username,
-                    biography = request.POST['biography'],
-                    university = request.POST['university'],
-                    tutortype = temp[1],
-                    isStudent = isStudent,
-                    rate = request.POST['rate'],
-                    tags = request.POST['tags'],
-                    phoneNumber = request.POST['tel'],
-                )
+                tutor.avatar = avatar
             tutor.save()
             tutor.course.add(course_tut)
             tutor.save()
@@ -226,8 +213,8 @@ def set_profile(request):
             )
             student.save()
         wallet = Wallet(
-        username = request.user.username,
-        balance = request.POST['balance'],
+            username = request.user.username,
+            balance = request.POST['balance'],
         )
         wallet.save()
         return redirect('/tutoria/dashboard')
@@ -485,11 +472,11 @@ def book(request, tutor_id, date_time):
         return render(request, 'tutoria/session/bookSession.html', context)
 
 @login_required(redirect_field_name='/tutoria/dashboard')
-def detail_cancel(request, date_time):
+def session_detail(request, date_time):
     tocancel = parser.parse(date_time)
     student = Student.objects.get(username = request.user.username)
     session = Session.objects.get(student = student, start_time=tocancel)
-    transaction =Transaction.objects.get(student = student, start_time = tocancel)
+    transaction = Transaction.objects.get(student = student, start_time = tocancel)
     tdy = datetime.datetime.today() + datetime.timedelta(hours=8)
     error = ''
     if request.method == 'POST':
@@ -530,12 +517,7 @@ def detail_cancel(request, date_time):
             error = "You can't cancel a session which starts in less than 24 hours. Sorry."
 
     context = {
-        'session_id':session.id,
-        'tutor' : session.tutor,
-        'tutor_no':session.tutor.phoneNumber,
-        'start' : session.start_time,
-        'end' : session.end_time,
-        'duration': session.duration,
+        'session' : session,
         'error' : error
     }
     return render(request, 'tutoria/session/session_detail.html', context)
