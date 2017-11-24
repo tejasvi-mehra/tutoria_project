@@ -162,6 +162,7 @@ def set_profile(request):
         balance = request.POST['balance'],
         )
         wallet.save()
+        avatar = ""
 
         if len(request.FILES) != 0:
             myfile = request.FILES['myfile']
@@ -171,22 +172,36 @@ def set_profile(request):
         if temp[0] == 'tutor':
             course_tut=""
             try:
-                course_tut = Course.objects.get(subject=request.POST['sub'],code=request.POST['code'])
+                course_tut = Course.objects.get(subject__iexact=request.POST['sub'],code=request.POST['code'])
             except:
                 return render(request, 'tutoria/profile/set_profile.html', {'error': 'Invalid Course Specified'})
-            tutor = Tutor(
-                first_name = request.user.first_name,
-                last_name = request.user.last_name,
-                username = request.user.username,
-                biography = request.POST['biography'],
-                university = request.POST['university'],
-                tutortype = temp[1],
-                isStudent = isStudent,
-                rate = request.POST['rate'],
-                tags = request.POST['tags'],
-                phoneNumber = request.POST['tel'],
-                avatar = avatar
-            )
+            if avatar != "":
+                tutor = Tutor(
+                    first_name = request.user.first_name,
+                    last_name = request.user.last_name,
+                    username = request.user.username,
+                    biography = request.POST['biography'],
+                    university = request.POST['university'],
+                    tutortype = temp[1],
+                    isStudent = isStudent,
+                    rate = request.POST['rate'],
+                    tags = request.POST['tags'],
+                    phoneNumber = request.POST['tel'],
+                    avatar = avatar
+                )
+            else :
+                tutor = Tutor(
+                    first_name = request.user.first_name,
+                    last_name = request.user.last_name,
+                    username = request.user.username,
+                    biography = request.POST['biography'],
+                    university = request.POST['university'],
+                    tutortype = temp[1],
+                    isStudent = isStudent,
+                    rate = request.POST['rate'],
+                    tags = request.POST['tags'],
+                    phoneNumber = request.POST['tel'],
+                )
             tutor.save()
             tutor.course.add(course_tut)
             tutor.save()
@@ -219,11 +234,15 @@ def nameSearch(request):
     else:
         field_name = request.POST['nameSearch']
         if field_name:
-            tutors = Tutor.objects.filter(Q(first_name__startswith=field_name) | Q(last_name__startswith=field_name),isHidden=False)
-            return render(request, 'tutoria/search.html', {'tutors': tutors,'student':student,'tutor':tutor})
+            try:
+                name=str(field_name).split(' ') #both first_name and last_name
+                tutors = Tutor.objects.filter(Q(first_name__startswith=name[0],last_name__startswith=name[1]),isHidden=False)
+                return render(request, 'tutoria/search.html', {'tutors': tutors,'student':student,'tutor':tutor})
+            except:
+                tutors = Tutor.objects.filter(Q(first_name__startswith=field_name) | Q(last_name__startswith=field_name),isHidden=False)
+                return render(request, 'tutoria/search.html', {'tutors': tutors,'student':student,'tutor':tutor})
 
 
-        '''try:'''
         field_uni = request.POST['uniSearch']
         field_course = request.POST['courseSearch']
         field_sub = request.POST['subSearch']
@@ -235,15 +254,15 @@ def nameSearch(request):
 
         #print(field_uni,field_course,field_sub,field_type)
         #print(field_course,field_sub,'hi')
-        kk=Course.objects.filter(code__startswith=field_course,subject__startswith=field_sub)
+        kk=Course.objects.filter(code__startswith=field_course,subject__istartswith=field_sub)
         tutors=""
         if (field_rateTo or field_rateFrom):
             print(*kk)
-            tutors = Tutor.objects.filter(university__startswith=field_uni,
+            tutors = Tutor.objects.filter(university__istartswith=field_uni,
                                           tutortype__startswith=field_type,
                                           course__in=kk,
-                                          rate__lt=field_rateTo,
-                                          rate__gt=field_rateFrom,
+                                          rate__lte=field_rateTo,
+                                          rate__gte=field_rateFrom,
                                           tags__icontains=field_tags,
                                           isHidden=False).distinct()
             print([k for k in tutors])
@@ -251,7 +270,7 @@ def nameSearch(request):
         else:
             print(*kk)
             #print('wtf')
-            tutors = Tutor.objects.filter(university__startswith=field_uni,
+            tutors = Tutor.objects.filter(university__istartswith=field_uni,
                                           tutortype__startswith=field_type,
                                           course__in=kk,
                                           tags__icontains=field_tags,
@@ -261,6 +280,8 @@ def nameSearch(request):
             t_remove=[]
             for t in tutors:
                 num=len(Session.objects.filter(tutor=t))
+                l=Session.objects.filter(tutor=t)
+                print(num, [g.start_time for g in l])
                 if t.tutortype == "private" and num == 56:
                     t_remove.append(t)
                 elif t.tutortype == "contracted" and num == 112:
@@ -278,13 +299,20 @@ def view_tutor_profile(request, tutor_id):
     print(tags)
     reviews=Review.objects.filter(tutor=tutor)
     hasRating=False
+    available = True
     if len(reviews)>3:
         hasRating=True
+    num=len(Session.objects.filter(tutor=tutor))
+    if tutor.tutortype == "private" and num == 56:
+        available = False
+    elif tutor.tutortype == "contracted" and num == 112:
+        available = False
     context = {
         'tutor':tutor,
         'reviews':reviews[::-1],
         'hasRating':hasRating,
-        'tags' :tags[:6]
+        'tags' :tags[:6],
+        'isAvailable': available
     }
     if request.user.username == tutor.username:
         return render(request, 'tutoria/profile/t_view_profile.html', context)
@@ -595,6 +623,8 @@ def edit_profile(request, tutor_id):
         tutor.phoneNumber = request.POST['tel']
         tutor.tags = request.POST['tags']
         remsub = request.POST['remsub']
+
+
         print(remsub)
         course_tut=""
         ls =[]
@@ -612,7 +642,7 @@ def edit_profile(request, tutor_id):
 
         if request.POST['sub']:
             try:
-                course_tut = Course.objects.get(subject=request.POST['sub'],code=request.POST['code'])
+                course_tut = Course.objects.get(subject__iexact=request.POST['sub'],code=request.POST['code'])
                 tutor.course.add(course_tut)
             except:
                 return render(request, 'tutoria/profile/editProfile.html', {'error': 'Invalid Course Specified'})
@@ -623,7 +653,7 @@ def edit_profile(request, tutor_id):
             avatar = fs.save(str(myfile),myfile)
             tutor.avatar = avatar
         tutor.save()
-        return redirect('/tutoria/edit_profile')
+        return render(request, 'tutoria/profile/editProfile.html',{"tutor" : tutor})
     else:
         tutor = Tutor.objects.get(username=request.user.username)
         return render(request, 'tutoria/profile/editProfile.html',{"tutor" : tutor})

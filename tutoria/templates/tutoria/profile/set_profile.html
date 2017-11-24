@@ -1,0 +1,176 @@
+{% extends 'tutoria/nonav.html' %}
+{% block body %}
+<style media="screen">
+  #yo{
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 70%;
+    padding-bottom: 2%;
+  }
+
+  .label-info{
+    background-color: #5bc0de;
+  }
+
+  .bootstrap-tagsinput {
+      width: 50%;
+  }
+  .label {
+      line-height: 2 !important;
+  }
+
+  .bootstrap-tagsinput .tag {
+        margin-right: 2px;
+        color: white;
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  }
+</style>
+
+  <main role="main" class="container">
+    <div class="jumbotron main-container page-title" id="yo">
+      <div class="page-title">
+      <h1>Set Profile</h1></div>
+
+      {% if error %}
+        {{error}}
+      {% endif %}
+      <br>
+      <div align="center">
+      <form class="well form-horizontal" action="" method="post" onsubmit="return validateMyForm();" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table style="text-align: center; align:center">
+          <tr>
+            <th>
+              <label>Register as Tutor:</label>
+            </th>
+            <th>
+              <label>Yes</label><input type="checkbox" name="checks" value="tutor" id="isTutor">
+            </th>
+          </tr>
+
+        <tbody id="tutorOption" style="display:none">
+          <tr>
+            <th><label>Select Tutor Type</label></th>
+            <th><label>Contracted:</label><input type="checkbox" id="contracted" class="tutorClass" value="contracted" name="checks"></th>
+            </tr>
+          <tr>
+            <td></td>
+            <th><label>Private:</label> <input type="checkbox" id="private" class="tutorClass" value="private" name="checks"></th>
+          </tr>
+          <tr>
+            <th></th>
+            <th></th>
+          </tr>
+
+          <tr>
+            <th><label>University</label></th>
+            <th><input type="text" name="university" value=""></th>
+          </tr>
+
+          <tr>
+            <th><label>Biography</label></th>
+            <th><input type="text" name="biography" value=""></th>
+          </tr>
+
+          <tr>
+            <th><label>Primary Subject</label></th>
+            <th><input type="text" name="sub" value=""></th>
+          </tr>
+
+          <tr>
+            <th><label>Course Code</label></th>
+            <th><input type="text" name="code" value=""></th>
+          </tr>
+
+          <tr>
+            <th><label>Tags</label></th>
+            <th><input type="text" name="tags" value="" data-role="tagsinput"></th>
+          </tr>
+
+          <tr  id="tutorRate" style="display:none">
+            <th><label>Rate</label></th>
+            <th> <input type="number" name="rate" value="0" step="10"></th>
+          </tr>
+        </tbody>
+
+          <tr>
+            <th><label>Register as Student:</label></th>
+            <th><label>Yes</label><input type="checkbox" name="checks" value="student" id="isStudent"></th>
+          </tr>
+
+          <tr>
+            <th><label>Upload Profile Photo</label></th>
+            <th style="padding-left:17%"><input type="file" name="myfile" value="hi"></th>
+          </tr>
+
+          <tr>
+            <th><label>Phone Number:</label></th>
+            <th><input type="tel" name="tel"></th>
+          </tr>
+
+          <tr>
+            <th><label>Add to Wallet: $$</label></th>
+            <th><input type="number" name="balance" min="0" max="1000" placeholder="" step="10"></th>
+          </tr>
+
+        </table>
+        <br>
+        <button class="btn btn-primary" type="submit" name="button" >Submit</button>
+      </form>
+    </div>
+  </div>
+ </main>
+
+<script type="text/javascript">
+
+  // lets you check only private or contracted
+  $('input.tutorClass').on('change' ,function(){
+    $('input.tutorClass').not(this).prop('checked', false);
+  });
+
+  // fades in tutor options based on tutor selection
+  $('#isTutor').change(function(){
+    if(this.checked){
+      $('#tutorOption').fadeIn('slow');
+    }else{
+      $('#tutorOption').fadeOut('slow');
+    }
+  })
+
+  $('#private').change(function(){
+    if(this.checked){
+      $('#tutorRate').fadeIn('slow');
+    }else{
+      $('#tutorRate').fadeOut('slow');
+    }
+  })
+
+  $('#contracted').change(function(){
+    if(this.checked){
+      $('#tutorRate').fadeOut('slow');
+    }
+  })
+
+  // checks whether tutor is selected
+  function validateMyForm(){
+
+      var student = $('#isStudent').is(":checked");
+      var tutor = $('#isTutor').is(":checked");
+      var type1 = $('#contracted').is(":checked");
+      var type2 = $('#private').is(":checked");
+
+
+      if(tutor && (type1 || type2)){
+        return true;
+      }
+      else if(student){
+        return true;
+      }
+      else{
+        alert('validation failed. check');
+        return false;
+      }
+
+  }
+</script>
+{% endblock %}
