@@ -176,8 +176,11 @@
                       {%endif%}
 
             </div>
-            <div class="head-descript"><p>University: {{tutor.university}}</p><p>{% if tutor.tutortype == "private" %}Rate: {{tutor.rate}} HKD {% else %} {{tutor.tutortype}} {% endif %} </p></div></span>
-          <p>Tags: {{tutor.tags}}</p>
+          <div class="head-descript">
+                    <span class="prof-detail"><h4>University :</h4>&nbsp<p>{{tutor.university}}</p></span>
+                    <span class="prof-detail"><h4>Tutor Type :</h4>
+                    <p>{% if tutor.tutortype == "private" %}Rate: {{tutor.rate}} HKD {% else %} {{tutor.tutortype}} {% endif %} </p></span>
+                    <span class="prof-detail"><h4>Bio :</h4><p>{{tutor.biography}}</p></span></div>
         </div>
         </span>
         <br>
