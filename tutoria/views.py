@@ -265,6 +265,8 @@ def nameSearch(request):
             t_remove=[]
             for t in tutors:
                 num=len(Session.objects.filter(tutor=t))
+                l=Session.objects.filter(tutor=t)
+                print(num, [g.start_time for g in l])
                 if t.tutortype == "private" and num == 56:
                     t_remove.append(t)
                 elif t.tutortype == "contracted" and num == 112:
