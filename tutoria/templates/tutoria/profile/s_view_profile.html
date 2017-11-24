@@ -4,9 +4,12 @@
   <div class="jumbotron main-container page-title">
     <div class="container">
             <div class="row">
-                  <div class="row profile-container" style="max-height:400px;">
+                  <div class="row profile-container" >
                       <div class="profile-pic">
                           <img src="{{tutor.avatar.url}}" alt="" class="img-rounded img-responsive" />
+                      </div>
+                      <div class="">
+
                       </div>
                   </div>
                   <div class="profile-container-deets">
@@ -30,9 +33,9 @@
                           </div>
                   </div>
             </div>
-            </div>
-            <br>
-            <div class="reviews-container">
+    </div>
+    <br>
+    <div class="reviews-container">
                 <h1>Reviews</h1>
                 <br>
                 {%for rev in reviews%}
@@ -43,9 +46,7 @@
                 <br>
                 {%endfor%}
             </div>
-        </div>
   </div>
-
 </main>
 
 {% endblock %}
