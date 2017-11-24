@@ -1,5 +1,6 @@
   {% extends 'tutoria/base.html' %}
   {% block body %}
+  <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
   <style media="screen">
   .header img {
 float: left;
@@ -26,98 +27,140 @@ left: 0px;
 
             <img src="{{student.avatar.url}}" alt="">
 
-          {% endif %}
-          <h1>Dashboard</h1></div>
+          {% endif %}</div>
+          <h1>Dashboard</h1>
         </div>
         <br>
         <br>
 
-  <h4>Hey {{name}}</h4>
-  <div class="content-container">
 
+  <div class="content-container">
+<div class="dash-sub-header">
+  <span><h4 style="text-transform: uppercase; color: #F05F40;">Hey {{name}}</h4>
+{%if tutor%}
+<button style="float: right; margin-top: -37px;" type="button" name="button" class="btn btn-primary dash-btn">
+    <a href="/tutoria/view_profile/{{tutor.id}}">View Profile</a></br>
+  </button></span>
+
+{%endif%}
+  </div>
   {% if tutor %}
 
-  <h2>{{tutor.first_name}}</h2>
-
-  <h5>As Tutor</h5><br>
-
+ <div class="dash-sub"> 
+<div class="dash-sub dash-content">
+  {% if student and tutor %}
+  <h3>Tutor Dashboard</h3><br>
+  {%else%}
+  <h4>Upcoming Sessions</h4>{%endif%}
+  {%if not tutor_sessions%}
+  <p>No upcoming sessions!</p>
+  {%else%}
   {% for sesh in tutor_sessions %}
-  <ul>
       {% ifnotequal sesh.status 'BLOCKED' %}
-        <li>{{sesh.start_time}} to  {{sesh.end_time}} with student --- {{sesh.student}}</li>
+        <p>Session at {{sesh.start_time}} with {{sesh.student.first_name}} {{sesh.student.last_name}}</p>
       {% endifnotequal %}
 
   </ul>
 
   {% endfor %}
-
+{%endif%}
+  <button style="float: right;" class="btn btn-primary tutoria-button1"><a href="/tutoria/manage_timetable/tutor">Manage teacher timetable</a></button>
   <br>
-  <button class="btn btn-primary dash-button"><a href="/tutoria/manage_timetable/tutor">Manage teacher timetable</a></button>
-  <h5>Your balance: {{balance}}</h5>
+  <br>
 
   </div>
-  <br>
-  <br>
+
   {% endif %}
   {% if student %}
-  <div class="content-container">
-  <h5>As Student</h5><br>
+  
+
+  <div class="content-container dash-content">
+
+    {% if student and tutor %}
+  <h3>Student Dashboard</h3>
+  
+  {%else%}
+  <h4>Upcoming Sessions</h4>{%endif%}
+  <br>
+  {%if not student_sessions%}
+  <p>No upcoming sessions!</p>
+  {%else%}
   {% for sesh in student_sessions %}
-  <ul>
-    <li>
-      {{sesh.start_time}} to  {{sesh.end_time}} with tutor --- {{sesh.tutor}}
-    </li>
-  </ul>
-  {% endfor %}
-  <br>
-  <button class="btn btn-primary dash-button"><a href="/tutoria/manage_timetable/student">Manage student timetable</a></button>
-  <h5>Balance: {{balance}}</h5>
+  
 
-  </div>
-  <br><br>
+  
+    <p>
+      Session at {{sesh.start_time}} with {{sesh.tutor.first_name}} {{sesh.tutor.last_name}}
+    </p>
+  {% endfor %}
+  {%endif%}
+  <button style="float: right;" class="btn btn-primary tutoria-button1"><a href="/tutoria/manage_timetable/student">Manage student timetable</a></button>
+  <br>
+  </div></div>
+  
   {% endif %}
-  <div class="content-container">
+  
+    <div class="dash-sub">
+      <div class="content-container dash-content">
   <h4>Transaction History</h4>
-  <h5>Outgoing Transactions</h5>
-  {% for transaction in transactions_outgoing %}
-  <ul>
-    <li>
-      Made to  {{transaction.tutor}} with amount {{transaction.amount}} --- for session: {{transaction.start_time}} to  {{transaction.end_time}}
-    </li>
-  </ul>
-  {% endfor %}
+  
   <br>
-  <h5>Incoming Transactions</h5>
-  {% for transaction in transactions_incoming %}
-  <ul>
-    <li>
-      Made by {{transaction.student}} with amount {{transaction.amount}} --- for session: {{transaction.start_time}} to  {{transaction.end_time}}
-    </li>
-  </ul>
+  <h5 style="color: #ffa028;
+  text-transform: uppercase;">Outgoing Transactions</h5>
+  <br>
+{%if not transactions_outgoing%}
+  <p>No transactions to show!</p>
+  {%else%}
+
+  {% for transaction in transactions_outgoing %}
+  <p>
+      Made to  {{transaction.tutor}} with amount {{transaction.amount}} --- for session: {{transaction.start_time}} to  {{transaction.end_time}}
+    </p>
   {% endfor %}
-  </div>
+  {%endif%}
+  <br>
+  <h5 style="color: #ffa028;
+  text-transform: uppercase;">Incoming Transactions</h5>
+  <br>
+  {%if not transactions_incoming%}
+  <p>No transactions to show!</p>
+  {%else%}
+  {% for transaction in transactions_incoming %}
+ <p>
+      Made by {{transaction.student}} with amount {{transaction.amount}} --- for session: {{transaction.start_time}} to  {{transaction.end_time}}
+    <p>
+  
+  {% endfor %}
+  {%endif%}
   <br>
 
-  {% if student %}
+  <h5>Balance: {{balance}}</h5>
+  {%if not tutor%}
+
+  <button style="float: right;"type="button" class="btn btn-primary tutoria-button1" name="button">
+  <a href="/tutoria/add_funds">Add money</a></button><br>
+  <br>
+  {%else%}
+ <div class="buttons" style="float: right;">
+  <button style="float: right;"type="button" class="btn btn-primary tutoria-button1" type="button" name="button">
+  <a href="/tutoria/withdraw_funds">Withdraw money</a><br></button>  <button style="float: right;"type="button" class="btn btn-primary tutoria-button1" name="button">
+  <a href="/tutoria/add_funds">Add money</a></button></div>
+  </div>
+  <br>
+{%endif%}
+  <!-- {% if student %}
   <button type="button" name="button">
   <a href="/tutoria/search">Search for Tutors</a><br></button>
-  {% endif %}
+  {% endif %} -->
 
-  <button type="button" name="button">
-  <a href="/tutoria/add_funds">Add money</a><br></button>
+  
 
-  {% if tutor %}
-  <button type="button" name="button">
-  <a href="/tutoria/withdraw_funds">Withdraw money</a><br></button>
+  
 
-  <button type="button" name="button">
+  <!-- <button type="button" name="button">
     <a href="/tutoria/view_profile/{{tutor.id}}">View Profile</a></br>
-  </button>
-  {% endif %}
-
-  <br><br>
-  <button type="button" name="button"><a href="/tutoria/logout"> Logout </a></button>
-        </div>
+  </button> -->
+        </div></div>
       </main>
 
 {% endblock %}

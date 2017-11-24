@@ -236,6 +236,37 @@ border-width: 1px;
   display: none;
 }
 
+.dash-sub{
+
+  padding: 10px;
+  border-bottom: solid #ffa028 0.5px;
+}
+
+.dash-sub-header{
+  width: 100%;
+display: inline-block;
+
+padding: 10px;
+  border-bottom: solid #ffa028 0.5px;
+}
+.dash-sub-header h4{
+  width: 50%;
+  margin-right: 10px;
+}
+.dash-sub h3,
+.dash-sub h4,
+.dash-sub h5{
+
+  text-transform: uppercase;
+  color: #5bc0de;
+}
+
+.content-container h6{
+
+  color: #ffa028;
+  text-transform: uppercase;
+}
+
 .avatar img{
 width: 64px;
   }
@@ -509,9 +540,16 @@ header.masthead {
 
 }
 .dash-button{
-  /*position: absolute;*/
+  /*position: ;*/
   display: inline-block;
   float: right;
+  margin-bottom: 10px;
+}
+.dash-content button{
+  margin-bottom: 15px;
+}
+.content-container.dash-content{
+padding-bottom: 30px; 
 }
 
 .btn-xl {
