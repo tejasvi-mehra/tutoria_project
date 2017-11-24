@@ -73,7 +73,7 @@
               16:30
             </th>
           </tr>
-        </thead>
+      </thead>
         <tbody>
           <tr>
             {% for sesh in sessions %}
@@ -88,7 +88,7 @@
                   {% ifnotequal sesh.status 'vacant' %}
                     <p>UNAVAILABLE</p>
                   {% else %}
-                    <p><a href="/tutoria/book/{{tutor.id}}/{{sesh.time |date:'Y-m-d H:i'}}">AVAILABLE&nbsp&nbsp;</a></p>
+                    <p><a style="color:#1abf5d" href="/tutoria/book/{{tutor.id}}/{{sesh.time |date:'Y-m-d H:i'}}">AVAILABLE&nbsp&nbsp;</a></p>
                   {% endifnotequal %}
                 </td>
                 {% endfor %}

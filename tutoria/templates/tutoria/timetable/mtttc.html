@@ -1,9 +1,6 @@
 {% extends 'tutoria/base.html' %}
 {% block body %}
 <style media="screen">
-      a:link{
-        /*color:blue;*/
-      }
       td,th{
         width:10%;
       }
@@ -24,43 +21,67 @@
         <div class="table-responsive">
             <table class="table table-striped">
               <thead>
-                <tr>
-                  <th>
+                  <tr>
+                    <th>
 
-                  </th>
-                  <th>
-                    09:00
-                  </th>
-                  <th>
-                    10:00
-                  </th>
-                  <th>
-                    11:00
-                  </th>
-                  <th>
-                    12:00
-                  </th>
-                  <th>
-                    13:00
-                  </th>
-                  <th>
-                    14:00
-                  </th>
-                  <th>
-                    15:00
-                  </th>
-                  <th>
-                    16:00
-                  </th>
-                </tr>
-              </thead>
+                    </th>
+                    <th>
+                      09:00
+                    </th>
+                    <th>
+                      09:30
+                    </th>
+                    <th>
+                      10:00
+                    </th>
+                    <th>
+                      10:30
+                    </th>
+                    <th>
+                      11:00
+                    </th>
+                    <th>
+                      11:30
+                    </th>
+                    <th>
+                      12:00
+                    </th>
+                    <th>
+                      12:30
+                    </th>
+                    <th>
+                      13:00
+                    </th>
+                    <th>
+                      13:30
+                    </th>
+                    <th>
+                      14:00
+                    </th>
+                    <th>
+                      14:30
+                    </th>
+                    <th>
+                      15:00
+                    </th>
+                    <th>
+                      15:30
+                    </th>
+                    <th>
+                      16:00
+                    </th>
+                    <th>
+                      16:30
+                    </th>
+                  </tr>
+                </thead>
               <tbody>
                 <tr>
                   {% for sesh in sessions %}
-                      {% if forloop.counter0|divisibleby:8  %}
+                      {% if forloop.counter0|divisibleby:16  %}
                         </tr>
                       {% endif %}
-                      {% if forloop.counter0|divisibleby:8 %}
+                      {% if forloop.counter0|divisibleby:16 %}
                         <tr>
                         <th>{{sesh.time | date:'Y-m-d'}}</th>
                       {% endif %}
@@ -69,7 +90,7 @@
                         {% ifequal sesh.status 'BLOCKED' %}
                           <p><a href="/tutoria/tutor_unblock_session/{{sesh.time | date:'Y-m-d H:i'}}">UNBLOCK</a></p>
                         {% else %}
-                          <p><a href="/tutoria/session_tutor/{{sesh.time | date:'Y-m-d H:i'}}">{{sesh.status}}</a></p>
+                          <p><a style="color:blue"  href="/tutoria/session_tutor/{{sesh.time | date:'Y-m-d H:i'}}">{{sesh.status}}</a></p>
 
                         {% endifequal %}
                         {% else %}

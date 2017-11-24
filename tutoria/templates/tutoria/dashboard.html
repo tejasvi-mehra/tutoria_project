@@ -81,18 +81,15 @@ left: 0px;
   {%else%}
   <h4>Upcoming Sessions</h4>{%endif%}
   <br>
-  {%if not student_sessions%}
-  <p>No upcoming sessions!</p>
+  {% if not student_sessions %}
+    <p>No upcoming sessions!</p>
   {%else%}
   {% for sesh in student_sessions %}
-
-
-
     <p>
       Session at {{sesh.start_time}} with {{sesh.tutor.first_name}} {{sesh.tutor.last_name}}
     </p>
   {% endfor %}
-  {%endif%}
+  {% endif %}
   <button style="float: right;" class="btn btn-primary tutoria-button1"><a href="/tutoria/manage_timetable/student">Manage student timetable</a></button>
   <br>
   </div></div>
@@ -107,17 +104,18 @@ left: 0px;
   <h5 style="color: #ffa028;
   text-transform: uppercase;">Outgoing Transactions</h5>
   <br>
-{%if not transactions_outgoing%}
-  <p>No transactions to show!</p>
+  {%if not transactions_outgoing%}
+    <p>No transactions to show!</p>
   {%else%}
 
   {% for transaction in transactions_outgoing %}
   <p>
-      Made to  {{transaction.tutor}} with amount {{transaction.amount}} --- for session: {{transaction.start_time}} to  {{transaction.end_time}}
+      Made to {{transaction.tutor.first_name}} {{transaction.tutor.last_name}} with amount {{transaction.amount}} --- for session: {{transaction.start_time}} to  {{transaction.end_time}}
     </p>
   {% endfor %}
   {%endif%}
   <br>
+  {% if tutor %}
   <h5 style="color: #ffa028;
   text-transform: uppercase;">Incoming Transactions</h5>
   <br>
@@ -125,17 +123,13 @@ left: 0px;
   <p>No transactions to show!</p>
   {%else%}
   {% for transaction in transactions_incoming %}
- <p>
-      Made by {{transaction.student}} with amount {{transaction.amount}} --- for session: {{transaction.start_time}} to  {{transaction.end_time}}
-    <p>
-
+    <p>Made by {{transaction.student}} with amount {{transaction.amount}} --- for session: {{transaction.start_time}} to  {{transaction.end_time}}</p>
   {% endfor %}
   {%endif%}
   <br>
-
+  {% endif %}
   <h5>Balance: {{balance}}</h5>
   {%if not tutor%}
-
   <button style="float: right;"type="button" class="btn btn-primary tutoria-button1" name="button">
   <a href="/tutoria/add_funds">Add money</a></button><br>
   <br>

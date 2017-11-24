@@ -37,6 +37,7 @@
          <h4>Book Session</h4>
        </div>
        <div class="modal-body">
+<<<<<<< HEAD
          <div class="jumbotron main-container page-title" >
            <div class="brief-container">
              <p>Name: {{tutor.username}}</p>
@@ -49,6 +50,16 @@
              </form>
           </div>
         </div>
+=======
+         <p>Name: {{tutor.first_name}} {{tutor.last_name}}</p>
+         <p>Date: {{date}}</p>
+         <p>Due: <span id="due_amount_copy">{{tutor.rate}}</span></p>
+         <form action = "/tutoria/book/{{tutor.id}}/{{date}}/" method = "post">
+                 {% csrf_token %}
+                 <input type="text" name="final" id="final_due_amount" value="" hidden>
+                 <input type="submit" name="book" value="Book" />
+         </form>
+>>>>>>> origin/fortejasvi
        </div>
        <div class="modal-footer">
          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
