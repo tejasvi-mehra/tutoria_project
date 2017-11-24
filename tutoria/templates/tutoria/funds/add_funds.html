@@ -6,7 +6,7 @@
         <h1>Add Amount</h1>
         <form onSubmit="return confirm('Are you sure you wish to add funds?');" action="/tutoria/add_funds/" method="post">
           {% csrf_token %}
-          $$ <input type="number" name="amount" value="" style="height:40px; width:100px">
+          $$ <input type="number" name="amount" value="0" style="height:40px; width:100px">
           <br><br>
           <button class ="btn btn-lg btn-primary" type="submit" name="button", style="height:40px">Submit</button>
         </form>

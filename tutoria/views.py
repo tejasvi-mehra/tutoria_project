@@ -100,11 +100,15 @@ def dashboard(request):
     tutor_sessions, student_sessions = get_sessions(username)
     student, tutor = check_person(username)
     print(student,tutor)
+    if tutor == False:
+        name = student.name
+    else :
+        name = tutor.first_name + " " + tutor.last_name
     balance = get_balance(username)
     transactions_outgoing = get_transactions_outgoing(username)
     transactions_incoming = get_transactions_incoming(username)
     context = {
-        'name' : request.user.username,
+        'name' : name,
         'tutor_sessions' : tutor_sessions,
         'student_sessions' : student_sessions,
         'student' : student,
@@ -207,7 +211,7 @@ def set_profile(request):
             tutor.save()
         if 'student' in temp:
             student = Student(
-                name = request.user.first_name + request.user.last_name,
+                name = request.user.first_name + " " + request.user.last_name,
                 username = request.user.username,
                 isTutor = isTutor,
                 avatar = avatar

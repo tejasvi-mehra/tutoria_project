@@ -13,7 +13,7 @@
     <div class="brief-container">
         <h1>Book Session</h1>
         <br>
-        <h3>Name: {{tutor.username}}</h3>
+        <h3>Name: {{tutor.first_name}} {{tutor.last_name}}</h3>
         <br>
         <h4>Date: {{date}}</h4>
         <br>
@@ -39,7 +39,7 @@
          <h4 class="modal-title">Modal Header</h4>
        </div>
        <div class="modal-body">
-         <p>Name: {{tutor.username}}</p>
+         <p>Name: {{tutor.first_name}} {{tutor.last_name}}</p>
          <p>Date: {{date}}</p>
          <p>Due: <span id="due_amount_copy">{{tutor.rate}}</span></p>
          <form action = "/tutoria/book/{{tutor.id}}/{{date}}/" method = "post">
