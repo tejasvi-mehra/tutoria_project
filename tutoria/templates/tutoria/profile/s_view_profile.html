@@ -4,31 +4,32 @@
   <div class="jumbotron main-container page-title">
     <div class="container">
             <div class="row">
+                  <div class="row profile-container" style="max-height:400px;">
+                      <div class="profile-pic">
+                          <img src="{{tutor.avatar.url}}" alt="" class="img-rounded img-responsive" />
+                      </div>
+                  </div>
+                  <div class="profile-container-deets">
+                          <h1><a href="#">{{tutor.first_name}} {{tutor.last_name}}</a></h1>
+                          <div class="profile-sub-deets">
 
-
-
-                            <div class="row profile-container">
-                                <div class="profile-pic">
-                                <img src="{{tutor.avatar.url}}" alt="" class="img-rounded img-responsive" /></div>
-                            </div>
-
-
-                            <div class="profile-container-deets">
-                                <h1><a href="#">{{tutor.first_name}} {{tutor.last_name}}</a></h1>
-                                <div class="profile-sub-deets">
-
-                                <div class="detail"><h3>Biography:</h3><p>{{tutor.biography}}</p></div><br>
-                                <div class="detail"><h3>University:</h3> <p>{{tutor.university}}</p></div><br>
-                                <div class="detail"><h3>Tutor Type:</h3> <p>{{tutor.tutortype}}</p></div><br>
-                                <div class="detail"><h3>Tutor Rate:</h3><p>{{tutor.rate}}</p></div><br></div>
-                                <!-- Split button -->
-                                <div class="btn-group">
-                                    <a class="btn btn-primary" href="/tutoria/viewTimetable/{{tutor.id}}">Book Session</a>
-                                </div></div>
-                            </div>
-
-
-
+                              <div class="detail"><h3>Biography:</h3><p>{{tutor.biography}}</p></div><br>
+                              <div class="detail"><h3>University:</h3> <p>{{tutor.university}}</p></div><br>
+                              <div class="detail"><h3>Tutor Type:</h3> <p>{{tutor.tutortype}}</p></div><br>
+                              {% ifequal tutor.tutortype 'private' %}
+                              <div class="detail"><h3>Tutor Rate:</h3><p>{{tutor.rate}}</p></div><br>
+                          </div>
+                          {% endifequal %}
+                          {% if tutor.hasRating  %}
+                            <div class="detail"><h3>Average Rating:</h3><p>{{tutor.rating}}</p></div><br>
+                          {% else %}
+                            <div class="detail"><h3>Average Rating:</h3><p>Unrated</p></div><br>
+                          {% endif %}
+                          <div class="btn-group">
+                              <a class="btn btn-primary" href="/tutoria/viewTimetable/{{tutor.id}}">Book Session</a>
+                          </div>
+                  </div>
+            </div>
             </div>
             <br>
             <div class="reviews-container">
@@ -42,7 +43,6 @@
                 <br>
                 {%endfor%}
             </div>
-  
         </div>
   </div>
 
