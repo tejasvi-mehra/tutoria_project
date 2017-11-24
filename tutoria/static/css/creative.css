@@ -1033,9 +1033,29 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
   background-color: #337ab7
 }
 
+<<<<<<< HEAD
 .nav-stacked>li {
   float: none
 }
+=======
+a {
+  color: #F05F40;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  transition: all 0.2s; }
+  a:hover {
+    color: #f05f40; }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+    }
+>>>>>>> remotes/origin/latest
 
 .nav-stacked>li+li {
   margin-top: 2px;
@@ -1340,6 +1360,91 @@ li {
   min-height: 100px;
   overflow: scroll;
 }
+.profile-container{
+
+  display: inline-block;
+  margin: 10px;
+  /*padding: 10px;*/
+  border-radius: 10px;
+  background: #fff;
+  /*width: 100%;*/
+
+}
+.profile-container-deets{
+
+  display: inline-block;
+  float: right;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: #fff;
+  width: 61%;
+
+}
+
+.profile-container-deets h1{
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.profile-sub-deets {
+
+  padding: 10px;
+}
+
+.detail{
+
+  padding: 5px;
+  border-bottom: solid black;
+  border-bottom-width: 0.5px;
+}
+.profile-sub-deets h3{
+  color: #5bc0de;
+}
+
+.row.profile-container{
+
+  width: 35%;
+}
+
+.profile-pic{
+  padding: 10px;
+  margin-right: auto;
+margin-right: auto;
+display: block;
+}
+
+.profile-pic img{
+margin-right: auto;
+margin-right: auto;
+display: block;
+  max-width:80%;
+}
+
+.profile-sub-deets p{
+
+  font-family: 'Hind', sans-serif;
+  font-size: 24px;
+  text-transform: capitalize;
+  text-align: end;
+}
+
+.reviews-container{
+padding: 10px;
+background-color: #fff;
+border-radius: 10px;
+/*width: 90%;*/
+
+}
+
+.review{
+margin: 5px;
+border-radius: 10px;
+border-color: #fc2;
+padding: 10px;
+border-width: 1px;
+
+}
 
 .brief-container {
   display: block;
@@ -1378,7 +1483,10 @@ li {
   width: 64px;
 }
 
+<<<<<<< HEAD
 .deets {
+=======
+>>>>>>> remotes/origin/latest
   padding-left: 30px;
   float: right;
   display: inline-block;
@@ -1398,6 +1506,7 @@ li {
   float: right;
   padding-left: 10px;
   margin-left: 10px;
+
 }
 
 .deets .rating img {
@@ -1428,7 +1537,7 @@ li {
   display: inline-block;
   padding: 5px;
   width: 100%;
-  border-bottom: solid black;
+  border-bottom:solid black;
   border-bottom-width: 0.5px;
 }
 
@@ -1541,12 +1650,43 @@ body {
     background-color: transparent;
   }
   #mainNav .navbar-brand {
-    color: rgba(255, 255, 255, 0.7);
-  }
-  #mainNav .navbar-brand:focus, #mainNav .navbar-brand:hover {
-    color: #fff;
-  }
-  /*#mainNav .navbar-nav > li.nav-item > a.nav-link {
+    font-weight: 600;
+    font-size: 1.7rem;
+    /*text-transform: uppercase;*/
+    color: #F05F40;
+    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif; }
+    #mainNav .navbar-brand:focus, #mainNav .navbar-brand:hover {
+      color: #fff; }
+  #mainNav .navbar-nav > li.nav-item > a.nav-link,
+  #mainNav .navbar-nav > li.nav-item > a.nav-link:focus {
+
+    padding-left: 64px;
+    padding-right: 64px;
+
+     }
+    #mainNav .navbar-nav > li.nav-item > a.nav-link > img{
+      width: 32px;
+
+    }
+    #mainNav .navbar-nav > li.nav-item > a.nav-link:hover,
+    #mainNav .navbar-nav > li.nav-item > a.nav-link:focus:hover {
+      color: #F05F40; }
+    #mainNav .navbar-nav > li.nav-item > a.nav-link.active,
+    #mainNav .navbar-nav > li.nav-item > a.nav-link:focus.active {
+      color: #F05F40 !important;
+      background-color: transparent; }
+      #mainNav .navbar-nav > li.nav-item > a.nav-link.active:hover,
+      #mainNav .navbar-nav > li.nav-item > a.nav-link:focus.active:hover {
+        background-color: transparent; }
+  @media (min-width: 992px) {
+    #mainNav {
+      border-color: transparent;
+      background-color: transparent; }
+      #mainNav .navbar-brand {
+        color: rgba(255, 255, 255, 0.7); }
+        #mainNav .navbar-brand:focus, #mainNav .navbar-brand:hover {
+          color: #fff; }
+      /*#mainNav .navbar-nav > li.nav-item > a.nav-link {
         padding: 0.5rem 1rem; }*/
   #mainNav .navbar-nav>li.nav-item>a.nav-link, #mainNav .navbar-nav>li.nav-item>a.nav-link:focus {
     color: rgba(255, 255, 255, 0.7);
@@ -1701,6 +1841,7 @@ header.masthead p {
 }
 
 .btn {
+
   font-weight: 700;
   text-transform: uppercase;
   border: none;

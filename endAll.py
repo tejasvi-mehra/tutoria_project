@@ -29,7 +29,7 @@ def start():
                      time="{}:{}".format(tdy.hour,tdy.minute)
                      )
          notif.save()
-         notif=Notification(
+         notif2=Notification(
                      title="{} was paid by {} to you.".format(transaction.amount,transaction.student),
                      forSession=False,
                      tutor=transaction.tutor,
@@ -37,7 +37,10 @@ def start():
                      date="{}/{}/{}".format(tdy.day,tdy.month,tdy.year),
                      time="{}:{}".format(tdy.hour,tdy.minute)
                      )
-
+         notif2.save()
+         print("To: {}".format(transaction.tutor.username)+"\nFrom: MyTutors\nSubject: Session Activity")
+         print("Dear {},\n".format(transaction.tutor.first_name+" "+transaction.tutor.last_name))
+         print(notif2.title)
 
 
 def clear_history():

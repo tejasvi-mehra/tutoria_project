@@ -13,11 +13,11 @@ urlpatterns = [
 
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
 
-    url(r'^setProfile/$', views.set_profile, name='dashboard'),
+    url(r'^set_profile/$', views.set_profile, name='dashboard'),
 
     url(r'^search/$', views.search, name='search'),
 
-    url(r'^nameSearch/$', views.nameSearch, name='nameSearch'),
+    url(r'^name_search/$', views.nameSearch, name='nameSearch'),
 
     url(r'^book/(?P<tutor_id>[0-9]+)/(?P<date_time>.*)/$', views.book, name='book'),
 
@@ -25,7 +25,7 @@ urlpatterns = [
 
     url(r'^view_profile/(?P<tutor_id>[0-9]+)/$', views.view_tutor_profile, name='view_profile'),
 
-    url(r'^viewTimetable/(?P<tutor_id>[0-9]+)/$', views.view_tutor_timetable, name='view_timetable'),
+    url(r'^view_timetable/(?P<tutor_id>[0-9]+)/$', views.view_tutor_timetable, name='view_timetable'),
 
     url(r'^manage_timetable/student/$', views.manage_student_time_table, name='manage_student_time_table'),
 
@@ -45,7 +45,7 @@ urlpatterns = [
 
     url(r'^notifications/',views.notifications,name='notifications'),
 
-    url(r'^writeReview/(?P<session_id>.*)/$',views.review,name='review'),
+    url(r'^write_review/(?P<session_id>.*)/$',views.review,name='review'),
 
     url(r'^edit_profile/(?P<tutor_id>[0-9]+)/$', views.edit_profile, name='edit_profile'),
 
