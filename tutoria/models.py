@@ -93,6 +93,7 @@ class Notification(models.Model):
     date = models.CharField(max_length=200)
     time = models.CharField(max_length=200)
     session = models.ForeignKey(Session,default=2)
+    forReview = models.BooleanField(default=False)
 
 class Review(models.Model):
     """docstring for Review"""

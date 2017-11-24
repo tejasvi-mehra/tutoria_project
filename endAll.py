@@ -26,7 +26,8 @@ def start():
                      student=transaction.student,
                      now=int(ttime.time()),
                      date="{}/{}/{}".format(tdy.day,tdy.month,tdy.year),
-                     time="{}:{}".format(tdy.hour,tdy.minute)
+                     time="{}:{}".format(tdy.hour,tdy.minute),
+                     forReview=True
                      )
          notif.save()
          notif2=Notification(

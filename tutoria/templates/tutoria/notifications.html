@@ -24,7 +24,16 @@
             {%if notif.forSession%}
             <br>
             <button class="btn btn-primary tutoria-button1">
+<<<<<<< HEAD
             <a href="/tutoria/session_tutor/{{notif.session.start_time | date:'Y-m-d H:i'}}/">View Session</a></button>
+=======
+            <a href="/tutoria/session_detail/{{notif.start_time | date:'Y-m-d H:i'}}/">View Session</a></button>
+            {%elif notif.forReview%}
+            <br>
+            <button class="btn btn-primary tutoria-button1" style="float: right;" >
+              <a href="/tutoria/write_review/{{session_id}}/">Write a review</a>
+            </button>
+>>>>>>> origin/searchdash
             {%endif%}
 
       </div>
