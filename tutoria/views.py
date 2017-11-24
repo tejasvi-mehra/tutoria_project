@@ -629,6 +629,8 @@ def edit_profile(request, tutor_id):
         tutor.phoneNumber = request.POST['tel']
         tutor.tags = request.POST['tags']
         remsub = request.POST['remsub']
+        
+
         print(remsub)
         course_tut=""
         ls =[]

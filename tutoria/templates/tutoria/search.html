@@ -108,7 +108,7 @@
                               <input class="form-control" type="text" name="subSearch" placeholder="Subject">
                               </div>
                               <div class="form-group">
-                                <input class="form-control" type="text" name="tags" placeholder="Tags: Separate by comma" size="35" style=" width: 100%;">
+                                <input class="form-control" type="text" name="tags" placeholder="Tag" size="35" style=" width: 100%;">
                               </div>
                               <div class="form-group">
                                 <input class="form-control" type="number"  min="0" max="1000" step="10" name="rateFrom" placeholder="Hourly Rate - From"/>
@@ -170,7 +170,6 @@
 
                     </div><div class="head-descript"><p>University: {{tutor.university}}</p><p>{% if tutor.tutortype == "private" %}Rate: {{tutor.rate}} HKD {% else %} {{tutor.tutortype}} {% endif %} </p></div></span>
 
-          <p>Bio: {{tutor.biography}}</p>
         </div>
         </span>
         <br>
