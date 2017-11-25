@@ -30,7 +30,7 @@ def get_transactions_incoming(username):
         try:
             # print(student)
             booked = tutor.transaction_set.all()
-            booked = filter_sessions(booked,30)
+            booked = filter_transactions(booked,30)
             # print(booked[0])
         except:
             booked = []
@@ -383,6 +383,7 @@ def view_tutor_timetable(request, tutor_id):
 def book(request, tutor_id, date_time):
     tutor = get_object_or_404(Tutor, id=tutor_id)
     start_time = parser.parse(date_time)
+    tdy = datetime.datetime.today()
     if request.method == 'POST':
         due = float(request.POST['final'])
         commission = float(tutor.rate)*0.05
@@ -417,6 +418,7 @@ def book(request, tutor_id, date_time):
                 student = student,
                 start_time = start_time,
                 end_time = start_time + td,
+                booked_time = tdy,
                 amount = due,
                 commission = commission
             )
@@ -462,7 +464,6 @@ def book(request, tutor_id, date_time):
             )
             # print(notif2.title)
             notif2.save()
-                """ Notification object """
             sendFundsToMyTutors(student.username, costOfBooking+commission)
             return redirect('/tutoria/session_detail/' + str(session.start_time))
         else:
@@ -496,7 +497,20 @@ def session_detail(request, date_time):
             refund_amount = transaction.amount + transaction.commission
             refundFromMyTutors(student.username, refund_amount)
             session.delete()
-            transaction.delete()
+            transaction1 = Transaction(
+                session = None,
+                student = transaction.student,
+                tutor = transaction.tutor,
+                amount = transaction.amount,
+                commission = transaction.commission,
+                discount = transaction.discount,
+                booked_time = datetime.datetime.today(),
+                start_time = transaction.start_time,
+                end_time = transaction.end_time,
+                completed = True
+            )
+            transaction1.save()
+
             today=datetime.datetime.today()
             notif=Notification(
                 title="You cancelled session with {} scheduled for {}".format(session.tutor,session.start_time),

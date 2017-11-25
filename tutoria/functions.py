@@ -26,6 +26,19 @@ def filter_sessions(sessions, days):
             final.append(sesh)
     return final
 
+# filter the transaction array based on number of days
+def filter_transactions(transactions, days):
+    time_delta = datetime.timedelta(days=days)
+    tdy = datetime.datetime.today() + datetime.timedelta(hours=8)
+    month = tdy - time_delta
+    print ("herheer/......")
+    final = []
+    for transaction in transactions:
+        if transaction.booked_time <= tdy and transaction.booked_time > month:
+            final.append(sesh)
+    return final
+
+
 # get tutor sessions which can be BOOKED or BLOCKED
 def get_tutor_sessions(username):
     booked = []
@@ -147,7 +160,9 @@ def get_transactions_outgoing(username):
         try:
             # print(student)
             booked = student.transaction_set.all()
-            booked = filter_sessions(booked,30)
+            print (booked + "1......................................................................")
+            booked = filter_transactions(booked,30)
+            print (booked + "2......................................................................")
             # print(booked[0])
         except:
             booked = []
