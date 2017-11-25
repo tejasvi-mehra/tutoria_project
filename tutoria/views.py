@@ -23,22 +23,6 @@ def mytutors_withdraw(request):
         wallet.save();
     return render(request, 'tutoria/funds/mytutors.html',{'wallet':wallet})
 
-def get_transactions_incoming(username):
-    booked = []
-    try:
-        tutor = Tutor.objects.get(username=username)
-        try:
-            # print(student)
-            booked = tutor.transaction_set.all()
-            booked = filter_sessions(booked,30)
-            # print(booked[0])
-        except:
-            booked = []
-    except:
-        booked = []
-
-    return booked
-
 def home(request):
     return render(request, 'tutoria/index.html')
 
@@ -51,9 +35,7 @@ def coupon(request, code):
         return JsonResponse({"success" : False})
 
 def admin_panel(request):
-
     if request.method == 'POST':
-
         if request.POST['remsub']:
             Course.objects.all().delete()
             remsub = request.POST['remsub']
@@ -102,7 +84,6 @@ def dashboard(request):
     student_sessions.sort(key=lambda x:x.start_time)
 
     student, tutor = check_person(username)
-    print(student,tutor)
     if tutor == False:
         name = student.name
     else :
@@ -141,7 +122,6 @@ def session_tutor(request, date_time):
 
 @login_required()
 def manage_tutor_time_table(request):
-    print("here whats up")
     error = ""
     if request.GET.get('error'):
         error = request.GET['error']
@@ -167,13 +147,8 @@ def manage_tutor_time_table(request):
 def set_profile(request):
     if request.method == 'POST':
         temp = request.POST.getlist('checks')
-        isTutor = False
-        isStudent = False
-        if 'student' in temp:
-            isStudent = True
-        if 'tutor' in temp:
-            isTutor = True
-        # Create wallet object
+        isTutor = True if 'student' in temp else False
+        isStudent = True if 'tutor' in temp else False
 
         avatar = ""
 
@@ -184,10 +159,6 @@ def set_profile(request):
 
         if temp[0] == 'tutor':
             course_tut=""
-            try:
-                course_tut = Course.objects.get(subject__iexact=request.POST['sub'],code=request.POST['code'])
-            except:
-                return render(request, 'tutoria/profile/set_profile.html', {'error': 'Invalid Course Specified'})
             tutor = Tutor(
                 first_name = request.user.first_name,
                 last_name = request.user.last_name,
@@ -202,8 +173,13 @@ def set_profile(request):
             )
             if avatar != "":
                 tutor.avatar = avatar
-            tutor.save()
-            tutor.course.add(course_tut)
+
+            try:
+                course_tut = Course.objects.get(subject__iexact=request.POST['sub'],code=request.POST['code'])
+                tutor.course.add(course_tut)
+            except:
+                pass
+
             tutor.save()
         if 'student' in temp:
             student = Student(
@@ -257,12 +233,9 @@ def nameSearch(request):
         field_day = request.POST['daySearch']
         field_tags = request.POST['tags']
 
-        #print(field_uni,field_course,field_sub,field_type)
-        #print(field_course,field_sub,'hi')
-        kk=Course.objects.filter(code__startswith=field_course,subject__istartswith=field_sub)
+        kk = Course.objects.filter(code__startswith=field_course,subject__istartswith=field_sub)
         tutors=""
         if (field_rateTo or field_rateFrom):
-            print(*kk)
             tutors = Tutor.objects.filter(university__istartswith=field_uni,
                                           tutortype__startswith=field_type,
                                           course__in=kk,
@@ -270,11 +243,9 @@ def nameSearch(request):
                                           rate__gte=field_rateFrom,
                                           tags__icontains=field_tags,
                                           isHidden=False).distinct()
-            print([k for k in tutors])
+
 
         else:
-            print(*kk)
-            #print('wtf')
             tutors = Tutor.objects.filter(university__istartswith=field_uni,
                                           tutortype__startswith=field_type,
                                           course__in=kk,
@@ -301,7 +272,6 @@ def nameSearch(request):
 def view_tutor_profile(request, tutor_id):
     tutor = get_object_or_404(Tutor, pk=tutor_id)
     tags = tutor.tags.split(',');
-    print(tags)
     reviews=Review.objects.filter(tutor=tutor)
     hasRating=False
     available = True
@@ -365,10 +335,8 @@ def tutor_unblock_session(request, date_time):
 def view_tutor_timetable(request, tutor_id):
     tutor = get_object_or_404(Tutor, pk=tutor_id)
     sessions = filter_sessions(get_tutor_sessions(tutor.username), 7)
-    print(sessions)
     week = create_week(7, 60) if tutor.tutortype == 'private' else create_week(7, 30)
     result = manage_sessions(sessions, week)
-    # print(result)
     context = {
         'tutor' : tutor,
         'sessions' : result
@@ -422,7 +390,7 @@ def book(request, tutor_id, date_time):
             )
             transaction.save()
 
-            """ Notification object """
+
             title="{} booked a session with you on {}.".format(session.student,session.start_time)
             today=datetime.datetime.today()
             str_date="{}/{}/{}".format(today.day,today.month,today.year)
@@ -462,7 +430,7 @@ def book(request, tutor_id, date_time):
             )
             # print(notif2.title)
             notif2.save()
-                """ Notification object """
+
             sendFundsToMyTutors(student.username, costOfBooking+commission)
             return redirect('/tutoria/session_detail/' + str(session.start_time))
         else:
@@ -546,7 +514,7 @@ def add_funds(request):
     else:
         return render(request, 'tutoria/funds/add_funds.html', {'balance' : wallet.balance})
 
-# Withdraw funds for tutor
+
 @login_required()
 def withdraw_funds(request):
     wallet = Wallet.objects.get(username=request.user.username)
@@ -561,29 +529,34 @@ def withdraw_funds(request):
     else:
         return render(request, 'tutoria/funds/withdraw_funds.html', {'balance' : wallet.balance})
 
+
 @login_required()
 def notifications(request):
     if request.method=="GET":
-        print(request.user.username)
-        s = None
-        tut = None
-        s1 = Student.objects.filter(username=request.user.username)
-        if len(s1)>0:
-            s=s1[0]
-        tutor=Tutor.objects.filter(username=request.user.username)
-        notifs=[]
-        if s:
-            student=s
-            stu_notifs=Notification.objects.filter(student=student)
-            for y in stu_notifs:
-                notifs.append(y)
-        if tutor:
-            tut = tutor[0]
-            tut_notifs=Notification.objects.filter(tutor=tut)
-            for x in tut_notifs:
-                notifs.append(x)
 
-        notifs.sort(key=lambda x: x.now, reverse=True)
+        student = None
+        tutor = None
+
+        student1 = Student.objects.filter(username=request.user.username)
+        tutor1 = Tutor.objects.filter(username=request.user.username)
+
+        if len(student1) > 0:
+            student = student1[0]
+        if len(tutor1) > 0:
+            tutor = tutor1[0]
+
+        notifications = []
+
+        if student:
+            student_notifications = Notification.objects.filter(student=student)
+            for item in student_notifications:
+                notifications.append(y)
+        if tutor:
+            tutor_notifications = Notification.objects.filter(tutor=tut)
+            for item in tutor_notifications:
+                notifications.append(x)
+
+        notifications.sort(key=lambda x: x.now, reverse=True)
         print(notifs)
         context = {
             'notifs' : notifs,
@@ -596,7 +569,7 @@ def notifications(request):
 def review(request,session_id):
     if request.method=="POST":
         session=get_object_or_404(Session,pk=session_id)
-        rev=Review(
+        rev = Review(
             student=session.student,
             tutor=session.tutor,
             text=request.POST['review'],

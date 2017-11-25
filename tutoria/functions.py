@@ -14,8 +14,7 @@ from django.http import JsonResponse
 
 """ functions to be imported """
 
-# filter the sessions array based on number of days
-# looking forward
+# filters session based on days looking ahead.
 def filter_sessions(sessions, days):
     time_delta = datetime.timedelta(days=days)
     tdy = datetime.datetime.today() + datetime.timedelta(hours=8)
@@ -38,14 +37,11 @@ def get_tutor_sessions(username):
 
 # get student sessions which can be BOOKED
 def get_student_sessions(username):
-    # print("in get sessions", username)
     booked = []
     try:
         student = Student.objects.get(username=username)
         try:
-            # print(student)
             booked = student.session_set.all()
-            # print(booked[0])
         except:
             booked = []
     except:
@@ -56,7 +52,6 @@ def get_student_sessions(username):
 def get_sessions(username):
     tutor_sessions = get_tutor_sessions(username)
     student_sessions = get_student_sessions(username)
-    # print(tutor_sessions, student_sessions)
     tutor_sessions = filter_sessions(tutor_sessions, 7)
     student_sessions = filter_sessions(student_sessions, 7)
     return (tutor_sessions, student_sessions)
@@ -107,17 +102,6 @@ def check_person(username):
 
 # return the balance of student or tutor
 def get_balance(username):
-    # try:
-    #     student = Student.objects.get(username=username)
-    #     if student.isTutor:
-    #         tutor = Tutor.objects.get(username=username)
-    #         return tutor.balance
-    #     else:
-    #         return student.balance
-    # except:
-    #     tutor = Tutor.objects.get(username=username)
-    #     return tutor.balance
-
     wallet = Wallet.objects.get(username=username)
     return wallet.balance;
 
@@ -139,16 +123,16 @@ def refundFromMyTutors(username, amount):
     mytutorswallet.amount = float(mytutorswallet.amount) - float(amount)
     mytutorswallet.save()
 
-# Get transactions made in past 30 days
+
 def get_transactions_outgoing(username):
     booked = []
     try:
         student = Student.objects.get(username=username)
         try:
-            # print(student)
             booked = student.transaction_set.all()
+            print(booked)
             booked = filter_sessions(booked,30)
-            # print(booked[0])
+            print(booked)
         except:
             booked = []
     except:
@@ -156,9 +140,22 @@ def get_transactions_outgoing(username):
 
     return booked
 
+def get_transactions_incoming(username):
+    booked = []
+    try:
+        tutor = Tutor.objects.get(username=username)
+        try:
+            booked = tutor.transaction_set.all()
+            booked = filter_sessions(booked,30)
+        except:
+            booked = []
+    except:
+        booked = []
 
+    return booked
+
+# check conflict while booking a session
 def check_conflict(tutor, student, date_time):
-    # print(date_time, datetime.datetime.today(), datetime.timedelta(hours=24))
     tdy = datetime.datetime.today() + datetime.timedelta(hours=8)
     print(date_time < datetime.datetime.today() + datetime.timedelta(hours=24))
     if student.username == tutor.username:
@@ -178,5 +175,5 @@ def check_conflict(tutor, student, date_time):
              return False, "You can only book one session per tutor per day."
 
     return True, ""
-# Get incoming transactios for past 30 days
+
 """ functions to be imported """
