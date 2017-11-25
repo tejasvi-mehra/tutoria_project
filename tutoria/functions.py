@@ -31,13 +31,58 @@ def filter_transactions(transactions, days):
     time_delta = datetime.timedelta(days=days)
     tdy = datetime.datetime.today() + datetime.timedelta(hours=8)
     month = tdy - time_delta
-    print ("herheer/......")
     final = []
+    print(transactions)
+    print('------------')
     for transaction in transactions:
-        if transaction.booked_time <= tdy and transaction.booked_time > month:
-            final.append(sesh)
+        print("key", transaction)
+        if transaction.booked_time <= tdy and transaction.booked_time > month and transaction.session != None:
+            print("valid", transaction)
+            final.append(transaction)
+            print('--------')
+            print("added", final)
+    print('--------')
+    print ("final", final)
+    print ("return back")
     return final
 
+def filter_transactions_incoming(transactions, days):
+    time_delta = datetime.timedelta(days=days)
+    tdy = datetime.datetime.today() + datetime.timedelta(hours=8)
+    month = tdy - time_delta
+    final = []
+    print(transactions)
+    print('------------')
+    for transaction in transactions:
+        print("key", transaction)
+        if transaction.booked_time <= tdy and transaction.booked_time > month and transaction.session == None:
+            print("valid", transaction)
+            final.append(transaction)
+            print('--------')
+            print("added", final)
+    print('--------')
+    print ("final", final)
+    print ("return back")
+    return final
+
+def filter_transactions_incoming_tutor(transactions, days):
+    time_delta = datetime.timedelta(days=days)
+    tdy = datetime.datetime.today() + datetime.timedelta(hours=8)
+    month = tdy - time_delta
+    final = []
+    print(transactions)
+    print('------------')
+    for transaction in transactions:
+        print("key1", transaction)
+        if transaction.booked_time <= tdy and transaction.booked_time > month and transaction.session != None:
+            print("valid1", transaction)
+            final.append(transaction)
+            print('--------')
+            print("added1", final)
+    print('--------')
+    print ("final1", final)
+    print ("return back1")
+    return final
 
 # get tutor sessions which can be BOOKED or BLOCKED
 def get_tutor_sessions(username):
@@ -155,19 +200,51 @@ def refundFromMyTutors(username, amount):
 # Get transactions made in past 30 days
 def get_transactions_outgoing(username):
     booked = []
+    print("reached ")
     try:
         student = Student.objects.get(username=username)
         try:
-            # print(student)
+            student = Student.objects.get(username=username)
+            print(student)
             booked = student.transaction_set.all()
-            print (booked + "1......................................................................")
+            print ("called1")
             booked = filter_transactions(booked,30)
-            print (booked + "2......................................................................")
+            print ("booked:")
+            print (booked)
             # print(booked[0])
         except:
             booked = []
     except:
         booked = []
+
+    return booked
+
+def get_transactions_incoming(username):
+    booked = []
+    try:
+        student = Student.objects.get(username=username)
+        try:
+            booked = student.transaction_set.all()
+            print ("called2")
+            booked = filter_transactions_incoming(booked,30)
+            booked1 = []
+            if student.isTutor :
+                tutor = Tutor.objects.get(username=username)
+                booked1 = tutor.transaction_set.all()
+                print ("called3")
+                booked1 = filter_transactions_incoming_tutor(booked1,30)
+                booked = booked + booked1
+
+        except:
+            booked = []
+    except:
+        tutor = Tutor.objects.get(username=username)
+        try:
+            booked = tutor.transaction_set.all()
+            print ("called3")
+            booked = filter_transactions_incoming_tutor(booked,30)
+        except:
+            booked = []
 
     return booked
 

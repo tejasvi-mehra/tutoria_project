@@ -139,9 +139,22 @@ left: 0px;
   <p>No transactions to show!</p>
   {%else%}
   {% for transaction in transactions_incoming %}
- <p>
-      HK$ {{transaction.amount}} paid by {{transaction.student}} for session on {{transaction.start_time}}
+    {% if transaction.session %}
+    {% if transaction.completed %}
     <p>
+      HK$ {{transaction.amount}} was paid by {{transaction.student}} for session on {{transaction.start_time}}
+    </p>
+    {% else %}
+    <p>
+      HK$ {{transaction.amount}} will be paid by {{transaction.student}} for session on {{transaction.start_time}}
+    </p>
+    {% endif %}
+      {% else %}
+        {% ifnotequal transaction.amount 0 %}
+      <p>  HK$ {{transaction.amount}} session amount and HK$ {{transaction.commission}} was refunded back for cancellation of session on {{transaction.start_time}} </p>
+        {% endifnotequal %}
+      {% endif %}
+
 
   {% endfor %}
   {%endif%}
