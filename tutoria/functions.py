@@ -122,39 +122,22 @@ def get_balance(username):
     return wallet.balance;
 
 # Transfer money from student to admin on every booking
-def sendFundsToAdmin(username, amount):
-    # student = Student.objects.get(username = username)
-    # if student.isTutor:
-    #     tutor = Tutor.objects.get(username=username)
-    #     tutor.balance= float(tutor.balance) - amount
-    #     tutor.save()
-    # else:
-    #     student.balance= float(student.balance) - amount
-    #     student.save()
-
+def sendFundsToMyTutors(username, amount):
     wallet = Wallet.objects.get(username=username)
     wallet.balance = float(wallet.balance)-amount
     wallet.save()
-    admin = MyTutorsWallet.objects.get(username = "mytutors")
-    admin.amount = float(admin.amount) + amount
-    admin.save()
+    mytutorswallet = MyTutorsWallet.objects.get(username = "mytutors")
+    mytutorswallet.amount = float(mytutorswallet.amount) + amount
+    mytutorswallet.save()
 
 # Refund money back to student
-def refundFromAdmin(username, amount):
-    # student = Student.objects.get(username = username)
-    # if student.isTutor:
-    #     tutor = Tutor.objects.get(username=username)
-    #     tutor.balance = float(tutor.balance) + float(amount)
-    #     tutor.save()
-    # else:
-    #     student.balance= float(student.balance) + float(amount)
-    #     student.save()
+def refundFromMyTutors(username, amount):
     wallet = Wallet.objects.get(username=username)
     wallet.balance = float(wallet.balance) + float(amount)
     wallet.save()
-    admin = MyTutorsWallet.objects.get(username = "mytutors")
-    admin.amount = float(admin.amount) - float(amount)
-    admin.save()
+    mytutorswallet = MyTutorsWallet.objects.get(username = "mytutors")
+    mytutorswallet.amount = float(mytutorswallet.amount) - float(amount)
+    mytutorswallet.save()
 
 # Get transactions made in past 30 days
 def get_transactions_outgoing(username):

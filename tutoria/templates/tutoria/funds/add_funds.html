@@ -2,6 +2,13 @@
 {% block body %}
     <main role="main" class="container">
       <div class="jumbotron" style="text-align:center;">
+        {% if error %}
+        <div style="background:#F05F40">
+          <hr>
+          <h3>{{error}}</h3>
+          <hr>
+        </div>
+        {% endif %}
         Funds : {{balance}}<br><br>
         <h1>Add Amount</h1>
         <form onSubmit="return confirm('Are you sure you wish to add funds?');" action="/tutoria/add_funds/" method="post">

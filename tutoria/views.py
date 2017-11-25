@@ -287,9 +287,9 @@ def nameSearch(request):
                 num=len(Session.objects.filter(tutor=t))
                 l=Session.objects.filter(tutor=t)
                 print(num, [g.start_time for g in l])
-                if t.tutortype == "private" and num == 56:
+                if t.tutortype == "private" and num >= 56:
                     t_remove.append(t)
-                elif t.tutortype == "contracted" and num == 112:
+                elif t.tutortype == "contracted" and num >= 96:
                     t_remove.append(t)
 
             tutors=tutors.exclude(id__in=[o.id for o in t_remove])
@@ -385,82 +385,93 @@ def book(request, tutor_id, date_time):
     start_time = parser.parse(date_time)
     if request.method == 'POST':
         due = float(request.POST['final'])
+        commission = float(tutor.rate)*0.05
         student = get_object_or_404(Student, username=request.user.username)
+        costOfBooking = (due) if tutor.tutortype == 'private' else 0
+        if costOfBooking + commission > get_balance(student.username) :
+            context = {
+                'error' : 'Insufficient Funds !!.',
+                'date': date_time,
+                'tutor': tutor,
+                'balance' : get_balance(student.username)
+            }
+            return render(request, 'tutoria/funds/add_funds.html', context)
         flag, error = check_conflict(tutor, student, start_time)
         if flag:
             duration = 60 if tutor.tutortype == 'private' else 30
             td = datetime.timedelta(minutes=60) if tutor.tutortype == 'private' else datetime.timedelta(minutes=30)
-            costOfBooking = (due) if tutor.tutortype == 'private' else 0
-            if costOfBooking > get_balance(student.username) :
-                return render(request, 'tutoria/funds/add_funds.html', {'error' : 'Insufficient Funds !!.','date': date_time,'tutor': tutor})
-            else:
-                session = Session(
-                    tutor = tutor,
-                    student = student,
-                    start_time = start_time,
-                    end_time = start_time + td,
-                    duration = duration,
-                    amount = due,
-                    status = 'BOOKED'
-                )
-                session.save()
-        
-                commission = float(tutor.rate)*0.05
-                transaction = Transaction(
-                    tutor = tutor,
-                    student = student,
-                    start_time = start_time,
-                    end_time = start_time + td,
-                    amount = due,
-                    commission = commission
-                )
-                transaction.save()
 
+            session = Session(
+                tutor = tutor,
+                student = student,
+                start_time = start_time,
+                end_time = start_time + td,
+                duration = duration,
+                amount = due,
+                status = 'BOOKED'
+            )
+            session.save()
+
+            transaction = Transaction(
+                tutor = tutor,
+                student = student,
+                start_time = start_time,
+                end_time = start_time + td,
+                amount = due,
+                commission = commission
+            )
+            transaction.save()
+
+            """ Notification object """
+            title="{} booked a session with you on {}.".format(session.student,session.start_time)
+            today=datetime.datetime.today()
+            str_date="{}/{}/{}".format(today.day,today.month,today.year)
+            str_time="{}:{}".format(today.hour,today.minute)
+            now=int(ttime.time())
+            notif=Notification(
+
+                title=title,
+                tutor=session.tutor,
+                student=None,
+                now=now,
+                date=str_date,
+                time=str_time,
+                start_time = start_time,
+                end_time = start_time + td,
+                forSession = True,
+                session=session
+
+            )
+            print("To: {}".format(session.tutor.username)+"\nFrom: MyTutors\nSubject: Session Activity")
+            print("Dear {},\n".format(session.tutor.first_name+" "+session.tutor.last_name))
+            print(notif.title)
+            # notif2.save()
+            notif.save()
+            title2="You booked a session with {} on {}.".format(session.tutor,session.start_time)
+            notif2=Notification(
+
+                title=title2,
+                tutor=None,
+                student=session.student,
+                now=now,
+                date=str_date,
+                time=str_time,
+                forSession = True,
+                session=session
+
+            )
+            # print(notif2.title)
+            notif2.save()
                 """ Notification object """
-                title="{} booked a session with you on {}.".format(session.student,session.start_time)
-                today=datetime.datetime.today()
-                str_date="{}/{}/{}".format(today.day,today.month,today.year)
-                str_time="{}:{}".format(today.hour,today.minute)
-                now=int(ttime.time())
-                notif=Notification(
-
-                    title=title,
-                    tutor=session.tutor,
-                    student=None,
-                    now=now,
-                    date=str_date,
-                    time=str_time,
-                    start_time = start_time,
-                    end_time = start_time + td,
-                    forSession = True,
-                    session=session
-
-                )
-                print("To: {}".format(session.tutor.username)+"\nFrom: MyTutors\nSubject: Session Activity")
-                print("Dear {},\n".format(session.tutor.first_name+" "+session.tutor.last_name))
-                print(notif.title)
-                # notif2.save()
-                notif.save()
-                title2="You booked a session with {} on {}.".format(session.tutor,session.start_time)
-                notif2=Notification(
-
-                    title=title2,
-                    tutor=None,
-                    student=session.student,
-                    now=now,
-                    date=str_date,
-                    time=str_time,
-                    forSession = True,
-                    session=session
-
-                )
-                # print(notif2.title)
-                notif2.save()
-                """ Notification object """
-                sendFundsToAdmin(student.username, costOfBooking)
-                return redirect('/tutoria/session_detail/' + str(session.start_time))
+            sendFundsToMyTutors(student.username, costOfBooking+commission)
+            return redirect('/tutoria/session_detail/' + str(session.start_time))
         else:
-            return render(request, 'tutoria/session/bookSession.html', {'error' : error, 'date': date_time,'tutor': tutor})
+            context = {
+                'error' : error,
+                'date': date_time,
+                'tutor': tutor
+            }
+            return render(request, 'tutoria/session/bookSession.html', context)
     else:
         context = {
             'date': date_time,
@@ -483,7 +494,7 @@ def session_detail(request, date_time):
         if session.start_time > tdy + datetime.timedelta(hours=24):
             transaction = Transaction.objects.get(student = student, start_time = tocancel)
             refund_amount = transaction.amount + transaction.commission
-            refundFromAdmin(student.username, refund_amount)
+            refundFromMyTutors(student.username, refund_amount)
             session.delete()
             transaction.delete()
             today=datetime.datetime.today()
@@ -557,7 +568,7 @@ def notifications(request):
         s = None
         tut = None
         s1 = Student.objects.filter(username=request.user.username)
-        if len(s1)>=0:
+        if len(s1)>0:
             s=s1[0]
         tutor=Tutor.objects.filter(username=request.user.username)
         notifs=[]
