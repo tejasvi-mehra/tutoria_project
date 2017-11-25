@@ -89,6 +89,7 @@ def dashboard(request):
     else :
         name = tutor.first_name + " " + tutor.last_name
     balance = get_balance(username)
+    print ('coming here')
     transactions_outgoing = get_transactions_outgoing(username)
     transactions_incoming = get_transactions_incoming(username)
     context = {
@@ -119,7 +120,6 @@ def session_tutor(request, date_time):
     session = Session.objects.get(tutor = tutor, start_time=toview)
     return render(request, 'tutoria/session/session_tutor.html', {'session' : session})
 
-
 @login_required()
 def manage_tutor_time_table(request):
     error = ""
@@ -141,7 +141,6 @@ def manage_tutor_time_table(request):
     else:
         print("here whats up")
         return render(request, 'tutoria/timetable/mtttc.html', context)
-
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def set_profile(request):
@@ -196,7 +195,6 @@ def set_profile(request):
         wallet.save()
         return redirect('/tutoria/dashboard')
     return render(request, 'tutoria/profile/set_profile.html')
-
 
 @login_required()
 def search(request):
@@ -267,7 +265,6 @@ def nameSearch(request):
 
         return render(request, 'tutoria/search.html', {'tutors': tutors,'student':student,'tutor':tutor})
 
-
 @login_required(redirect_field_name='/tutoria/dashboard')
 def view_tutor_profile(request, tutor_id):
     tutor = get_object_or_404(Tutor, pk=tutor_id)
@@ -293,7 +290,6 @@ def view_tutor_profile(request, tutor_id):
         return render(request, 'tutoria/profile/t_view_profile.html', context)
     else:
         return render(request, 'tutoria/profile/s_view_profile.html', context)
-
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def tutor_block_session(request, date_time):
@@ -321,7 +317,6 @@ def tutor_block_session(request, date_time):
     else:
         return redirect('/tutoria/manage_timetable/tutor?error=This session has already been booked')
 
-
 @login_required(redirect_field_name='/tutoria/dashboard')
 def tutor_unblock_session(request, date_time):
     tounlock = parser.parse(date_time)
@@ -329,7 +324,6 @@ def tutor_unblock_session(request, date_time):
     session = Session.objects.get(tutor=tutor, start_time=tounlock)
     session.delete();
     return redirect('/tutoria/manage_timetable/tutor')
-
 
 @login_required(redirect_field_name='/tutoria/dashboard')
 def view_tutor_timetable(request, tutor_id):
@@ -346,11 +340,11 @@ def view_tutor_timetable(request, tutor_id):
     else:
         return render(request, 'tutoria/timetable/vttc.html', context)
 
-
 @login_required(redirect_field_name='/tutoria/dashboard')
 def book(request, tutor_id, date_time):
     tutor = get_object_or_404(Tutor, id=tutor_id)
     start_time = parser.parse(date_time)
+    tdy = datetime.datetime.today()
     if request.method == 'POST':
         due = float(request.POST['final'])
         commission = float(tutor.rate)*0.05
@@ -385,6 +379,8 @@ def book(request, tutor_id, date_time):
                 student = student,
                 start_time = start_time,
                 end_time = start_time + td,
+                booked_time = tdy,
+                session = session,
                 amount = due,
                 commission = commission
             )
@@ -464,7 +460,20 @@ def session_detail(request, date_time):
             refund_amount = transaction.amount + transaction.commission
             refundFromMyTutors(student.username, refund_amount)
             session.delete()
-            transaction.delete()
+            transaction1 = Transaction(
+                booked_time = tdy,
+                start_time = transaction.start_time,
+                end_time = transaction.end_time,
+                session = None,
+                student = transaction.student,
+                tutor = transaction.tutor,
+                completed = True,
+                commission = transaction.commission,
+                discount = transaction.discount,
+                amount = transaction.amount
+            )
+            transaction1.save()
+            # transaction.delete()
             today=datetime.datetime.today()
             notif=Notification(
                 title="You cancelled session with {} scheduled for {}".format(session.tutor,session.start_time),
@@ -550,18 +559,17 @@ def notifications(request):
         if student:
             student_notifications = Notification.objects.filter(student=student)
             for item in student_notifications:
-                notifications.append(y)
+                notifications.append(item)
         if tutor:
-            tutor_notifications = Notification.objects.filter(tutor=tut)
+            tutor_notifications = Notification.objects.filter(tutor=tutor)
             for item in tutor_notifications:
-                notifications.append(x)
+                notifications.append(item)
 
         notifications.sort(key=lambda x: x.now, reverse=True)
-        print(notifs)
         context = {
-            'notifs' : notifs,
-            'tutor' : tut,
-            'student' : s
+            'notifs' : notifications,
+            'tutor' : tutor,
+            'student' : student
         }
         return render(request,'tutoria/notifications.html/', context)
 

@@ -66,6 +66,7 @@ class Transaction(models.Model):
     tutor = models.ForeignKey(Tutor)
     amount = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     commission = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    booked_time = models.DateTimeField(null=True, blank=True)
     discount = models.DecimalField(decimal_places=0, max_digits=3, default=0)
     start_time = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
