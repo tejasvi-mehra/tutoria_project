@@ -169,7 +169,7 @@ def sendFundsToMyTutors(username, amount):
     wallet.balance = float(wallet.balance)-amount
     wallet.save()
     mytutorswallet = MyTutorsWallet.objects.get(username = "mytutors")
-    mytutorswallet.amount = float(mytutorswallet.amount) + amount
+    mytutorswallet.balance = float(mytutorswallet.balance) + amount
     mytutorswallet.save()
 
 # Refund money back to student
@@ -178,7 +178,7 @@ def refundFromMyTutors(username, amount):
     wallet.balance = float(wallet.balance) + float(amount)
     wallet.save()
     mytutorswallet = MyTutorsWallet.objects.get(username = "mytutors")
-    mytutorswallet.amount = float(mytutorswallet.amount) - float(amount)
+    mytutorswallet.balance = float(mytutorswallet.balance) - float(amount)
     mytutorswallet.save()
 
 

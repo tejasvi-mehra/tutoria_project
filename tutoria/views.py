@@ -146,15 +146,10 @@ def manage_tutor_time_table(request):
 def set_profile(request):
     if request.method == 'POST':
         temp = request.POST.getlist('checks')
-        isTutor = True if 'student' in temp else False
-        isStudent = True if 'tutor' in temp else False
+        isTutor = True if 'tutor' in temp else False
+        isStudent = True if 'student' in temp else False
 
         avatar = ""
-
-        if len(request.FILES) != 0:
-            myfile = request.FILES['myfile']
-            fs = FileSystemStorage()
-            avatar = fs.save(str(myfile),myfile)
 
         if temp[0] == 'tutor':
             course_tut=""
@@ -170,7 +165,11 @@ def set_profile(request):
                 tags = request.POST['tags'],
                 phoneNumber = request.POST['tel'],
             )
-            if avatar != "":
+
+            if len(request.FILES) != 0:
+                myfile = request.FILES['myfile']
+                fs = FileSystemStorage()
+                avatar = fs.save(str(myfile),myfile)
                 tutor.avatar = avatar
 
             try:
@@ -180,14 +179,20 @@ def set_profile(request):
                 pass
 
             tutor.save()
+
         if 'student' in temp:
             student = Student(
                 name = request.user.first_name + " " + request.user.last_name,
                 username = request.user.username,
                 isTutor = isTutor,
-                avatar = avatar
             )
+            if len(request.FILES) != 0:
+                myfile = request.FILES['myfile']
+                fs = FileSystemStorage()
+                avatar = fs.save(str(myfile),myfile)
+                student.avatar = avatar
             student.save()
+            
         wallet = Wallet(
             username = request.user.username,
             balance = request.POST['balance'],
