@@ -72,7 +72,7 @@ class Transaction(models.Model):
     completed = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.student) + " to " + str(self.tutor) + " at " + str(self.start_time) + " val " + str(self.completed)
+        return str(self.student) + " to " + str(self.tutor) + " at " + str(self.session_start_time) + " val " + str(self.completed) + " booked on " + str(self.booked_time)
 
 class MyTutorsWallet(models.Model):
     username = models.CharField(max_length=100, default="mytutors")

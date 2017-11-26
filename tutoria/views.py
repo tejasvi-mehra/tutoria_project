@@ -192,7 +192,7 @@ def set_profile(request):
                 avatar = fs.save(str(myfile),myfile)
                 student.avatar = avatar
             student.save()
-            
+
         wallet = Wallet(
             username = request.user.username,
             balance = request.POST['balance'],
@@ -459,20 +459,19 @@ def session_detail(request, date_time):
     error = ''
     if request.method == 'POST':
         if session.start_time > tdy + datetime.timedelta(hours=24):
-            transaction = Transaction.objects.get(student = student, start_time = tocancel)
+            transaction = Transaction.objects.get(student = student, session_start_time = tocancel)
             refund_amount = transaction.amount + transaction.commission
             refundFromMyTutors(student.username, refund_amount)
             session.delete()
             transaction1 = Transaction(
                 booked_time = tdy,
-                session_start_time = transaction.start_time,
-                session_end_time = transaction.end_time,
+                session_start_time = transaction.session_start_time,
+                session_end_time = transaction.session_end_time,
                 session = None,
                 student = transaction.student,
                 tutor = transaction.tutor,
                 completed = True,
                 commission = transaction.commission,
-                discount = transaction.discount,
                 amount = transaction.amount
             )
             transaction1.save()
