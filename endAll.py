@@ -49,9 +49,7 @@ def start():
              print("Dear {},\n".format(transaction.tutor.first_name+" "+transaction.tutor.last_name))
              print(notif2.title)
 
-
 def clear_history():
     thirty_days = datetime.datetime.today()-datetime.timedelta(days=30)
     Transaction.objects.filter(booked_time__lte=thirty_days).delete()
     Session.objects.filter(end_time__lte=thirty_days).delete()
-# get_all_transactions()

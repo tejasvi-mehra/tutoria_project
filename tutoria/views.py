@@ -19,7 +19,7 @@ def mytutors_withdraw(request):
         print("here")
         to_deduct = int(request.POST["withdraw"])
         wallet = MyTutorsWallet.objects.all()[0]
-        wallet.amount = wallet.amount - to_deduct;
+        wallet.balance = wallet.balance - to_deduct;
         wallet.save();
     return render(request, 'tutoria/funds/mytutors.html',{'wallet':wallet})
 
@@ -377,8 +377,8 @@ def book(request, tutor_id, date_time):
             transaction = Transaction(
                 tutor = tutor,
                 student = student,
-                start_time = start_time,
-                end_time = start_time + td,
+                session_start_time = start_time,
+                session_end_time = start_time + td,
                 booked_time = tdy,
                 session = session,
                 amount = due,
@@ -391,17 +391,15 @@ def book(request, tutor_id, date_time):
             today=datetime.datetime.today()
             str_date="{}/{}/{}".format(today.day,today.month,today.year)
             str_time="{}:{}".format(today.hour,today.minute)
-            now=int(ttime.time())
+            created_at=int(ttime.time())
             notif=Notification(
 
                 title=title,
                 tutor=session.tutor,
                 student=None,
-                now=now,
+                created_at = created_at,
                 date=str_date,
                 time=str_time,
-                start_time = start_time,
-                end_time = start_time + td,
                 forSession = True,
                 session=session
 
@@ -417,7 +415,7 @@ def book(request, tutor_id, date_time):
                 title=title2,
                 tutor=None,
                 student=session.student,
-                now=now,
+                created_at = created_at,
                 date=str_date,
                 time=str_time,
                 forSession = True,
@@ -462,8 +460,8 @@ def session_detail(request, date_time):
             session.delete()
             transaction1 = Transaction(
                 booked_time = tdy,
-                start_time = transaction.start_time,
-                end_time = transaction.end_time,
+                session_start_time = transaction.start_time,
+                session_end_time = transaction.end_time,
                 session = None,
                 student = transaction.student,
                 tutor = transaction.tutor,
@@ -480,7 +478,7 @@ def session_detail(request, date_time):
                 forSession=False,
                 student=session.student,
                 tutor=None,
-                now=int(ttime.time()),
+                created_at = int(ttime.time()),
                 date="{}/{}/{}".format(today.day,today.month,today.year),
                 time="{}:{}".format(today.hour,today.minute)
 
@@ -492,7 +490,7 @@ def session_detail(request, date_time):
                 forSession=False,
                 student=None,
                 tutor=session.tutor,
-                now=int(ttime.time()),
+                created_at = int(ttime.time()),
                 date="{}/{}/{}".format(today.day,today.month,today.year),
                 time="{}:{}".format(today.hour,today.minute)
 
@@ -523,7 +521,6 @@ def add_funds(request):
     else:
         return render(request, 'tutoria/funds/add_funds.html', {'balance' : wallet.balance})
 
-
 @login_required()
 def withdraw_funds(request):
     wallet = Wallet.objects.get(username=request.user.username)
@@ -537,7 +534,6 @@ def withdraw_funds(request):
         return redirect('/tutoria/dashboard')
     else:
         return render(request, 'tutoria/funds/withdraw_funds.html', {'balance' : wallet.balance})
-
 
 @login_required()
 def notifications(request):
@@ -565,7 +561,7 @@ def notifications(request):
             for item in tutor_notifications:
                 notifications.append(item)
 
-        notifications.sort(key=lambda x: x.now, reverse=True)
+        notifications.sort(key=lambda x: x.created_at, reverse=True)
         context = {
             'notifs' : notifications,
             'tutor' : tutor,

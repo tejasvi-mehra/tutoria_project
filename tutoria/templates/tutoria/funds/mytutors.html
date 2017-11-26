@@ -1,7 +1,7 @@
 {% extends 'tutoria/nonav.html' %}
 {% block body %}
     <div class="jumbotron" style="text-align:center;">
-      Funds : {{wallet.amount}}<br><br>
+      Funds : {{wallet.balance}}<br><br>
       <form onSubmit="return confirm('Are you sure you wish to withdraw?');" action="/tutoria/mytutors/withdraw/" method="post">
         {% csrf_token %}
         Withdraw Funds <br><br>

@@ -125,7 +125,7 @@ left: 0px;
     {% for transaction in transactions_outgoing %}
       {% ifnotequal transaction.amount 0 %}
         <p>
-          HK$ {{transaction.amount}} paid to {{transaction.tutor.first_name}} {{transaction.tutor.last_name}} and HK$ {{transaction.commission}} paid to MyTutors for a session on {{transaction.start_time}}
+          HK$ {{transaction.amount}} paid to {{transaction.tutor.first_name}} {{transaction.tutor.last_name}} and HK$ {{transaction.commission}} paid to MyTutors for a session on {{transaction.session_start_time}}
         </p>
 
       {% endifnotequal %}
@@ -142,16 +142,16 @@ left: 0px;
     {% if transaction.session %}
     {% if transaction.completed %}
     <p>
-      HK$ {{transaction.amount}} was paid by {{transaction.student}} for session on {{transaction.start_time}}
+      HK$ {{transaction.amount}} was paid by {{transaction.student}} for session on {{transaction.session_start_time}}
     </p>
     {% else %}
     <p>
-      HK$ {{transaction.amount}} will be paid by {{transaction.student}} for session on {{transaction.start_time}}
+      HK$ {{transaction.amount}} will be paid by {{transaction.student}} for session on {{transaction.session_start_time}}
     </p>
     {% endif %}
       {% else %}
         {% ifnotequal transaction.amount 0 %}
-      <p>  HK$ {{transaction.amount}} session amount and HK$ {{transaction.commission}} was refunded back for cancellation of session on {{transaction.start_time}} </p>
+      <p>  HK$ {{transaction.amount}} session amount and HK$ {{transaction.commission}} was refunded back for cancellation of session on {{transaction.session_start_time}} </p>
         {% endifnotequal %}
       {% endif %}
 
@@ -173,20 +173,7 @@ left: 0px;
   <a href="/tutoria/add_funds">Add money</a></button></div>
   </div>
   <br>
-{%endif%}
-  <!-- {% if student %}
-  <button type="button" name="button">
-  <a href="/tutoria/search">Search for Tutors</a><br></button>
-  {% endif %} -->
-
-
-
-
-
-  <!-- <button type="button" name="button">
-    <a href="/tutoria/view_profile/{{tutor.id}}">View Profile</a></br>
-  </button> -->
-        </div></div></div>
+{%endif%}        </div></div></div>
       </main>
 
 {% endblock %}
